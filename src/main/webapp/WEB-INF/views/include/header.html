@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+@import url(../../../resources/css/common.css);
+
+/* ..................... */
+/* 헤더					 */
+/* ..................... */
+.header{
+	width:100%;
+	margin-top:30px;
+}
+.title-box{
+	width:350px;
+	display:block;
+	text-align: center;
+	margin:0 auto ;
+	padding:20px 0;
+	border:2px solid rgba(255,255,255,0.4);
+	background:rgba(0,0,0,0.3);
+}
+.title-box #title{
+	color:#eee;
+	font-family: "나눔스퀘어B";
+	font-size: 45px;
+	text-shadow:2px 2px 0px gray;
+	display:inline-block;
+	padding:7px 0;
+}
+.title-box #title-bottom, #title-top {
+	font-family: "나눔스퀘어R";
+	font-size:14px;
+	color:#c4e2ee;
+	display:inline-block;
+}
+#title-top{
+	padding-top:10px;
+}
+#title-bottom{
+	padding-bottom:10px;
+}
+
+#title-bottom span{
+	color:#eee;
+	font-size:16px;
+	font-weight: bold;
+}
+
+.top-login-box{
+	text-align: center;
+	padding:20px 0 10px;
+}
+.top-login-box a{
+	color:#ddd;
+}
+
+.top-menu-box{
+	width:100%;
+	padding:20px 0 20px;
+	text-align: center;
+}
+
+.top-menu-box a{
+	display: inline-block;
+	width: 170px;
+	height:35px;
+	line-height:35px;
+	font-family:"나눔스퀘어B";
+	font-size:20px;
+	text-decoration: none;
+	text-align: center;
+	margin:0 30px;
+	border-radius: 4px;
+}
+
+a.click-event {
+	-webkit-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+	transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+	
+}
+a.click-event {
+	color: #273687;
+	background:rgba(255,255,255,0.5);
+}
+
+a.click-event:hover {
+	color: #eee;
+	box-shadow: rgba(39,54,135,0.5) 0 0px 0px 40px inset;
+}
+
+.fixed-header{
+	width:100%;
+	position:fixed;
+	top:0;
+	display:none;
+	background:#435274;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+.fixed-header .top-menu-box a{
+	border:2px solid rgba(0,0,0,0);
+}
+.fixed-header .top-menu-box a:HOVER{
+	border-color:#eee;
+}
+
+/* ..................... */
+/* section				 */
+/* ..................... */
+.section{
+	width:100%;
+}
+.inner-section{
+	width:100%;
+	height:1000px;
+	margin-bottom:30px;
+	background:rgba(0,0,0,0.4);
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+$(function(){
+	$(window).scroll(function(){
+		var winTop = $(window).scrollTop();
+		if(winTop >= 331){
+			$(".fixed-header").stop().slideDown("fast");
+	    }else{
+	    	$(".fixed-header").stop().slideUp("fast");
+	    }
+	});
+});
+</script>
+</head>
+<body>
+
+<header class="header">
+	<div class="width1400">
+		<div class="title-box">
+			<span id="title-top">국가자격증 기출문제</span><br />
+			<span id="title"><a href="">오모리닷컴</a></span><br />
+			<span id="title-bottom"><span>오</span>답풀이, <span>모</span>의고사, <span>리</span>플레이(반복학습)</span>
+		</div>
+	</div>
+	<div class="width1400">
+		<div class="top-login-box">
+			<a href=""><b>TEST1</b>로 로그인하셨습니다.</a>
+			<a href="">로그아웃</a>
+			<a href="">로그인</a>
+			<a href="">회원가입</a>
+		</div>
+	</div>
+	<div class="top-menu-box">
+		<div class="width1400">
+			<a href="" class="click-event">모의고사</a>
+			<a href="" class="click-event">과목별 시험</a>
+			<a href="" class="click-event">한 문제씩 풀기</a>
+			<a href="" class="click-event">오답노트</a>
+			<a href="" class="click-event">성적 통계</a>
+		</div>
+	</div>
+</header>
+
+<!-- fixed header  -->
+<div class="fixed-header">
+	<div class="top-menu-box">
+		<div class="width1400">
+			<a href="">모의고사</a>
+			<a href="">과목별 시험</a>
+			<a href="">한 문제씩 풀기</a>
+			<a href="">오답노트</a>
+			<a href="">성적 통계</a>
+		</div>
+	</div>
+</div>
+<!-- .............................. -->
+
+<section class="section">
+	<div class="width1400">
+		<div class="inner-section">
+		
+		</div>
+	</div>
+</section>
+
+
+</body>
+</html>

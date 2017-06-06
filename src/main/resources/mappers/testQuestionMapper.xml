@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.TestQuestionMapper">
+	<resultMap id="TestQuestionResult" type="TestQuestionVO" >
+		<id property="tq_no" column="tq_no" />
+		<result property="testName.tno" column="tno" />
+		<result property="tq_subject" column="tq_subject" />
+		<result property="tq_subject_no" column="tq_subject_no" />
+		<result property="tq_small_no" column="tq_small_no" />
+		<result property="tq_question" column="tq_question" />
+		<result property="tq_answer" column="tq_answer" />
+		<result property="tq_per" column="tq_per" />
+	</resultMap>
+
+	<select id="selectAllTestQuestionForMock" resultType="TestQuestionVO" resultMap="TestQuestionResult">
+		select * from testquestion 
+		where tno = #{tno}
+		order by tq_small_no
+	</select>
+	
+	<select id="selectAllTestQuestionForSubject" resultType="TestQuestionVO" resultMap="TestQuestionResult">
+		select * from testquestion
+		where tno = #{testName.tno} 
+			and tq_subject_no = #{tq_subject_no}
+		order by tq_small_no
+	</select>
+		
+	<select id="selectOneTestQuestion" resultType="TestQuestionVO" resultMap="TestQuestionResult">
+		select * from testquestion
+		where tno = #{tno} 
+			and tq_small_no = #{tq_small_no}
+	</select>
+	
+	<insert id="insertTestQuestion">
+		insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
+		values(#{testName.tno}, #{tq_subject}, #{tq_subject_no}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
+	</insert>
+</mapper>

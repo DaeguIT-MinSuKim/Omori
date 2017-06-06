@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="chartist.min.js"></script>
+<script src="chartist-plugin-pointlabels.min.js"></script>
+<script src="chartist-plugin-tooltip.min.js"></script>
+<link rel="stylesheet" href="chartist.min.css">
+<link rel="stylesheet" href="chartist-plugin-tooltip.css">
+<style>
+	.ct-chart{
+		border:1px solid black;
+		width:300px;
+		height:200px;
+	}
+</style>
+<script>
+$(function(){
+	var data = {
+			labels : [ '05-21', '05-22', '05-23', '05-24', '05-25' ],
+			series : [ [
+			            {meta: '데이터베이스', value: 68 },
+			            {meta: '데이터베이스', value: 70},
+			            {meta: '데이터베이스', value: 88},
+			            {meta: '데이터베이스', value: 90},
+			            {meta: '데이터베이스', value: 92},
+			          ], [
+			            {meta: '전자계산기구조', value: 70 },
+			            {meta: '전자계산기구조', value: 50},
+			            {meta: '전자계산기구조', value: 72},
+			            {meta: '전자계산기구조', value: 65},
+			            {meta: '전자계산기구조', value: 60},
+			          ]],
+			
+		};
+
+	var options = {
+		low:20,
+		high:100,
+		width : 300,
+		height : 200,
+		plugins: [
+			    Chartist.plugins.ctPointLabels({textAnchor: 'middle'}),
+			    Chartist.plugins.tooltip()
+			  ]
+	};
+
+	new Chartist.Line('.ct-chart', data, options);
+	
+	
+	
+	var data2 = {
+			labels : [ '2016-1회', '2016-2회', '2016-3회', '2017-1회', '2017-2회' ],
+			series : [ [ 
+			             {meta : '2016-1회', value : 68}, 
+			             {meta : '2016-2회', value : 70}, 
+			             {meta : '2016-3회', value : 88}, 
+			             {meta : '2017-1회', value : 90}, 
+			             {meta : '2017-2회',value : 92} ]
+			]};
+
+	var options2 = {
+		high : 100,
+		low : 50,
+		width : 400,
+		height : 200,
+		axisX : {
+			labelInterpolationFnc : function(value, index) {
+				return index % 2 === 0 ? value : null;
+			}
+		},
+		plugins : [ Chartist.plugins.tooltip() ]
+	};
+
+	new Chartist.Bar('.ct-chart2', data2, options2);
+});
+</script>
+</head>
+<body>
+<div class="ct-chart ct-perfect-fourth"></div>
+<div class="ct-chart2 ct-perfect-fourth"></div>
+</body>
+</html>

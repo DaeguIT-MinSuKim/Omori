@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.TestExampleMapper">
+	<resultMap id="TestExampleResult" type="TestExampleVO" >
+		<id property="te_no" column="te_no" />
+		<result property="question.tq_no" column="tq_no" />
+		<result property="te_small_no" column="te_small_no" />
+		<result property="te_content" column="te_content" />
+	</resultMap>
+	
+	<select id="selectAllTestExampleByTqNo" resultType="TestExampleVO" resultMap="TestExampleResult">
+		select * from testexample
+		where tq_no = #{tq_no}
+		order by te_small_no
+	</select>
+	
+	<select id="selectOneTestExampleCorrectAnswer" resultType="TestExampleVO" resultMap="TestExampleResult">
+		select e.* from testexample e 
+		inner join testquestion q 
+			on e.te_small_no = q.tq_answer
+		where e.tq_no = #{tq_no} 
+			and q.tq_no = #{tq_no};
+	</select>
+	
+	<insert id="insertTestExample">
+		insert into testexample(tq_no, te_small_no, te_content) 
+		values(#{question.tq_no}, #{te_small_no}, #{te_content});
+	</insert>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.UserMapper">
+	<insert id="insertUser">
+		insert into user(uid, upw, uemail, ujoindate, isadmin) 
+		values(#{uid}, #{upw}, #{uemail}, now(), #{isadmin});
+	</insert>
+	
+	<select id="selectOneUser" resultType="UserVO">
+		select uid, upw, uemail, ujoindate, isadmin from user 
+		where uid = #{uid} and upw = #{upw};
+	</select>
+	<!-- 
+	<select id="checkExistUser" resultType="int">
+		select count(*) from tbl_user
+		where uid = #{uid};
+	</select> -->
+</mapper>

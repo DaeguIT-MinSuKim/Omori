@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.GradeMapper">
+	<resultMap id="GradeResult" type="GradeVO" >
+		<id property="g_no" column="g_no" />
+		<result property="user.uid" column="uid" />
+		<result property="testName.tno" column="tno" />
+		<result property="grade" column="grade" />
+		<result property="g_low" column="g_low" />
+		<result property="g_low_grade" column="g_low_grade" />
+		<result property="g_high" column="g_high" />
+		<result property="g_high_grade" column="g_high_grade" />
+		<result property="g_date" column="g_date" />
+	</resultMap>
+
+	<select id="selectAllGradeLatest" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid} 
+		order by g_date desc, g_no desc;
+	</select>
+</mapper>

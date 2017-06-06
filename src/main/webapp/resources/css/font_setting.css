@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+@font-face{
+	font-family: "나눔스퀘어B";
+	src: url(../fonts/NanumSquareB.woff) format("woff");
+}
+
+@font-face{
+	font-family: "나눔스퀘어R";
+	src: url(../fonts/NanumSquareR.woff) format("woff");
+}
+
+@font-face{
+	font-family: "나눔바른고딕";
+	src: url(../fonts/NanumBarunGothic.woff) format("woff");
+}
+
+@font-face{
+	font-family: "210HaetsalB";
+	src: url(../fonts/210HaetsalB.woff) format("woff");
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.ImageMapper">
+	<resultMap id="ImageResult" type="ImageVO" >
+		<result property="question.tq_no" column="tq_no" />
+		<result property="imgsource" column="imgsource" />
+	</resultMap>
+	
+	<select id="selectImageByTqNo" resultType="ImageVO" resultMap="ImageResult">
+		select * from image
+		where tq_no = #{tq_no}
+		order by tq_no
+	</select>
+	
+	<insert id="insertImage">
+		insert into image values(#{question.tq_no}, #{imgsource})
+	</insert>
+</mapper>
