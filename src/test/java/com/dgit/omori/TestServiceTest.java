@@ -10,11 +10,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
 import com.dgit.domain.TestQuestionVO;
+import com.dgit.domain.UserVO;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
+import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
 import com.dgit.service.TestNameService;
 import com.dgit.service.TestQuestionService;
@@ -32,6 +35,8 @@ public class TestServiceTest {
 	private ImageService imageService;
 	@Inject
 	private GradeService gradeService;
+	@Inject
+	private SelectedAnswerService answerService;
 	
 	/*......................*/
 	/*TestName				*/
@@ -75,6 +80,11 @@ public class TestServiceTest {
 //	@Test
 	public void selectOneTestQuestion() throws Exception{
 		questionService.selectOneTestQuestion(1, 1);
+	}
+	
+//	@Test
+	public void selectOneTestQuestionByTqno() throws Exception{
+		questionService.selectOneTestQuestionByTqno(1);
 	}
 	
 //	@Test
@@ -141,5 +151,42 @@ public class TestServiceTest {
 //	@Test
 	public void selectAllGradeLatest() throws Exception{
 		gradeService.selectAllGradeLatest("test1");
+	}
+	
+	/*......................*/
+	/*SelectedAnswer		*/
+	/*......................*/
+//	@Test
+	public void selectAllAnswerByTnoDate() throws Exception{
+		SelectedAnswerVO vo = new SelectedAnswerVO();
+		TestNameVO testName = new TestNameVO();
+		testName.setTno(1);
+		vo.setTestName(testName);
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		vo.setSa_date("2017-05-31");
+		answerService.selectAllAnswerByTnoDate(vo);
+	}
+	
+//	@Test
+	public void insertSelectedAnswer() throws Exception{
+		SelectedAnswerVO vo = new SelectedAnswerVO();
+		
+		TestNameVO testName = new TestNameVO();
+		testName.setTno(1);
+		vo.setTestName(testName);
+		
+		TestQuestionVO question = new TestQuestionVO();
+		question.setTq_no(6);
+		vo.setQuestion(question);
+		
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		
+		vo.setSa_date("2017-05-31");
+		vo.setSa_answer(4);
+		answerService.insertSelectedAnswer(vo);
 	}
 }
