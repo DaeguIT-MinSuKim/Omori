@@ -102,16 +102,19 @@ public class MockTestController {
 	}//latestTestName
 	
 	@ResponseBody
-	@RequestMapping(value = "/mockTestQAndE/{tno}", method = RequestMethod.POST)
-	public ResponseEntity<List<TestQuestionVO>> mockTest(@PathVariable("tno") int tno) throws Exception{
-		logger.info("you got mock test................................");
+	@RequestMapping(value = "/getQuestionAndExampleByTno/{tno}", method = RequestMethod.POST)
+	public ResponseEntity<List<TestQuestionVO>> getQuestionAndExampleByTno(@PathVariable("tno") int tno) throws Exception{
+		logger.info("getQuestionAndExampleByTno................................");
 		
 		ResponseEntity<List<TestQuestionVO>> entity = null;
 		
+		TestNameVO testName = nameService.selectOneTestName(tno);
 		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
 		
 		for(int i=0; i<questionList.size(); i++){
 			TestQuestionVO question = questionList.get(i);
+			question.setTestName(testName);
+			
 			int tq_no = question.getTq_no();
 			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
 			List<ImageVO> imageList = imageServie.selectImageByTqNo(tq_no);
@@ -127,6 +130,6 @@ public class MockTestController {
 		}
 		
 		return entity;
-	}//mockTest
+	}//getQuestionAndExampleByTno
 	
 }
