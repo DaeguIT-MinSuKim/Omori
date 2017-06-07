@@ -314,10 +314,11 @@
 					closeOnConfirm:false
 				}, function(isConfirm){
 					if(tno != 0){
-						$("#testName").html(tname);
-						setTimer(tname); /* 타이머설정 */
-						getMockTest(tno); /* 태그생성 */
-						swal.close();
+						location.replace("${pageContext.request.contextPath}/mock_test/start_test/"+tno);
+						//$("#testName").html(tname);
+						//setTimer(tname); /* 타이머설정 */
+						//getMockTest(tno); /* 태그생성 */
+						//swal.close();
 					}else{
 						return false;
 					}
