@@ -6,23 +6,21 @@
 <mapper namespace="com.dgit.mapper.SelectedAnswerMapper">
 	<resultMap id="AnswerResult" type="SelectedAnswerVO" >
 		<id property="sa_no" column="sa_no" />
-		<result property="testName.tno" column="tno" />
-		<result property="question.tq_no" column="tq_no" />
 		<result property="user.uid" column="uid" />
+		<result property="tq_no" column="tq_no" />
 		<result property="sa_answer" column="sa_answer" />
 		<result property="sa_date" column="sa_date" />
 	</resultMap>
 
-	<select id="selectAllAnswerByTnoDate" resultType="SelectedAnswerVO" resultMap="AnswerResult">
-		select * from selected_answer
-		where tno = #{testName.tno}
-			and sa_date= #{sa_date} 
-			and uid = #{user.uid}
-		order by tq_no;
+	<select id="selectOneAnswerByTqno" resultType="SelectedAnswerVO" resultMap="AnswerResult">
+		select * from selected_answer 
+		where tq_no = #{tq_no} 
+			and uid = #{uid}
+		order by sa_date desc limit 1;
 	</select>
 	
 	<insert id="insertSelectedAnswer">
-		insert into selected_answer(tno, tq_no, uid, sa_answer, sa_date) 
-		values(#{testName.tno}, #{question.tq_no}, #{user.uid}, #{sa_answer}, #{sa_date});
+		insert into selected_answer(uid, tq_no, sa_answer, sa_date) 
+		values(#{user.uid}, #{tq_no}, #{sa_answer}, #{sa_date});
 	</insert>
 </mapper>

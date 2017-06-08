@@ -13,6 +13,7 @@ public class TestQuestionVO {
 	private int tq_per;
 	private List<TestExampleVO> exampleList;
 	private List<ImageVO> imageList;
+	private SelectedAnswerVO answer;
 	
 	public int getTq_no() {
 		return tq_no;
@@ -74,5 +75,12 @@ public class TestQuestionVO {
 	public void setImageList(List<ImageVO> imageList) {
 		this.imageList = imageList;
 	}
+	public SelectedAnswerVO getAnswer() {
+		return answer;
+	}
+	public void setAnswer(SelectedAnswerVO answer) {
+		this.answer = answer;
+	}
+	
 	
 }

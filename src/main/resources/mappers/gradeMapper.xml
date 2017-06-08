@@ -19,6 +19,6 @@
 	<select id="selectAllGradeLatest" resultType="GradeVO" resultMap="GradeResult">
 		select * from grade 
 		where uid = #{uid} 
-		order by g_date desc, g_no desc;
+		order by g_date desc, g_no desc
 	</select>
 </mapper>

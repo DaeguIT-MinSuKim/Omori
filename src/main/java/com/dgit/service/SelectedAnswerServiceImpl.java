@@ -14,8 +14,8 @@ public class SelectedAnswerServiceImpl implements SelectedAnswerService{
 	private SelectedAnswerDao dao;
 
 	@Override
-	public List<SelectedAnswerVO> selectAllAnswerByTnoDate(SelectedAnswerVO vo) throws Exception {
-		return dao.selectAllAnswerByTnoDate(vo);
+	public SelectedAnswerVO selectOneAnswerByTqno(int tq_no, String uid) throws Exception {
+		return dao.selectOneAnswerByTqno(tq_no, uid);
 	}
 
 	@Override

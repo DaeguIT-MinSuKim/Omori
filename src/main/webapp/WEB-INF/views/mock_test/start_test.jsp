@@ -317,7 +317,7 @@
 					closeOnConfirm:false
 				}, function(isConfirm){
 					if(isConfirm){
-						
+						$("#formSendAnswer").submit();
 					}else{
 						
 					}

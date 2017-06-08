@@ -41,7 +41,20 @@ public class TestQuestionDaoImpl implements TestQuestionDao{
 	}
 
 	@Override
+	public List<String> selectOnlySubject(int tno) throws Exception {
+		return session.selectList(namespace + ".selectOnlySubject", tno);
+	}
+
+	@Override
 	public void insertTestQuestion(TestQuestionVO vo) throws Exception {
 		session.insert(namespace+".insertTestQuestion", vo);
+	}
+
+	@Override
+	public int selectCountBySubject(int tno, String tq_subject) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("tno", tno);
+		map.put("tq_subject", tq_subject);
+		return session.selectOne(namespace + ".selectCountBySubject", map);
 	}
 }

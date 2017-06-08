@@ -161,8 +161,7 @@ ALTER TABLE omori.selected_answer
 ALTER TABLE omori.selected_answer
 	MODIFY COLUMN sa_no INTEGER NOT NULL AUTO_INCREMENT;
 
-create index idx_tqno on selected_answer(tq_no);
-create index idx_uid on selected_answer(uid);
+
 	
 -- 예시이미지
 CREATE TABLE omori.image (
@@ -173,9 +172,11 @@ CREATE TABLE omori.image (
 -- 시험본직후성적
 CREATE TABLE omori.nowgrade (
 	ng_no      INTEGER      NOT NULL, -- 시험본직후성적번호
+	uid		   VARCHAR(50)	null,	  -- 아이디
 	tno        INTEGER      NOT NULL, -- 자격증번호
 	tq_subject VARCHAR(100) NOT NULL, -- 과목명
 	nowgrade   INTEGER      NOT NULL, -- 점수(개수)
+	ng_count   INTEGER		NOT null, -- 과목의총개수
 	ng_date    TIMESTAMP    NOT NULL  -- 시험친날짜
 );
 
@@ -299,8 +300,11 @@ ALTER TABLE omori.selected_answer
 			uid -- 아이디
 		)on delete cascade on update cascade;
 
--- ----------------------------------------------------------------------------------------
 use omori;
+
+create index idx_tqno on selected_answer(tq_no);
+create index idx_uid on selected_answer(uid);
+-- ----------------------------------------------------------------------------------------
 
 insert into user(uid, upw, uemail, ujoindate, isadmin) values('test1', 'test1', 'test1@naver.com',now(), false);
 insert into user(uid, upw, uemail, ujoindate, isadmin) values('test2', 'test2', 'test2@naver.com',now(), false);
@@ -323,14 +327,17 @@ insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_questio
 values(1, '데이터베이스', 1, 1, '문제1', '1', '10');
 insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 values(1, '데이터베이스', 1, 2, '문제2', '2', '20');
+-- 과목명만 모아 보기
 select distinct tq_subject from testquestion where tno = 1;
+-- 한 과목당 문제 개수
+select count(*) from testquestion where tno = 1 and tq_subject = '데이터베이스'; 
 -- 모의 시험
 select * from testquestion where tno = 1 order by tq_small_no;
-select * from testquestion where tno = 2 order by tq_small_no;
 -- 과목별 시험
 select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
+
 delete from testquestion;
 alter table testquestion auto_increment = 1;
 
@@ -357,7 +364,6 @@ where e.tq_no = 1 and q.tq_no = 1;
 delete from testexample;
 alter table testexample auto_increment = 1;
 
-
 insert into selected_answer(uid, tq_no, sa_answer, sa_date) values('test1', 1, 1, now());
 -- 문제 1번에 대해 제일 최근 test1유저가 선택한 답
 select * from selected_answer where tq_no = 1 and uid='test1' order by sa_date desc limit 1;
@@ -366,6 +372,19 @@ select s.* from selected_answer s inner join testquestion q on s.sa_answer = q.t
 where s.tq_no = 1 and q.tq_no = 1 and s.uid = 'test2' and s.sa_date = '2017-05-31';
 delete from selected_answer;
 alter table selected_answer auto_increment = 1;
+
+insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '데이터베이스', 18, now());
+insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '전자계산기구조', 18, now());
+insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '운영체제', 18, now());
+insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '소프트웨어공학', 18, now());
+insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '데이터통신', 18, now());
+
+-- 제일 최근에 본 시험의 점수
+select * from nowgrade where tno = 1 and tq_subject = '데이터베이스' and uid='test1' order by ng_date desc limit 1;
+select * from nowgrade;
+
+delete from nowgrade;
+alter table nowgrade auto_increment = 1;
 
 insert into grade(uid, tno, grade, g_low, g_low_grade, g_high, g_high_grade, g_date) values('test1', 1, 75, '데이터베이스', 17, '전자계산기구조', 18, '2017-05-31');
 insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 67, '데이터베이스', '전자계산기구조', '2017-05-30');

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.NowGradeMapper">
+	<resultMap id="NowGradeResult" type="NowGradeVO" >
+		<id property="ng_no" column="ng_no" />
+		<result property="user.uid" column="uid" />
+		<result property="tno" column="tno" />
+		<result property="tq_subject" column="tq_subject" />
+		<result property="nowgrade" column="nowgrade" />
+		<result property="ng_count" column="ng_count" />
+		<result property="ng_date" column="ng_date" />
+	</resultMap>
+
+	<select id="selectOneNowGradeLatest" resultType="NowGradeVO" resultMap="NowGradeResult">
+		select * from nowgrade 
+		where tno = #{tno} 
+			and tq_subject = #{tq_subject}
+			and uid = #{user.uid} 
+		order by ng_date desc limit 1;
+	</select>
+	
+	<insert id="insertNowGrade">
+		insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_count, ng_date) 
+		values(#{user.uid}, #{tno}, #{tq_subject}, #{nowgrade}, #{ng_count}, #{ng_date})
+	</insert>
+</mapper>

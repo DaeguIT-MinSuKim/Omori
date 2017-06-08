@@ -39,6 +39,18 @@
 		where tq_no = #{tq_no}
 	</select>
 	
+	<select id="selectOnlySubject" resultType="String">
+		select distinct tq_subject from testquestion
+		where tno = #{tno}
+	</select>
+	
+	<select id="selectCountBySubject" resultType="int">
+		select count(*) from testquestion 
+		where tno = #{tno}
+			 and tq_subject = #{tq_subject}
+	</select>
+	
+	
 	<insert id="insertTestQuestion">
 		insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 		values(#{testName.tno}, #{tq_subject}, #{tq_subject_no}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);

@@ -1,5 +1,6 @@
 package com.dgit.omori;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.NowGradeVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
@@ -17,6 +19,7 @@ import com.dgit.domain.TestQuestionVO;
 import com.dgit.domain.UserVO;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
+import com.dgit.service.NowGradeService;
 import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
 import com.dgit.service.TestNameService;
@@ -37,6 +40,8 @@ public class TestServiceTest {
 	private GradeService gradeService;
 	@Inject
 	private SelectedAnswerService answerService;
+	@Inject
+	private NowGradeService nowGradeService;
 	
 	/*......................*/
 	/*TestName				*/
@@ -102,6 +107,17 @@ public class TestServiceTest {
 		questionService.insertTestQuestion(vo);
 	}
 	
+//	@Test
+	public void selectQuestionAndAnswer() throws Exception{
+		List<TestQuestionVO> questionList = questionService.selectQuestionAndAnswer(1, "test1");
+		System.out.println(questionList.get(0).getAnswer().getSa_answer() + "을 선택했다");
+	}
+	
+//	@Test
+	public void selectOnlySubject() throws Exception{
+		questionService.selectOnlySubject(1);
+	}
+	
 	
 	/*......................*/
 	/*TestExample			*/
@@ -157,36 +173,48 @@ public class TestServiceTest {
 	/*SelectedAnswer		*/
 	/*......................*/
 //	@Test
-	public void selectAllAnswerByTnoDate() throws Exception{
+	public void selectOneAnswerByTqno() throws Exception{
 		SelectedAnswerVO vo = new SelectedAnswerVO();
-		TestNameVO testName = new TestNameVO();
-		testName.setTno(1);
-		vo.setTestName(testName);
+		
 		UserVO user = new UserVO();
 		user.setUid("test1");
 		vo.setUser(user);
-		vo.setSa_date("2017-05-31");
-		answerService.selectAllAnswerByTnoDate(vo);
+		vo.setTq_no(1);
+		
+		answerService.selectOneAnswerByTqno(1, "test1");
 	}
 	
 //	@Test
 	public void insertSelectedAnswer() throws Exception{
 		SelectedAnswerVO vo = new SelectedAnswerVO();
 		
-		TestNameVO testName = new TestNameVO();
-		testName.setTno(1);
-		vo.setTestName(testName);
-		
-		TestQuestionVO question = new TestQuestionVO();
-		question.setTq_no(6);
-		vo.setQuestion(question);
-		
 		UserVO user = new UserVO();
 		user.setUid("test1");
 		vo.setUser(user);
 		
-		vo.setSa_date("2017-05-31");
+		vo.setTq_no(1);
 		vo.setSa_answer(4);
+		vo.setSa_date(new Date());
+		
 		answerService.insertSelectedAnswer(vo);
+	}
+	
+	/*......................*/
+	/*NowGrade				*/
+	/*......................*/
+//	@Test
+	public void selectOneNowGradeLatest() throws Exception{
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		
+		nowGradeService.selectOneNowGradeLatest(1, "데이터베이스", user);
+	}
+	
+//	@Test
+	public void insertNowGrade() throws Exception{
+//		UserVO user = new UserVO();
+//		user.setUid("test1");
+//		
+//		nowGradeService.insertNowGrade(1, user);
 	}
 }

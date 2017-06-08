@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.NowGradeVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
@@ -30,6 +31,8 @@ import com.dgit.domain.UserVO;
 import com.dgit.interceptor.LoginInterceptor;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
+import com.dgit.service.NowGradeService;
+import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
 import com.dgit.service.TestNameService;
 import com.dgit.service.TestQuestionService;
@@ -49,6 +52,10 @@ public class MockTestController {
 	private ImageService imageServie;
 	@Autowired
 	private GradeService gradeService;
+	@Autowired
+	private SelectedAnswerService answerService;
+	@Autowired
+	private NowGradeService nowService;
 	
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
@@ -84,23 +91,19 @@ public class MockTestController {
 		logger.info("testResult Post......................");
 		
 		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
-		TestNameVO testName = nameService.selectOneTestName(tno);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String date = sdf.format(new Date());
 		
 		for(int i = 0; i < tq_no.length; i++){
 			SelectedAnswerVO answer = new SelectedAnswerVO();
-			TestQuestionVO question = questionService.selectOneTestQuestionByTqno(tq_no[i]);
-			
-			answer.setTestName(testName);
-			answer.setQuestion(question);
 			answer.setUser(user);
-			answer.setSa_date(date);
+			answer.setTq_no(tq_no[i]);
+			answer.setSa_answer(sa_answer[i]);
+			answer.setSa_date(new Date());
+			
+			answerService.insertSelectedAnswer(answer);
 		}
 		
-		model.addAttribute("tq_noList", tq_no);
-		model.addAttribute("sa_answerList", sa_answer);
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		model.addAttribute("testName", testName);
 		return "mock_test/test_result";
 	}//testResultPost
 	
@@ -159,4 +162,46 @@ public class MockTestController {
 		return entity;
 	}//getQuestionAndExampleByTno
 	
+	@ResponseBody
+	@RequestMapping(value="/markMockTest/{tno}", method=RequestMethod.POST)
+	public ResponseEntity<List<TestQuestionVO>> markMockTest(HttpServletRequest req, @PathVariable int tno) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		ResponseEntity<List<TestQuestionVO>> entity = null;
+		
+		List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswer(tno, user.getUid());
+		nowService.insertNowGrade(questionWithAnswerList, user);
+		
+		try {
+			entity = new ResponseEntity<>(questionWithAnswerList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//markMockTest
+	
+	@ResponseBody
+	@RequestMapping(value="/getNowGradeList/{tno}", method=RequestMethod.POST)
+	public ResponseEntity<List<NowGradeVO>> getNowGradeList(HttpServletRequest req, @PathVariable int tno) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		ResponseEntity<List<NowGradeVO>> entity = null;
+		
+		List<String> subjectList = questionService.selectOnlySubject(tno);
+		List<NowGradeVO> nowList = new ArrayList<>();
+		
+		for (String s : subjectList) {
+			NowGradeVO now = nowService.selectOneNowGradeLatest(tno, s, user);
+			nowList.add(now);
+		}
+		
+		try {
+			entity = new ResponseEntity<>(nowList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
 }

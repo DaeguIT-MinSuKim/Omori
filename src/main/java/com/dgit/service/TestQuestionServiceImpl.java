@@ -5,13 +5,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dgit.domain.ImageVO;
+import com.dgit.domain.SelectedAnswerVO;
+import com.dgit.domain.TestExampleVO;
+import com.dgit.domain.TestNameVO;
 import com.dgit.domain.TestQuestionVO;
+import com.dgit.persistence.ImageDao;
+import com.dgit.persistence.SelectedAnswerDao;
+import com.dgit.persistence.TestExampleDao;
+import com.dgit.persistence.TestNameDao;
 import com.dgit.persistence.TestQuestionDao;
 
 @Service
 public class TestQuestionServiceImpl implements TestQuestionService {
 	@Autowired
 	private TestQuestionDao dao;
+	@Autowired
+	private SelectedAnswerDao answerDao;
+	@Autowired
+	private TestNameDao nameDao;
+	@Autowired
+	private ImageDao imageDao;
+	@Autowired
+	private TestExampleDao exampleDao;
 
 	@Override
 	public List<TestQuestionVO> selectAllTestQuestionForMock(int tno) throws Exception {
@@ -32,10 +48,42 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	public TestQuestionVO selectOneTestQuestionByTqno(int tq_no) throws Exception {
 		return dao.selectOneTestQuestionByTqno(tq_no);
 	}
+
+	@Override
+	public int selectCountBySubject(int tno, String tq_subject) throws Exception {
+		return dao.selectCountBySubject(tno, tq_subject);
+	}
 	
 	@Override
 	public void insertTestQuestion(TestQuestionVO vo) throws Exception {
 		dao.insertTestQuestion(vo);
+	}
+
+	@Override
+	public List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception {
+		List<TestQuestionVO> questionList = dao.selectAllTestQuestionForMock(tno);
+		TestNameVO testName = nameDao.selectOneTestName(tno);
+		
+		for(int i = 0; i < questionList.size(); i++){
+			TestQuestionVO que = questionList.get(i);
+			int no = que.getTq_no();
+			
+			SelectedAnswerVO answer =  answerDao.selectOneAnswerByTqno(no, uid);
+			que.setAnswer(answer);
+			que.setTestName(testName);
+			
+			List<TestExampleVO> exampleList = exampleDao.selectAllTestExampleByTqNo(no);
+			que.setExampleList(exampleList);
+			
+			List<ImageVO> imageList = imageDao.selectImageByTqNo(no);
+			que.setImageList(imageList);
+		}
+		return questionList;
+	}
+
+	@Override
+	public List<String> selectOnlySubject(int tno) throws Exception {
+		return dao.selectOnlySubject(tno);
 	}
 
 }

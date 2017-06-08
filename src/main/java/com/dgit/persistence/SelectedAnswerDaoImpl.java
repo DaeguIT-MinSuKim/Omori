@@ -1,6 +1,8 @@
 package com.dgit.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,11 @@ public class SelectedAnswerDaoImpl implements SelectedAnswerDao{
 	private static final String namespace = "com.dgit.mapper.SelectedAnswerMapper";
 
 	@Override
-	public List<SelectedAnswerVO> selectAllAnswerByTnoDate(SelectedAnswerVO vo) throws Exception {
-		return session.selectList(namespace + ".selectAllAnswerByTnoDate", vo);
+	public SelectedAnswerVO selectOneAnswerByTqno(int tq_no, String uid) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("tq_no", tq_no);
+		map.put("uid", uid);
+		return session.selectOne(namespace + ".selectOneAnswerByTqno", map);
 	}
 
 	@Override
