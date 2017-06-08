@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.NoteMapper">
+	<resultMap id="NoteResult" type="NoteVO" >
+		<id property="note_no" column="note_no" />
+		<result property="user.uid" column="uid" />
+		<result property="testName.tno" column="tno" />
+		<result property="question.tq_no" column="tq_no" />
+		<result property="note_content" column="note_content" />
+		<result property="note_memo" column="note_memo" />
+		<result property="note_date" column="note_date" />
+	</resultMap>
+	
+	<insert id="insertNote">
+		insert into note(uid, tno, tq_no, note_content, note_memo, note_date) 
+		values(#{user.uid}, #{testName.tno}, #{question.tq_no}, #{note_content}, #{note_memo}, #{note_date});
+	</insert>
+	
+	<select id="selectAllNoteByTno" resultType="NoteVO" resultMap="NoteResult">
+		select * from note 
+		where uid = #{uid}
+			and tno = #{tno} 
+		order by tq_no
+	</select>
+	
+	<select id="selectOneNoteByTnoTqno"  resultType="NoteVO" resultMap="NoteResult">
+		select * from note 
+		where uid = #{uid} 
+			and tno = #{tno} 
+			and tq_no = #{tq_no}
+		order by note_date desc limit 1
+	</select>
+	
+	<update id="updateNote">
+		update note 
+		set note_content = #{note_content}, 
+			note_memo = #{note_memo},
+			note_date = #{note_date}
+		where note_no = #{note_no}
+	</update>
+	
+	<delete id="deleteNote">
+		delete from note
+		where note_no = #{note_no}
+	</delete>
+</mapper>
