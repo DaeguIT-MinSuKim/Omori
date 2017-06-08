@@ -1,7 +1,7 @@
--- 국자기출문제은행
+-- 오모리
 DROP SCHEMA IF EXISTS omori;
 
--- 국자기출문제은행
+-- 오모리
 CREATE SCHEMA omori;
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -72,7 +72,7 @@ CREATE TABLE omori.testquestion (
 	tq_subject_no INTEGER      NULL,     -- 과목번호
 	tq_small_no   INTEGER      NOT NULL, -- 작은번호
 	tq_question   TEXT         NOT NULL, -- 문제
-	tq_answer     INTEGER 	   NOT NULL, -- 정답
+	tq_answer     INTEGER      NOT NULL, -- 정답
 	tq_per        INTEGER      NULL      -- 오답율
 );
 
@@ -105,7 +105,7 @@ ALTER TABLE omori.testname
 
 -- 성적
 CREATE TABLE omori.grade (
-	g_no	     INTEGER      NOT NULL, -- 성적번호
+	g_no         INTEGER      NOT NULL, -- 성적번호
 	uid          VARCHAR(50)  NOT NULL, -- 아이디
 	tno          INTEGER      NOT NULL, -- 자격증번호
 	grade        INTEGER      NOT NULL, -- 점수
@@ -144,11 +144,12 @@ ALTER TABLE omori.user
 
 -- 사용자가 선택한 답
 CREATE TABLE omori.selected_answer (
-	sa_no     INTEGER      NOT NULL, -- 선택한답번호
-	tq_no     INTEGER      NULL,     -- 문제번호
-	uid       VARCHAR(50)  NULL,     -- 아이디
-	sa_answer INTEGER      NULL,     -- 선택한답
-	sa_date   VARCHAR(50)  NULL      -- 시험친날짜
+	sa_no     INTEGER     NOT NULL, -- 선택한답번호
+	tno       INTEGER     NULL,     -- 자격증번호
+	uid       VARCHAR(50) NULL,     -- 아이디
+	tq_no     INTEGER     NULL,     -- 문제번호
+	sa_answer INTEGER     NULL,     -- 선택한답
+	sa_date   VARCHAR(50) NULL      -- 시험친날짜
 );
 
 -- 사용자가 선택한 답
@@ -183,7 +184,7 @@ ALTER TABLE omori.most_test
 		FOREIGN KEY (
 			uid -- 아이디
 		)
-		REFERENCES gookja_gichul_bank.user ( -- 사용자
+		REFERENCES omori.user ( -- 사용자
 			uid -- 아이디
 		)on delete cascade on update cascade;
 
@@ -287,6 +288,18 @@ ALTER TABLE omori.selected_answer
 			uid -- 아이디
 		)on delete cascade on update cascade;
 
+-- 사용자가 선택한 답
+ALTER TABLE omori.selected_answer
+	ADD CONSTRAINT FK_testname_TO_selected_answer -- 자격증이름 -> 사용자가 선택한 답
+		FOREIGN KEY (
+			tno -- 자격증번호
+		)
+		REFERENCES omori.testname ( -- 자격증이름
+			tno -- 자격증번호
+		)on delete cascade on update cascade;
+		
+		
+
 -- ----------------------------------------------------------------------------------------
 use omori;
 
@@ -296,14 +309,14 @@ insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
 
-LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori\\DataFiles\\testname.txt" INTO TABLE testname 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
 update testname set tno = 1 where tno = 7;
 select * from testname order by tname;
 delete from testname;
 
-LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 values(1, '데이터베이스', 1, 1, '문제1', '1', '10');
@@ -325,7 +338,7 @@ select * from image where tq_no = 1 order by tq_no;
 select * from image;
 delete from image;
 
-LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori\\DataFiles\\testexample.txt" INTO TABLE testexample 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample.txt" INTO TABLE testexample 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testexample(tq_no, te_small_no, te_content) values(1, 1, '문제1번의 예시1');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 2, '문제1번의 예시2');
@@ -341,8 +354,10 @@ delete from testexample;
 alter table testexample auto_increment = 1;
 
 
-insert into selected_answer(tq_no, uid, sa_answer, sa_date) values(1, 'test1', 1, '2017-05-31');
-insert into selected_answer(tq_no, uid, sa_answer, sa_date) values(1, 'test2', 2, '2017-05-31');
+insert into selected_answer(tno, tq_no, uid, sa_answer, sa_date) values(1, 5, 'test1', 1, '2017-05-31');
+insert into selected_answer(tno, tq_no, uid, sa_answer, sa_date) values(1, 'test2', 2, '2017-05-31');
+-- 자격증번호 1에 대해 'test1'이 2017-05-31날 선택한 답
+select * from selected_answer where tno = 1 and sa_date='2017-05-31' and uid = 'test1' order by tq_no;
 -- 문제 1번에 대해 2017-05-31일 test1유저가 선택한 답
 select * from selected_answer where tq_no = 1 and sa_date = '2017-05-31' and uid='test1' order by sa_no desc limit 1;
 -- 문제 1번에 대해 2017-05-31일 test2유저가 선택한 답과 정답이 일치하는지 확인

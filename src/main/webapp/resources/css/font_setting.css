@@ -19,3 +19,8 @@
 	font-family: "210HaetsalB";
 	src: url(../fonts/210HaetsalB.woff) format("woff");
 }
+
+@font-face{
+	font-family: "digital-7";
+	src: url(../fonts/digital-7.woff) format("woff");
+}

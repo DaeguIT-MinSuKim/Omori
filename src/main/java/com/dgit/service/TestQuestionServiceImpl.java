@@ -29,7 +29,13 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	}
 
 	@Override
+	public TestQuestionVO selectOneTestQuestionByTqno(int tq_no) throws Exception {
+		return dao.selectOneTestQuestionByTqno(tq_no);
+	}
+	
+	@Override
 	public void insertTestQuestion(TestQuestionVO vo) throws Exception {
 		dao.insertTestQuestion(vo);
 	}
+
 }

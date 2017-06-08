@@ -110,6 +110,9 @@
 	color:#CC0000 !important;
 	font-weight:bold;
 }
+.changeColor{
+	color:#ff0000 !important;
+}
 
 /* .omr-box */
 .omr-box .table{
@@ -119,15 +122,22 @@
 .omr-box .table td{
 	width:25px;
 	text-align:center;
-	padding:7px 5px;
+	font-size:14px;
+	padding:3px 5px;
 	border:1px solid #999;
 }
 .omr-box .table td a{
 	color:#333;
 }
-.omr-box .table td:FIRST-CHILD{
+.omr-box .table tr.num td{
 	color:#303030;
 	font-weight: bold;
+}
+.omr-box .table tr.answer td{
+	font-size:18px;
+	font-family:"digital-7";
+	height:30px;
+	color:#cc0000;
 }
 .omr-box #time-zone, #btnSendAnswer{
 	color:#303030;
@@ -138,15 +148,12 @@
 .omr-box #time-zone{
 	color:#ff3333;
 }
-.omr-box .omr02, .omr03, .omr04, .omr05{
-	display: none;
-}
 
+/* 로딩 이미지 */
 .table, .omr-box{
 	display:none;
 }
 
-/* 로딩 이미지 */
 .loading-box{
 	display:none;
 }
@@ -222,25 +229,15 @@
 					</table>
 				</div>
 				<div class="omr-box">
-					<table class="table">
-						<tr>
-							<td colspan="5" id="time-zone">00 : 00 : 00</td>
-						</tr>
-						<!-- <tr class="num">
-							<td>1</td>
-							<td>2</td>
-							<td>3</td>
-							<td>4</td>
-							<td>5</td>
-						</tr>
-						<tr class="answer">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr> -->
-					</table>
+					<!-- form영역 -->
+					<form action="${pageContext.request.contextPath}/mock_test/test_result" method="post" id="formSendAnswer">
+						<input type="hidden" name="tno" value="${testName.tno}" />
+						<table class="table">
+							<tr>
+								<td colspan="5" id="time-zone">00 : 00 : 00</td>
+							</tr>
+						</table>
+					</form>
 				</div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
@@ -274,6 +271,60 @@
 		getQuestionAndExampleByTno();
 		clickPagingButton();
 		clickEachExampleButton();
+		
+		/* 답안제출버튼클릭했을 때 */
+		$(document).on("click", "td#btnSendAnswer a", function(e){
+			e.preventDefault();
+			
+			var emptyCheck = true;
+			
+			$(".omr-box tr.answer td").each(function(i, obj){
+				//답을 선택하지 않았으면 input에는 -1이 들어가도록 함
+				if($(obj).find("span").html() == ""){
+					$(obj).find("input[name='sa_answer']").val(-1);
+					
+					$(".omr-box tr.num td").each(function(j, element){
+						if($(obj).attr("tqno") == $(element).attr("tqno")){
+							$(element).addClass("changeColor");
+						}
+					});
+					
+					emptyCheck = false;
+				}
+			});
+			
+			if(!emptyCheck){
+				swal({
+					title:"남은 문제가 있습니다",
+					text:"답안을 제출하시겠습니까?",
+					showCancelButton:true,
+					cancelButtonText: "아니오",
+					confirmButtonText: "네",
+					closeOnConfirm:false
+				}, function(isConfirm){
+					if(isConfirm){
+						$("#formSendAnswer").submit();
+					}else{
+						
+					}
+				});
+			}else{
+				swal({
+					title:"답안을 제출하시겠습니까?",
+					showCancelButton:true,
+					cancelButtonText: "아니오",
+					confirmButtonText: "네",
+					closeOnConfirm:false
+				}, function(isConfirm){
+					if(isConfirm){
+						
+					}else{
+						
+					}
+				});
+			}
+			
+		});
 	});
 	
 	/* getQuestionAndExampleByTno : ajax로 문제 리스트 받아오기 */
@@ -282,12 +333,54 @@
 			url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
 			type:"post",
 			success:function(result){
+				setTimer(result[0].testName.tname);
 				makeTags(result);
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다.");
 			}
 		});
+	}
+	
+	/* 타이머 설정 함수 */
+	function setTimer(tname){
+		if(tname.indexOf("정보처리기사") != -1){
+			var hour = 2;
+			var minute = 30;
+			var second = 00;
+			$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour ) + " : "
+												+ ((minute < 10) ? '0'+minute : minute ) + " : "
+												+ ((second < 10) ? '0'+second : second ));
+			
+			var timer;
+			timer = setInterval(function() {
+				second--;
+				if(second < 0){
+					second = 59;
+					minute--;
+				}
+				if(minute < 0){
+					minute = 59;
+					hour--;
+				}
+				
+				$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour )+ " : " + ((minute < 10) ? '0'+minute : minute ) + " : " + ((second < 10) ? '0'+second : second ));
+				
+				if(hour == 0 && minute == 0 && second == 0){
+					clearInterval(timer);
+					swal({
+						title:"시간이 종료되었습니다",
+						text:"계속 푸시겠습니까 ?",
+						showCancelButton:true,
+						cancelButtonText: "아니오",
+						confirmButtonText: "네",
+						closeOnConfirm:false
+					},function(isConfirm){
+						/* 아니오를 클릭하면 답안 제출 */
+					});
+				}
+			}, 1000);
+		}
 	}
 	
 	/* makeTags : 테이블 만드는 함수 */
@@ -374,38 +467,56 @@
 			}
 			
 			//omr
-			/* var $table_omr = $(".omr-box .table");
-			var $tr_omr = $("<tr>");
-			$tr_omr.attr("tqno", obj.tq_no);
-			$tr_omr.append("<td>"+obj.tq_small_no+"</td>");
-			
-			for(var j=0; j<exampleList.length; j++){
-				var example = exampleList[j];
-				
-				$tr_omr.append("<td>"+example.te_small_no+"</td>");
+			var $table_omr = $(".omr-box .table");
+			var $tr_num = $("<tr class='num'>");
+			var $tr_answer = $("<tr class='answer'>");
+			if(i % 5 == 0){
+				$table_omr.append($tr_num);
+				$table_omr.append($tr_answer);	
 			}
-			if(i < 20){
-				$tr_omr.addClass("omr01");
-			}else if(i < 40){
-				$tr_omr.addClass("omr02");
-			}else if(i < 60){
-				$tr_omr.addClass("omr03");
-			}else if(i < 80){
-				$tr_omr.addClass("omr04");
-			}else if(i < 100){
-				$tr_omr.addClass("omr05");
+			if(i == result.length - 1){
+				$table_omr.append("<tr><td colspan='5' id='btnSendAnswer'><a href=''>답안 제출</a></td></tr>");
 			}
-			$table_omr.append($tr_omr);
-			
-			if(i == result.length-1){
-				var $tr_sendAnswer = $("<tr>");
-				$tr_sendAnswer.html("<td colspan='5' id='btnSendAnswer'><a href=''>답안 제출</a></td>");
-				$tr_sendAnswer.addClass("omr05");
-				$table_omr.append($tr_sendAnswer);		
-			} */
 			
 		}//end of for
 		
+		//omr
+		for(var i = 0; i < result.length; i++){
+			var obj = result[i];
+			var index = 0;
+			
+			if(i < 5){ index = 0; }
+			else if(i < 10){ index = 1; }
+			else if(i < 15){ index = 2; }
+			else if(i < 20){ index = 3; }
+			else if(i < 25){ index = 4; }
+			else if(i < 30){ index = 5; }
+			else if(i < 35){ index = 6; }
+			else if(i < 40){ index = 7; }
+			else if(i < 45){ index = 8; }
+			else if(i < 50){ index = 9; }
+			else if(i < 55){ index = 10; }
+			else if(i < 60){ index = 11; }
+			else if(i < 65){ index = 12; }
+			else if(i < 70){ index = 13; }
+			else if(i < 75){ index = 14; }
+			else if(i < 80){ index = 15; }
+			else if(i < 85){ index = 16; }
+			else if(i < 90){ index = 17; }
+			else if(i < 95){ index = 18; }
+			else if(i < 100){ index = 19; }
+			
+			var $tr_num = $(".omr-box .table").find("tr.num").eq(index);
+			var $tr_answer = $(".omr-box .table").find("tr.answer").eq(index);
+			
+			$tr_num.append("<td tqno='"+obj.tq_no+"'>"+obj.tq_small_no+"</td>");
+			
+			var $td = $("<td tqno='"+obj.tq_no+"'>");
+			$td.append("<span></span>");
+			$td.append("<input type='hidden' name='sa_answer'/>");
+			$td.append("<input type='hidden' name='tq_no' value='"+obj.tq_no+"'/>");
+			$tr_answer.append($td);
+		}
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
@@ -425,32 +536,18 @@
 			$(".first-table").css("display", "none");
 			$(".added-table").css("display", "none");
 			$(".added-table").eq(index-1).css("display", "table-row");
+			
 			index++;
+			
 			$("td#paging").find("#count").html(index);
-			
-			$(".omr01, .omr02, .omr03, .omr04, .omr05").css("display", "none");
-			if(index < 3){
-				$(".omr01").css("display","table-row");
-			}else if(index < 5){
-				$(".omr02").css("display","table-row");
-			}else if(index < 7){
-				$(".omr03").css("display","table-row");
-			}else if(index < 9){
-				$(".omr04").css("display","table-row");	
-			}else{
-				$(".omr05").css("display","table-row");
-			}
-			
-			console.log(index);
 		});
 		
 		$("#prev").click(function(){
 			if(index == 1){
 				return;
 			}
-			index--;
 			
-			console.log(index);
+			index--;
 			
 			$("td#paging").find("#count").html(index);
 			$(".added-table").css("display", "none");
@@ -459,19 +556,6 @@
 				$(".first-table").css("display", "table-row");
 			}else{
 				$(".added-table").eq(index-2).css("display", "table-row");
-			}
-			
-			$(".omr01, .omr02, .omr03, .omr04, .omr05").css("display", "none");
-			if(index < 3){
-				$(".omr01").css("display","table-row");
-			}else if(index < 5){
-				$(".omr02").css("display","table-row");
-			}else if(index < 7){
-				$(".omr03").css("display","table-row");
-			}else if(index < 9){
-				$(".omr04").css("display","table-row");	
-			}else{
-				$(".omr05").css("display","table-row");
 			}
 		});
 	}
@@ -491,13 +575,15 @@
 			
 			var tesmallno = $(this).parent().parent(".example").attr("tesmallno");
 			
-			$(".omr-box .table tr").each(function(i, obj){
+			$(".omr-box .table tr.answer td").each(function(i, obj){
 				if( $(obj).attr("tqno") == tqno ){
-					$(obj).find("td").removeClass("answer-selected");
-					$(obj).find("td").css("background", "none");
-					
-					$(obj).find("td").eq(tesmallno).addClass("answer-selected");
-					$(obj).find("td").eq(tesmallno).css("background","#fff");
+					$(obj).find("span").html(tesmallno);
+					$(obj).find("input[name='sa_answer']").val(tesmallno);
+				}
+			});
+			$(".omr-box .table tr.num td").each(function(i, obj){
+				if( $(obj).attr("tqno") == tqno ){
+					$(obj).removeClass("changeColor");
 				}
 			});
 

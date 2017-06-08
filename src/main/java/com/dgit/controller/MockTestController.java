@@ -1,6 +1,8 @@
 package com.dgit.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
 import com.dgit.domain.TestQuestionVO;
@@ -73,9 +76,33 @@ public class MockTestController {
 		}
 		
 		model.addAttribute("testName", testName);
-		model.addAttribute("questionList", questionList);
 		return "mock_test/start_test";
-	}//mockTestGET
+	}//startTestGet
+	
+	@RequestMapping(value="/test_result", method=RequestMethod.POST)
+	public String testResultPost(HttpServletRequest req, int tno, int[] tq_no, int[] sa_answer, Model model) throws Exception{
+		logger.info("testResult Post......................");
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(new Date());
+		
+		for(int i = 0; i < tq_no.length; i++){
+			SelectedAnswerVO answer = new SelectedAnswerVO();
+			TestQuestionVO question = questionService.selectOneTestQuestionByTqno(tq_no[i]);
+			
+			answer.setTestName(testName);
+			answer.setQuestion(question);
+			answer.setUser(user);
+			answer.setSa_date(date);
+		}
+		
+		model.addAttribute("tq_noList", tq_no);
+		model.addAttribute("sa_answerList", sa_answer);
+		return "mock_test/test_result";
+	}//testResultPost
 	
 	@ResponseBody
 	@RequestMapping(value="/latestTestName", method=RequestMethod.POST)

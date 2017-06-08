@@ -34,11 +34,14 @@ public class TestQuestionDaoImpl implements TestQuestionDao{
 		paramMap.put("tq_small_no", tq_small_no);
 		return session.selectOne(namespace + ".selectOneTestQuestion", paramMap);
 	}
+	
+	@Override
+	public TestQuestionVO selectOneTestQuestionByTqno(int tq_no) throws Exception {
+		return session.selectOne(namespace + ".selectOneTestQuestionByTqno", tq_no);
+	}
 
 	@Override
 	public void insertTestQuestion(TestQuestionVO vo) throws Exception {
 		session.insert(namespace+".insertTestQuestion", vo);
 	}
-
-
 }

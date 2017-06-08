@@ -34,6 +34,11 @@
 			and tq_small_no = #{tq_small_no}
 	</select>
 	
+	<select id="selectOneTestQuestionByTqno" resultType="TestQuestionVO" resultMap="TestQuestionResult">
+		select * from testquestion
+		where tq_no = #{tq_no}
+	</select>
+	
 	<insert id="insertTestQuestion">
 		insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 		values(#{testName.tno}, #{tq_subject}, #{tq_subject_no}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);

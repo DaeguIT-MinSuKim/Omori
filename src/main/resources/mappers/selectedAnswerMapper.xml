@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.dgit.mapper.SelectedAnswerMapper">
+	<resultMap id="AnswerResult" type="SelectedAnswerVO" >
+		<id property="sa_no" column="sa_no" />
+		<result property="testName.tno" column="tno" />
+		<result property="question.tq_no" column="tq_no" />
+		<result property="user.uid" column="uid" />
+		<result property="sa_answer" column="sa_answer" />
+		<result property="sa_date" column="sa_date" />
+	</resultMap>
+
+	<select id="selectAllAnswerByTnoDate" resultType="SelectedAnswerVO" resultMap="AnswerResult">
+		select * from selected_answer
+		where tno = #{testName.tno}
+			and sa_date= #{sa_date} 
+			and uid = #{user.uid}
+		order by tq_no;
+	</select>
+	
+	<insert id="insertSelectedAnswer">
+		insert into selected_answer(tno, tq_no, uid, sa_answer, sa_date) 
+		values(#{testName.tno}, #{question.tq_no}, #{user.uid}, #{sa_answer}, #{sa_date});
+	</insert>
+</mapper>
