@@ -281,6 +281,29 @@
 		
 		markMockTest();
 		clickPagingButton();
+		
+		/* 성적 저장 버튼 클릭 */
+		$(document).on("click", "#btnSaveGrade", function(e){
+			e.preventDefault();
+			
+			swal({
+				title:"성적 통계를 위해 저장할까요?",
+				showCancelButton:true,
+				cancelButtonText: "아니오",
+				confirmButtonText: "네",
+				closeOnConfirm:false
+			}, function(isConfirm){
+				if(isConfirm){
+					/* $p_saveGrade.attr("grade", count);
+					$p_saveGrade.attr("lowSubject", lowSubject);
+					$p_saveGrade.attr("highSubject", highSubject);
+					$p_saveGrade.attr("lowGrade", lowGrade);
+					$p_saveGrade.attr("highGrade", highGrade); */
+				}else{
+					
+				}
+			});
+		});
 	});
 	
 	/* markMockTest : 채점을 하기위해 받아오는 TestQuestionList */
@@ -299,6 +322,7 @@
 		});
 	}
 	
+	/* 방금 푼 모의고사 성적을 가져옴 */
 	function getNowGradeList(){
 		$.ajax({
 			url:"${pageContext.request.contextPath}/mock_test/getNowGradeList/"+tno,
@@ -473,7 +497,7 @@
 			var $td = $("<td tqno='"+obj.tq_no+"'>").html(obj.tq_answer);
 			$td.append("<span></span>");
 			$tr_answer.append($td);
-		}
+		}//end of for
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
@@ -485,6 +509,10 @@
 		var maxCount = 0; //전채 개수
 		var count = 0; //맞은 개수
 		var sum = 0; //총점
+		var lowSubject = ""; //낮은 점수 과목
+		var highSubject = ""; //높은 점수 과목 
+		var lowGrade = result[0].nowgrade; //낮은 점수 과목의 점수
+		var highGrade = result[0].nowgrade; //높은 점수 과목의 점수
 		
 		for(var i = 0; i < result.length; i++){
 			var obj = result[i];
@@ -493,31 +521,49 @@
 			count += obj.nowgrade;
 			sum += obj.nowgrade;
 			
+			//과목별 맞은 개수
 			var $td_markResult = $(".table").find("td#markResult");
 			var $p_nowGrade = $("<p>");
 			$p_nowGrade.html("<span class='markSubjectName'>"+obj.tq_subject+"<span class='markNowGrade'>"+obj.nowgrade+" / "+obj.ng_count);
-			
 			$td_markResult.append($p_nowGrade);
 			
-			if(i == result.length-1){
-				var passCheck = "합격";
-				var minGrade = 0;
-				
-				if(tname.indexOf("정보처리기사") >= 0){
-					minGrade = 60;
-					sum = sum * 1;
+			if(i > 0){
+				if(lowGrade > obj.nowgrade){
+					lowGrade = obj.nowgrade;
+					lowSubject = obj.tq_subject;
 				}
-				if(sum < minGrade){
-					passCheck = "불합격";
+				if(highGrade < obj.nowgrade){
+					highGrade = obj.nowgrade;
+					highSubject = obj.tq_subject;
 				}
-				
-				var $p_result = $("<p id='lastResult'>");
-				$p_result.html("총점 : " + sum + " / " + minGrade + " (맞은 개수 : "+ count +" / "+ maxCount +") <span>"+passCheck+"</span>");
-				$td_markResult.append($p_result);
 			}
 		}//end of for
 		
 		var $td_markResult = $(".table").find("td#markResult");
+		
+		//최종 점수 및 맞은 개수
+		var passCheck = "합격";
+		var minGrade = 0;
+		if(tname.indexOf("정보처리기사") >= 0){
+			minGrade = 60;
+			sum = sum * 1;
+		}
+		if(sum < minGrade){
+			passCheck = "불합격";
+		}
+		var $p_result = $("<p id='lastResult'>");
+		$p_result.html("총점 : " + sum + " / " + minGrade + " (맞은 개수 : "+ count +" / "+ maxCount +") <span>"+passCheck+"</span>");
+		$td_markResult.append($p_result);
+		
+		//성적 저장 버튼
+		var $p_saveGrade = $("<p class='save-grade-box'>").html("<button id='btnSaveGrade'>성적 저장하기");
+		$p_saveGrade.attr("grade", count);
+		$p_saveGrade.attr("lowSubject", lowSubject);
+		$p_saveGrade.attr("highSubject", highSubject);
+		$p_saveGrade.attr("lowGrade", lowGrade);
+		$p_saveGrade.attr("highGrade", highGrade);
+		
+		$td_markResult.append($p_saveGrade);
 	}
 	
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */

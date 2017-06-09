@@ -1,5 +1,7 @@
 package com.dgit.domain;
 
+import java.util.Date;
+
 public class GradeVO {
 	private int g_no;
 	private UserVO user;
@@ -9,7 +11,7 @@ public class GradeVO {
 	private int g_low_grade;
 	private String g_high;
 	private int g_high_grade;
-	private String g_date;
+	private Date g_date;
 	
 	public int getG_no() {
 		return g_no;
@@ -59,10 +61,11 @@ public class GradeVO {
 	public void setG_high_grade(int g_high_grade) {
 		this.g_high_grade = g_high_grade;
 	}
-	public String getG_date() {
+	public Date getG_date() {
 		return g_date;
 	}
-	public void setG_date(String g_date) {
+	public void setG_date(Date g_date) {
 		this.g_date = g_date;
 	}
+	
 }

@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.NoteVO;
 import com.dgit.domain.NowGradeVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
@@ -19,6 +20,7 @@ import com.dgit.domain.TestQuestionVO;
 import com.dgit.domain.UserVO;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
+import com.dgit.service.NoteService;
 import com.dgit.service.NowGradeService;
 import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
@@ -42,6 +44,8 @@ public class TestServiceTest {
 	private SelectedAnswerService answerService;
 	@Inject
 	private NowGradeService nowGradeService;
+	@Inject
+	private NoteService noteService;
 	
 	/*......................*/
 	/*TestName				*/
@@ -216,5 +220,66 @@ public class TestServiceTest {
 //		user.setUid("test1");
 //		
 //		nowGradeService.insertNowGrade(1, user);
+	}
+	
+	/*......................*/
+	/*Note					*/
+	/*......................*/
+//	@Test
+	public void insertNote() throws Exception{
+		NoteVO vo = new NoteVO();
+		
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		
+		TestNameVO testName = nameService.selectOneTestName(1);
+		vo.setTestName(testName);
+		
+		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
+		vo.setQuestion(question);
+		
+		vo.setNote_content("문제 1번의 오답풀이 내용");
+		vo.setNote_memo("내가 왜 이걸 틀렸을까");
+		vo.setNote_date(new Date());
+		
+		noteService.insertNote(vo);
+	}
+	
+//	@Test
+	public void selectAllNoteByTno() throws Exception{
+		noteService.selectAllNoteByTno("test1", 1);
+	}
+	
+//	@Test
+	public void selectOneNoteByTnoTqno() throws Exception{
+		NoteVO vo = new NoteVO();
+		
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		
+		TestNameVO testName = nameService.selectOneTestName(1);
+		vo.setTestName(testName);
+		
+		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
+		vo.setQuestion(question);
+		
+		noteService.selectOneNoteByTnoTqno("test1", 1, 1);
+	}
+	
+//	@Test
+	public void updateNote() throws Exception{
+		NoteVO vo = noteService.selectOneNoteByTnoTqno("test1", 1, 1);
+		vo.setNote_content("123123");
+		vo.setNote_memo("123456789");
+		vo.setNote_date(new Date());
+		
+		noteService.updateNote(vo);
+	}
+	
+//	@Test
+	public void deleteNote() throws Exception{
+		noteService.deleteNote(1);
 	}
 }
