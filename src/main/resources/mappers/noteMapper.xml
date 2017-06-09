@@ -7,8 +7,8 @@
 	<resultMap id="NoteResult" type="NoteVO" >
 		<id property="note_no" column="note_no" />
 		<result property="user.uid" column="uid" />
-		<result property="testName.tno" column="tno" />
-		<result property="question.tq_no" column="tq_no" />
+		<result property="tno" column="tno" />
+		<result property="tq_no" column="tq_no" />
 		<result property="note_content" column="note_content" />
 		<result property="note_memo" column="note_memo" />
 		<result property="note_date" column="note_date" />
@@ -16,7 +16,7 @@
 	
 	<insert id="insertNote">
 		insert into note(uid, tno, tq_no, note_content, note_memo, note_date) 
-		values(#{user.uid}, #{testName.tno}, #{question.tq_no}, #{note_content}, #{note_memo}, #{note_date});
+		values(#{user.uid}, #{tno}, #{tq_no}, #{note_content}, #{note_memo}, #{note_date});
 	</insert>
 	
 	<select id="selectAllNoteByTno" resultType="NoteVO" resultMap="NoteResult">

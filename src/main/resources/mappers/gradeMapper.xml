@@ -9,16 +9,19 @@
 		<result property="user.uid" column="uid" />
 		<result property="testName.tno" column="tno" />
 		<result property="grade" column="grade" />
-		<result property="g_low" column="g_low" />
-		<result property="g_low_grade" column="g_low_grade" />
-		<result property="g_high" column="g_high" />
-		<result property="g_high_grade" column="g_high_grade" />
+		<result property="g_subject" column="g_subject" />
+		<result property="g_subject_grade" column="g_subject_grade" />
 		<result property="g_date" column="g_date" />
 	</resultMap>
 
-	<select id="selectAllGradeLatest" resultType="GradeVO" resultMap="GradeResult">
+	<select id="selectOneGradeLatest" resultType="GradeVO" resultMap="GradeResult">
 		select * from grade 
 		where uid = #{uid} 
-		order by g_date desc
+		order by g_date desc, g_no desc limit 1
 	</select>
+	
+	<insert id="insertGrade">
+		insert into grade(uid, tno, grade, g_subject, g_subject_grade, g_date) 
+		values(#{user.uid}, #{testName.tno}, #{grade}, #{g_subject}, #{g_subject_grade}, #{g_date});
+	</insert>
 </mapper>

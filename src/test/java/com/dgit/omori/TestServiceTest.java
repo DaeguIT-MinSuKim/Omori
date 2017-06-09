@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
 import com.dgit.domain.NoteVO;
 import com.dgit.domain.NowGradeVO;
@@ -170,7 +171,27 @@ public class TestServiceTest {
 	/*......................*/
 //	@Test
 	public void selectAllGradeLatest() throws Exception{
-		gradeService.selectAllGradeLatest("test1");
+//		gradeService.selectAllGradeLatest("test1");
+	}
+	
+//	@Test
+	public void inserGrade() throws Exception{
+		GradeVO vo = new GradeVO();
+		
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		
+		TestNameVO testName = new TestNameVO();
+		testName.setTno(1);
+		vo.setTestName(testName);
+		
+		vo.setGrade(70);
+		vo.setG_subject("데이터베이스");
+		vo.setG_subject_grade(17);
+		vo.setG_date("2017-06-09");
+		
+//		gradeService.insertGrade(vo);
 	}
 	
 	/*......................*/
@@ -233,12 +254,6 @@ public class TestServiceTest {
 		user.setUid("test1");
 		vo.setUser(user);
 		
-		TestNameVO testName = nameService.selectOneTestName(1);
-		vo.setTestName(testName);
-		
-		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
-		vo.setQuestion(question);
-		
 		vo.setNote_content("문제 1번의 오답풀이 내용");
 		vo.setNote_memo("내가 왜 이걸 틀렸을까");
 		vo.setNote_date(new Date());
@@ -258,12 +273,6 @@ public class TestServiceTest {
 		UserVO user = new UserVO();
 		user.setUid("test1");
 		vo.setUser(user);
-		
-		TestNameVO testName = nameService.selectOneTestName(1);
-		vo.setTestName(testName);
-		
-		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
-		vo.setQuestion(question);
 		
 		noteService.selectOneNoteByTnoTqno("test1", 1, 1);
 	}

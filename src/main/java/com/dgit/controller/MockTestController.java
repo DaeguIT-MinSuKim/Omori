@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.NoteVO;
 import com.dgit.domain.NowGradeVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
@@ -31,6 +32,7 @@ import com.dgit.domain.UserVO;
 import com.dgit.interceptor.LoginInterceptor;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
+import com.dgit.service.NoteService;
 import com.dgit.service.NowGradeService;
 import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
@@ -114,12 +116,12 @@ public class MockTestController {
 		
 		ResponseEntity<TestNameVO> entity = null;
 		
-		List<GradeVO> gradeList = gradeService.selectAllGradeLatest(user.getUid());
+		GradeVO grade = gradeService.selectOneGradeLatest(user.getUid());
 		
 		try {
 			TestNameVO testName = null;
-			if (gradeList.size() > 0) {
-				int tno = gradeList.get(0).getTestName().getTno();
+			if (grade != null) {
+				int tno = grade.getTestName().getTno();
 				testName = nameService.selectOneTestName(tno);
 			}
 			
@@ -204,4 +206,5 @@ public class MockTestController {
 		
 		return entity;
 	}
+
 }

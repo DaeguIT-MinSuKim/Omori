@@ -5,5 +5,6 @@ import java.util.List;
 import com.dgit.domain.GradeVO;
 
 public interface GradeDao {
-	List<GradeVO> selectAllGradeLatest(String uid) throws Exception;
+	GradeVO selectOneGradeLatest(String uid) throws Exception;
+	void insertGrade(GradeVO vo) throws Exception;
 }

@@ -16,7 +16,12 @@ public class GradeDaoImpl implements GradeDao{
 	private static final String namespace = "com.dgit.mapper.GradeMapper";
 	
 	@Override
-	public List<GradeVO> selectAllGradeLatest(String uid) throws Exception {
-		return session.selectList(namespace + ".selectAllGradeLatest", uid);
+	public void insertGrade(GradeVO vo) throws Exception {
+		session.insert(namespace + ".insertGrade", vo);
+	}
+
+	@Override
+	public GradeVO selectOneGradeLatest(String uid) throws Exception {
+		return session.selectOne(namespace + ".selectOneGradeLatest", uid);
 	}
 }

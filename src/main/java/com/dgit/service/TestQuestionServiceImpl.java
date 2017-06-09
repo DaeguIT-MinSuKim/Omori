@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dgit.domain.ImageVO;
+import com.dgit.domain.NoteVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
 import com.dgit.domain.TestQuestionVO;
 import com.dgit.persistence.ImageDao;
+import com.dgit.persistence.NoteDao;
 import com.dgit.persistence.SelectedAnswerDao;
 import com.dgit.persistence.TestExampleDao;
 import com.dgit.persistence.TestNameDao;
@@ -28,6 +30,8 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	private ImageDao imageDao;
 	@Autowired
 	private TestExampleDao exampleDao;
+	@Autowired
+	private NoteDao noteDao;
 
 	@Override
 	public List<TestQuestionVO> selectAllTestQuestionForMock(int tno) throws Exception {
@@ -66,17 +70,28 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 		
 		for(int i = 0; i < questionList.size(); i++){
 			TestQuestionVO que = questionList.get(i);
-			int no = que.getTq_no();
+			int tqno = que.getTq_no();
 			
-			SelectedAnswerVO answer =  answerDao.selectOneAnswerByTqno(no, uid);
+			SelectedAnswerVO answer =  answerDao.selectOneAnswerByTqno(tqno, uid);
 			que.setAnswer(answer);
 			que.setTestName(testName);
 			
-			List<TestExampleVO> exampleList = exampleDao.selectAllTestExampleByTqNo(no);
+			List<TestExampleVO> exampleList = exampleDao.selectAllTestExampleByTqNo(tqno);
 			que.setExampleList(exampleList);
 			
-			List<ImageVO> imageList = imageDao.selectImageByTqNo(no);
+			List<ImageVO> imageList = imageDao.selectImageByTqNo(tqno);
 			que.setImageList(imageList);
+			
+			NoteVO note = noteDao.selectOneNoteByTnoTqno(uid, tno, tqno);
+			if(note != null){
+				note.setNote_content(note.getNote_content().replaceAll("`", "'"));
+				note.setNote_content(note.getNote_content().replaceAll("\r\n", "<br>"));
+				note.setNote_content(note.getNote_content().replaceAll("u0020", "&nbsp;"));
+				note.setNote_memo(note.getNote_memo().replaceAll("`", "'"));
+				note.setNote_memo(note.getNote_memo().replaceAll("\r\n", "<br>"));
+				note.setNote_memo(note.getNote_memo().replaceAll("u0020", "&nbsp;"));
+			}
+			que.setNote(note);
 		}
 		return questionList;
 	}

@@ -5,8 +5,8 @@ import java.util.Date;
 public class NoteVO {
 	private int note_no;
 	private UserVO user;
-	private TestNameVO testName;
-	private TestQuestionVO question;
+	private int tno;
+	private int tq_no;
 	private String note_content;
 	private String note_memo;
 	private Date note_date;
@@ -23,17 +23,17 @@ public class NoteVO {
 	public void setUser(UserVO user) {
 		this.user = user;
 	}
-	public TestNameVO getTestName() {
-		return testName;
+	public int getTno() {
+		return tno;
 	}
-	public void setTestName(TestNameVO testName) {
-		this.testName = testName;
+	public void setTno(int tno) {
+		this.tno = tno;
 	}
-	public TestQuestionVO getQuestion() {
-		return question;
+	public int getTq_no() {
+		return tq_no;
 	}
-	public void setQuestion(TestQuestionVO question) {
-		this.question = question;
+	public void setTq_no(int tq_no) {
+		this.tq_no = tq_no;
 	}
 	public String getNote_content() {
 		return note_content;
@@ -53,4 +53,6 @@ public class NoteVO {
 	public void setNote_date(Date note_date) {
 		this.note_date = note_date;
 	}
+	
+	
 }

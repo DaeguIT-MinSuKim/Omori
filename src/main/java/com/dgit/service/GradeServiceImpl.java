@@ -14,8 +14,15 @@ public class GradeServiceImpl implements GradeService{
 	private GradeDao dao;
 
 	@Override
-	public List<GradeVO> selectAllGradeLatest(String uid) throws Exception {
-		return dao.selectAllGradeLatest(uid);
+	public void insertGrade(List<GradeVO> gradeList) throws Exception {
+		for (GradeVO vo : gradeList) {
+			dao.insertGrade(vo);
+		}
+	}
+
+	@Override
+	public GradeVO selectOneGradeLatest(String uid) throws Exception {
+		return dao.selectOneGradeLatest(uid);
 	}
 
 }

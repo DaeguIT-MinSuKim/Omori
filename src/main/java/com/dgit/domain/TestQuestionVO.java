@@ -14,6 +14,7 @@ public class TestQuestionVO {
 	private List<TestExampleVO> exampleList;
 	private List<ImageVO> imageList;
 	private SelectedAnswerVO answer;
+	private NoteVO note;
 	
 	public int getTq_no() {
 		return tq_no;
@@ -81,6 +82,11 @@ public class TestQuestionVO {
 	public void setAnswer(SelectedAnswerVO answer) {
 		this.answer = answer;
 	}
-	
+	public NoteVO getNote() {
+		return note;
+	}
+	public void setNote(NoteVO note) {
+		this.note = note;
+	}
 	
 }

@@ -43,7 +43,7 @@ ALTER TABLE omori.most_test
 	MODIFY COLUMN ms_no INTEGER NOT NULL AUTO_INCREMENT;
 
 -- 오답노트
-CREATE TABLE omori.notes (
+CREATE TABLE omori.note (
 	note_no      INTEGER     NOT NULL, -- 오답노트번호
 	uid          VARCHAR(50) NOT NULL, -- 아이디
 	tno          INTEGER     NOT NULL, -- 자격증번호
@@ -54,13 +54,13 @@ CREATE TABLE omori.notes (
 );
 
 -- 오답노트
-ALTER TABLE omori.notes
-	ADD CONSTRAINT PK_notes -- 오답노트 기본키
+ALTER TABLE omori.note
+	ADD CONSTRAINT PK_note -- 오답노트 기본키
 		PRIMARY KEY (
 			note_no -- 오답노트번호
 		);
 
-ALTER TABLE omori.notes
+ALTER TABLE omori.note
 	MODIFY COLUMN note_no INTEGER NOT NULL AUTO_INCREMENT;
 
 -- 문제
@@ -104,15 +104,13 @@ ALTER TABLE omori.testname
 
 -- 성적
 CREATE TABLE omori.grade (
-	g_no         INTEGER      NOT NULL, -- 성적번호
-	uid          VARCHAR(50)  NOT NULL, -- 아이디
-	tno          INTEGER      NOT NULL, -- 자격증번호
-	grade        INTEGER      NOT NULL, -- 점수
-	g_low        VARCHAR(100) NULL,     -- 점수가낮은과목
-	g_low_grade  INTEGER      NULL,     -- 점수가낮은과목의점수
-	g_high       VARCHAR(100) NULL,     -- 점수가높은과목
-	g_high_grade INTEGER      NULL,     -- 점수가높은과목의점수
-	g_date       VARCHAR(50)  NOT NULL  -- 시험친날짜
+	g_no        	INTEGER      NOT NULL, -- 성적번호
+	uid         	VARCHAR(50)  NOT NULL, -- 아이디
+	tno         	INTEGER      NOT NULL, -- 자격증번호
+	grade       	INTEGER      NOT NULL, -- 총점
+	g_subject       VARCHAR(100) NOT NULL, -- 과목
+	g_subject_grade INTEGER      NOT NULL, -- 과목의 점수
+	g_date      	VARCHAR(30)  NOT NULL  -- 시험친날짜
 );
 
 -- 성적
@@ -221,7 +219,7 @@ ALTER TABLE omori.most_test
 		)on delete cascade on update cascade;
 
 -- 오답노트
-ALTER TABLE omori.notes
+ALTER TABLE omori.note
 	ADD CONSTRAINT FK_user_TO_notes -- 사용자 -> 오답노트
 		FOREIGN KEY (
 			uid -- 아이디
@@ -231,8 +229,8 @@ ALTER TABLE omori.notes
 		)on delete cascade on update cascade;
 
 -- 오답노트
-ALTER TABLE omori.notes
-	ADD CONSTRAINT FK_testname_TO_notes -- 자격증이름 -> 오답노트
+ALTER TABLE omori.note
+	ADD CONSTRAINT FK_testname_TO_note -- 자격증이름 -> 오답노트
 		FOREIGN KEY (
 			tno -- 자격증번호
 		)
@@ -241,8 +239,8 @@ ALTER TABLE omori.notes
 		)on delete cascade on update cascade;
 
 -- 오답노트
-ALTER TABLE omori.notes
-	ADD CONSTRAINT FK_testquestion_TO_notes -- 문제 -> 오답노트
+ALTER TABLE omori.note
+	ADD CONSTRAINT FK_testquestion_TO_note -- 문제 -> 오답노트
 		FOREIGN KEY (
 			tq_no -- 문제번호
 		)
@@ -386,16 +384,31 @@ select * from nowgrade;
 delete from nowgrade;
 alter table nowgrade auto_increment = 1;
 
-insert into grade(uid, tno, grade, g_low, g_low_grade, g_high, g_high_grade, g_date) values('test1', 1, 75, '데이터베이스', 17, '전자계산기구조', 18, '2017-05-31');
+insert into grade(uid, tno, grade, g_subject, g_subject_grade, g_date) values('test1', 1, 75, '데이터베이스', 17, '2017-06-09');
 insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 67, '데이터베이스', '전자계산기구조', '2017-05-30');
 insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 80, '데이터베이스', '전자계산기구조', '2017-05-31');
 insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 80, '데이터베이스', '전자계산기구조', '2017-05-31');
--- 'test1'이 최근 본 시험 성적 순으로 정렬
-select * from grade where uid = 'test2' order by g_date desc, g_no desc;
-select * from grade;
+-- 'test1'이 최근에 본 시험
+select * from grade where uid = 'test1' order by g_date desc, g_no desc limit 1;
+-- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
+select * from grade where uid = 'test1' and tno = 1 and g_date = '2017-06-09-15-22';
+-- 'test1'이 과목별로 성적을 열람할 때
+select * from grade where uid = 'test1' and tno = 1 and g_subject = '데이터베이스' order by g_date desc;
+select * from grade; 
+delete from grade;
+alter table grade auto_increment = 1;
 
-insert into notes(uid, tno, tq_no, sa_no, note_content, note_memo, note_date) values('test1', 1, 1, 1, '오답풀이', null, now());
-select * from notes;
+insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());
+-- test1유저가 tno가 1인 문제에 오답풀이를 달은 모든 리스트
+select * from note where uid='test1' and tno = 1 order by tq_no;
+-- test1유저가 tno가 1이고 tq_no가 1인 문제에 오답풀이단 것을 가져옴 
+select * from note where uid='test1' and tno=1 and tq_no = 1 order by note_date desc limit 1;
+-- 수정
+update note set note_content = '11', note_memo = '11' where note_no = 1;
+-- 삭제
+delete from note where note_no = 1;
+alter table note auto_increment = 1;
+select * from note;
 
 insert into most_test(uid, tno, ms_count) values('test1', 1, 5);
 select * from most_test;
