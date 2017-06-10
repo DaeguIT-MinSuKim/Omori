@@ -42,7 +42,13 @@ public class GradeController {
 		
 		List<TestNameVO> testNameList = gradeService.selectTnoForGrade(user.getUid());
 		
-		model.addAttribute("testNameList", testNameList);
+		if (testNameList != null) {
+			model.addAttribute("testNameList", testNameList);
+			model.addAttribute("testName", testNameList.get(0));
+
+			List<String> dateList = gradeService.selectGradeDate(user.getUid(), testNameList.get(0).getTno());
+			model.addAttribute("dateList", dateList);
+		}
 		
 		return "grade/grade_home";
 	}//gradeGET
@@ -91,4 +97,66 @@ public class GradeController {
 		
 		return entity;
 	}//insertGradePost
+	
+	@ResponseBody
+	@RequestMapping(value="/getGradeGroupByTno", method=RequestMethod.POST)
+	public ResponseEntity<List<GradeVO>> getGradeGroupByTno(HttpServletRequest req, int tno){
+		ResponseEntity<List<GradeVO>> entity = null;
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		try {
+			TestNameVO testName = nameService.selectOneTestName(tno);
+			List<GradeVO> gradeList = gradeService.selectAllGradeGroupByTno(user.getUid(), tno);
+			for (GradeVO gradeVO : gradeList) {
+				gradeVO.setTestName(testName);
+			}
+			
+			entity = new ResponseEntity<>(gradeList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getGradeGroupByTno
+	
+	@ResponseBody
+	@RequestMapping(value="/getDateList", method=RequestMethod.POST)
+	public ResponseEntity<List<String>> getDateList(HttpServletRequest req, int tno){
+		ResponseEntity<List<String>> entity = null;
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		try {
+			List<String> dateList = gradeService.selectGradeDate(user.getUid(), tno);
+			
+			entity = new ResponseEntity<>(dateList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getDateList
+	
+	@ResponseBody
+	@RequestMapping(value="/getGradeListByDate", method=RequestMethod.POST)
+	public ResponseEntity<List<GradeVO>> getGradeListByDate(HttpServletRequest req, int tno, String g_date){
+		ResponseEntity<List<GradeVO>> entity = null;
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		try {
+			TestNameVO testName = nameService.selectOneTestName(tno);
+			List<GradeVO> list = gradeService.selectListGradeByDate(user.getUid(), tno, g_date);
+			for (GradeVO gradeVO : list) {
+				gradeVO.setTestName(testName);
+			}
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getGradeListByDate
 }

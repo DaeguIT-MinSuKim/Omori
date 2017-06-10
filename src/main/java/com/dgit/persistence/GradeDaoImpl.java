@@ -38,10 +38,27 @@ public class GradeDaoImpl implements GradeDao{
 	}
 
 	@Override
-	public List<GradeVO> selectAllGradeByTno(String uid, int tno) throws Exception {
+	public List<GradeVO> selectAllGradeGroupByTno(String uid, int tno) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("uid", uid);
 		map.put("tno", tno);
-		return session.selectList(namespace+".selectAllGradeByTno", map);
+		return session.selectList(namespace+".selectAllGradeGroupByTno", map);
+	}
+
+	@Override
+	public List<String> selectGradeDate(String uid, int tno) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("uid", uid);
+		map.put("tno", tno);
+		return session.selectList(namespace+".selectGradeDate", map);
+	}
+
+	@Override
+	public List<GradeVO> selectListGradeByDate(String uid, int tno, String g_date) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		map.put("uid", uid);
+		map.put("tno", tno);
+		map.put("g_date", g_date);
+		return session.selectList(namespace+".selectListGradeByDate", map);
 	}
 }

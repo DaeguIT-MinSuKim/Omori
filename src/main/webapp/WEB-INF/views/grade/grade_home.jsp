@@ -74,19 +74,16 @@
 /* -----------
 	성적 그래프 
 -------------- */
-.graph-box{
+.graph-box-bar, .graph-box-pie, .graph-box-line{
 	background-color:rgba(0,0,0,0.2);
 	width:70%;
 	margin:20px auto;
 	padding:20px;
 }
-.graph-box #canvasTest {
+.graph-box-bar #canvasTest {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
-}
-.graph-bx #pie{
-	size: 300;
 }
 </style>
 
@@ -96,7 +93,7 @@
 		<div class="width1400">
 			<h1>성적통계</h1>
 			<div class="inner-section">
-				<c:if test="${testNameList.size() < 1}">
+				<c:if test="${empty testNameList}">
 					<script>
 						swal({
 							title:"저장된 모의고사 성적이 없습니다!",
@@ -107,8 +104,8 @@
 						});
 					</script>
 				</c:if>
-				<c:if test="${testNameList.size() > 0}">
-					<div class="graph-box">
+				<c:if test="${!empty testNameList}">
+					<div class="graph-box-bar">
 						<select name="" id="selectTestName">
 							<c:forEach var="obj" items="${testNameList }">
 								<option value="${obj.tno}">${obj.tname}</option>
@@ -117,10 +114,20 @@
 						<h3 id='testName'>정보처리산업기사1회</h3>
 						<canvas id="canvasTest"></canvas>
 					</div>
-					<div class="graph-box">
+					<div class="graph-box-pie">
+						<select name="" id="selectTestNameForDate">
+							<c:forEach var="obj" items="${testNameList }">
+								<option value="${obj.tno}">${obj.tname}</option>
+							</c:forEach>
+						</select>
+						<select name="" id="selectDate">
+							<c:forEach var="obj" items="${dateList }">
+								<option value="${obj}">${obj}</option>
+							</c:forEach>
+						</select>
 						<canvas id="pie"></canvas>
 					</div>
-					<div class="graph-box">
+					<div class="graph-box-line">
 						<h3>데이터베이스</h3>
 						<canvas id="canvasSubject"></canvas>
 					</div>
@@ -129,7 +136,7 @@
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
+						<div class="loading-message">성적 불러오는 중</div>
 						<div class="load-3">
 							<div class="line"></div>
 							<div class="line"></div>
@@ -144,23 +151,31 @@
 </div>
 
 <script>
-	var color = Chart.helpers.color;
-	var barChartData = {
-	    labels: ["January", "February", "March", "April", "May", "June", "July"],
-	    datasets: [{
-	    	label:"점수",
-	        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-	        borderColor: window.chartColors.red,
-	        borderWidth: 2,
-	        data: [ 10, 20, 30, 40, 55, 60, 81 ]
-	    }, ]
-	};
+	var tno = ${testName.tno};
+	var g_date = "${dateList.get(0)}";
+	var color = Chart.helpers.color; //차트에 사용될 color
 	
-	/* ------------
-		pie chart
-	--------------- */
-	var config = {
-			type: 'pie',
+	$(function(){
+		getGradeGroupByTno(tno);
+		getGradeListByDate(tno, g_date);
+		
+		/* 날짜를 가져오기 위한 기출문제 선택 */
+		$(document).on("change", "#selectTestNameForDate", function(){
+			var tnoForDate = $(this).val();
+			getDateList(tnoForDate);
+		});
+		/* 가져온 날짜 선택 */
+		$(document).on("change", "#selectDate", function(){
+			var sendDate = $(this).val();
+			var sendTno = $("#selectTestNameForDate").find("option:selected").val();
+		});
+        
+        /* ----------
+			파이 차트
+		-------------*/
+	    /* var ctx3 = document.getElementById("pie").getContext("2d");
+	    window.myPie = new Chart(ctx3, {
+	    	type: 'pie',
 			data: {
 				datasets: [{
 					data: [10,20,30,40,50],
@@ -182,48 +197,13 @@
 				]
 			},
 	        options: {
-	            responsive: true
+	            responsive: true,
+	            maintainAspectRatio : false
 	        }
-	   };
-	
-	$(function(){
-		/* ----------
-			시험별 차트
-		-------------*/
-		Chart.defaults.global.defaultFontColor = "#eee";
-		var ctx = document.getElementById("canvasTest").getContext("2d");
-        window.myBar = new Chart(ctx, {
-            type: 'bar',
-            data: barChartData,
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: false,
-                },
-                scales: {
-                    yAxes : [{
-                        ticks : {
-                            max : 100,    
-                            min : 0,
-                        },
-                        gridLines:{
-                    		color:"#999999"
-                    	}
-                    }],
-                    xAxes : [{
-                    	gridLines:{
-                    		color:"#999999"
-                    	}
-                    }]
-                },
-            }
-        });
+	    }); */
         
         /* ----------
-			과목별 차트
+			라인 차트
 		-------------*/
         var ctx2 = document.getElementById("canvasSubject").getContext("2d");
         window.myLine = new Chart(ctx2, {
@@ -277,15 +257,123 @@
                 }
             }
         });
-        
-        
-        /* 파이차트 */
-        var ctx3 = document.getElementById("pie").getContext("2d");
-        window.myPie = new Chart(ctx3, {
-        	type: 'pie',
+	});
+	
+	/* -----------------
+		기출문제 점수 가져오기
+	--------------------*/
+	function getGradeGroupByTno(tno){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/grade/getGradeGroupByTno",
+			type:"post",
+			data:{tno:tno},
+			success:function(result){
+				console.log("getGradeGroupByTno...................");
+				makeBarChart(result)
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다");
+			}
+		});
+	}
+	/* ----------
+		막대 차트
+	-------------*/
+	function makeBarChart(result){
+		var maxSize = result.length < 5 ? result.length : 5;
+		var date = new Array();
+		var grade = new Array();
+		var testName = result[0].testName.tname;
+		
+		for(var i=0; i<result.length; i++){
+			var obj = result[i];
+			date[i] = obj.g_date;
+			grade[i] = obj.grade;
+		}
+		
+		var barChartData = {
+				labels:date,
+				datasets:[{
+					label:testName,
+					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.red,
+					borderWidth: 2,
+					data:grade
+				}]
+		}
+		
+		Chart.defaults.global.defaultFontColor = "#eee";
+		var ctx = document.getElementById("canvasTest").getContext("2d");
+		ctx.width = ctx.width;
+        window.myBar = new Chart(ctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false,
+                },
+                scales: {
+                    yAxes : [{
+                        ticks : {
+                            max : 100,    
+                            min : 0,
+                        },
+                        gridLines:{
+                    		color:"#999999"
+                    	}
+                    }],
+                    xAxes : [{
+                    	gridLines:{
+                    		color:"#999999"
+                    	}
+                    }]
+                },
+            }
+        });
+	}
+	/* ----------------------------------------
+		getGradeListByDate : 날짜에 따른 점수 가져오기
+	------------------------------------------- */
+	function getGradeListByDate(tno, g_date){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/grade/getGradeListByDate",
+			type:"post",
+			data:{tno:tno, g_date:g_date},
+			success:function(result){
+				console.log("getGradeByDate..............");
+				console.log(result);
+				makePieChart(result);
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다");
+			}
+		});
+	}
+	/* ----------
+		파이 차트
+	-------------*/
+	function makePieChart(result){
+		var data = new Array();
+		var subject = new Array();
+		
+		for(var i=0; i<result.length; i++){
+			var obj = result[i];
+			data[i] = obj.g_subject_grade;
+			subject[i] = obj.g_subject;
+		}
+		
+		var ctx = document.getElementById("pie").getContext("2d");
+		ctx.clearRect(0,0, ctx.width, ctx.height);
+		
+		var myPie = new Chart(ctx, {
+	    	type: 'pie',
 			data: {
 				datasets: [{
-					data: [10,20,30,40,50],
+					data: data,
 					backgroundColor: [
 						window.chartColors.red,
 						window.chartColors.orange,
@@ -295,18 +383,45 @@
 					],
 					label: 'Dataset 1'
 				}],
-				labels: [
-					"Red",
-	                "Orange",
-	                "Yellow",
-	                "Green",
-	                "Blue"
-				]
+				labels: subject
 			},
 	        options: {
 	            responsive: true,
 	            maintainAspectRatio : false
 	        }
-        });
-	})
+	    });
+		
+		window.myPie = myPie;
+	}
+	/* --------------------------------
+		getDateList : 저장된 리스트 가져오기 
+	----------------------------------- */
+	function getDateList(tnoForDate){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/grade/getDateList",
+			type:"post",
+			data:{tno:tnoForDate},
+			success:function(result){
+				console.log("getDateList............................");
+				makeSelectOption(result);
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다");
+			}
+		});
+	}
+	function makeSelectOption(result){
+		$("#selectDate").html("");
+		
+		for(var i=0; i<result.length; i++){
+			var obj = result[i];
+			var $option = $("<option value='"+obj+"'>").html(obj);
+			$("#selectDate").append($option);
+		}
+		
+		var sendDate = result[0];
+		var sendTno = $("#selectTestNameForDate").find("option:selected").val();
+		
+		getGradeListByDate(sendTno, sendDate);
+	}
 </script>

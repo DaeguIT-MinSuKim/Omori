@@ -47,6 +47,8 @@
 			}, function(isConfirm){
 				if(isConfirm){
 					latestTestName();
+				}else{
+					location.replace("${pageContext.request.contextPath}/mock_test/start_test/"+1);
 				}
 			});
 		});//end of ready
@@ -109,56 +111,12 @@
 				}, function(isConfirm){
 					if(tno != 0){
 						location.replace("${pageContext.request.contextPath}/mock_test/start_test/"+tno);
-						//$("#testName").html(tname);
-						//setTimer(tname); /* 타이머설정 */
-						//getMockTest(tno); /* 태그생성 */
-						//swal.close();
 					}else{
 						return false;
 					}
 				});
 			});
 		}//setTestNameList
-		
-		function setTimer(tname){
-			if(tname.indexOf("정보처리기사") != -1){
-				var hour = 2;
-				var minute = 30;
-				var second = 00;
-				$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour ) + " : "
-													+ ((minute < 10) ? '0'+minute : minute ) + " : "
-													+ ((second < 10) ? '0'+second : second ));
-				
-				var timer;
-				timer = setInterval(function() {
-					second--;
-					if(second < 0){
-						second = 59;
-						minute--;
-					}
-					if(minute < 0){
-						minute = 59;
-						hour--;
-					}
-					
-					$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour )+ " : " + ((minute < 10) ? '0'+minute : minute ) + " : " + ((second < 10) ? '0'+second : second ));
-					
-					if(hour == 0 && minute == 0 && second == 0){
-						clearInterval(timer);
-						swal({
-							title:"시간이 종료되었습니다",
-							text:"계속 푸시겠습니까 ?",
-							showCancelButton:true,
-							cancelButtonText: "아니오",
-							confirmButtonText: "네",
-							closeOnConfirm:false
-						},function(isConfirm){
-							/* 아니오를 클릭하면 답안 제출 */
-						});
-					}
-				}, 1000);
-			}
-		}//setTimer
 	</script>
 </c:if>
 

@@ -194,6 +194,13 @@ public class TestServiceTest {
 //		gradeService.insertGrade(vo);
 	}
 	
+	@Test
+	public void selectOneGradeByDate() throws Exception{
+		gradeService.selectListGradeByDate("test1", 2, "2017-06-11 2:6");
+		
+	}
+	
+	
 	/*......................*/
 	/*SelectedAnswer		*/
 	/*......................*/

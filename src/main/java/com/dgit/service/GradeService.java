@@ -9,6 +9,8 @@ public interface GradeService {
 	GradeVO selectOneGradeLatest(String uid) throws Exception;
 	int countSaveNo() throws Exception;
 	List<TestNameVO> selectTnoForGrade(String uid) throws Exception;
-	List<GradeVO> selectAllGradeByTno(String uid, int tno) throws Exception;
+	List<GradeVO> selectAllGradeGroupByTno(String uid, int tno) throws Exception;
+	List<String> selectGradeDate(String uid, int tno) throws Exception; 
+	List<GradeVO> selectListGradeByDate(String uid, int tno, String g_date) throws Exception;
 	void insertGrade(List<GradeVO> gradeList) throws Exception;
 }

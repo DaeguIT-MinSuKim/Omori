@@ -38,16 +38,35 @@ public class GradeServiceImpl implements GradeService{
 	public List<TestNameVO> selectTnoForGrade(String uid) throws Exception {
 		List<Integer> list =  dao.selectTnoForGrade(uid);
 		List<TestNameVO> testNameList = new ArrayList<>();
-		for (Integer i : list) {
-			TestNameVO testName = nameService.selectOneTestName(i);
-			testNameList.add(testName);
+		if(list.get(0) != null){
+			for (Integer i : list) {
+				TestNameVO testName = nameService.selectOneTestName(i);
+				testNameList.add(testName);
+			}
+			return testNameList;
+		}else{
+			return null;
 		}
-		return testNameList;
 	}
 
 	@Override
-	public List<GradeVO> selectAllGradeByTno(String uid, int tno) throws Exception {
-		return dao.selectAllGradeByTno(uid, tno);
+	public List<GradeVO> selectAllGradeGroupByTno(String uid, int tno) throws Exception {
+		List<GradeVO> list =  dao.selectAllGradeGroupByTno(uid, tno);
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		for (GradeVO vo : list) {
+			vo.setTestName(testName);
+		}
+		return list;
+	}
+
+	@Override
+	public List<String> selectGradeDate(String uid, int tno) throws Exception {
+		return dao.selectGradeDate(uid, tno);
+	}
+
+	@Override
+	public List<GradeVO> selectListGradeByDate(String uid, int tno, String g_date) throws Exception {
+		return dao.selectListGradeByDate(uid, tno, g_date);
 	}
 
 }
