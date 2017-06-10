@@ -104,15 +104,14 @@ ALTER TABLE omori.testname
 
 -- 성적
 CREATE TABLE omori.grade (
-	g_no         INTEGER      NOT NULL, -- 성적번호
-	uid          VARCHAR(50)  NOT NULL, -- 아이디
-	tno          INTEGER      NOT NULL, -- 자격증번호
-	grade        INTEGER      NOT NULL, -- 점수
-	g_low        VARCHAR(100) NOT NULL, -- 점수가낮은과목
-	g_low_grade  INTEGER      NOT NULL, -- 점수가낮은과목의점수
-	g_high       VARCHAR(100) NOT NULL, -- 점수가높은과목
-	g_high_grade INTEGER      NOT NULL, -- 점수가높은과목의점수
-	g_date       TIMESTAMP    NOT NULL  -- 시험친날짜
+	g_no        	INTEGER      NOT NULL, -- 성적번호
+	uid         	VARCHAR(50)  NOT NULL, -- 아이디
+	tno         	INTEGER      NOT NULL, -- 자격증번호
+	g_save_no		INTEGER		 NOT null, -- 성적저장번호
+	grade       	INTEGER      NOT NULL, -- 총점
+	g_subject       VARCHAR(100) NOT NULL, -- 과목
+	g_subject_grade INTEGER      NOT NULL, -- 과목의 점수
+	g_date      	VARCHAR(30)  NOT NULL  -- 시험친날짜
 );
 
 -- 성적
@@ -332,7 +331,7 @@ select distinct tq_subject from testquestion where tno = 1;
 -- 한 과목당 문제 개수
 select count(*) from testquestion where tno = 1 and tq_subject = '데이터베이스'; 
 -- 모의 시험
-select * from testquestion where tno = 1 order by tq_small_no;
+select * from testquestion where tno = 2 order by tq_small_no;
 -- 과목별 시험
 select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
 -- 한문제씩 풀기
@@ -386,13 +385,23 @@ select * from nowgrade;
 delete from nowgrade;
 alter table nowgrade auto_increment = 1;
 
-insert into grade(uid, tno, grade, g_low, g_low_grade, g_high, g_high_grade, g_date) values('test1', 1, 75, '데이터베이스', 17, '전자계산기구조', 18, '2017-05-31');
-insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 67, '데이터베이스', '전자계산기구조', '2017-05-30');
-insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 80, '데이터베이스', '전자계산기구조', '2017-05-31');
-insert into grade(uid, tno, grade, g_low, g_high, g_date) values('test1', 1, 80, '데이터베이스', '전자계산기구조', '2017-05-31');
--- 'test1'이 최근 본 시험 성적 순으로 정렬
-select * from grade where uid = 'test2' order by g_date desc, g_no desc;
-select * from grade;
+insert into grade(uid, tno, g_save_no, grade, g_subject, g_subject_grade, g_date) 
+values('test1', 1, 1, 75, '데이터베이스', 17, '2017-06-09');
+-- 'test1'이 최근에 본 시험
+select * from grade where uid = 'test1' order by g_date desc, g_no desc limit 1;
+-- 'test1'이 시험본 tno만 가져옴
+select distinct tno from grade where uid = 'test1' order by tno;
+-- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
+select * from grade where uid = 'test1' and tno = 2 and g_date = '2017-06-10 19:37';
+-- 'test1'이 한 기출문제의 성적을 가져옴
+select * from grade where uid='test1' and tno = 2 group by g_save_no;
+-- 시험을 저장할 때 한 시험에 부여되는 번호
+select distinct if(count(g_save_no) = 0, 1, g_save_no+1 ) as g_save_no from grade order by g_save_no desc limit 1;
+-- 'test1'이 과목별로 성적을 열람할 때
+select * from grade where uid = 'test1' and tno = 1 and g_subject = '데이터베이스' order by g_date desc;
+
+delete from grade;
+alter table grade auto_increment = 1;
 
 insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());
 -- test1유저가 tno가 1인 문제에 오답풀이를 달은 모든 리스트
@@ -403,8 +412,21 @@ select * from note where uid='test1' and tno=1 and tq_no = 1 order by note_date 
 update note set note_content = '11', note_memo = '11' where note_no = 1;
 -- 삭제
 delete from note where note_no = 1;
-
+alter table note auto_increment = 1;
 select * from note;
 
 insert into most_test(uid, tno, ms_count) values('test1', 1, 5);
 select * from most_test;
+
+create table test(
+	t integer not null,
+	d integer not null
+);
+
+drop table test;
+
+insert into test values(1, 2);
+
+select distinct t+1 from test order by t desc limit 1;
+select count(*) from test;
+select distinct if(count(t) = 0, 1, t+1 ) as c from test order by t desc limit 1;

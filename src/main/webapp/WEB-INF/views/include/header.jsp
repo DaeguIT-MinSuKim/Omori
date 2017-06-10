@@ -54,7 +54,7 @@ $(function(){
 				<li><a href="${pageContext.request.contextPath}/subject_test/subject_test" class="click-event">과목별 시험</a></li>
 				<li><a href="" class="click-event">한 문제씩 풀기</a></li>
 				<li><a href="" class="click-event">오답노트</a></li>
-				<li><a href="" class="click-event">성적 통계</a></li>
+				<li><a href="${pageContext.request.contextPath}/grade/" class="click-event">성적 통계</a></li>
 				<c:if test="${!empty login }">
 					<c:if test="${login.isadmin == true}">
 						<li>

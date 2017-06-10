@@ -8,6 +8,7 @@
 		<id property="g_no" column="g_no" />
 		<result property="user.uid" column="uid" />
 		<result property="testName.tno" column="tno" />
+		<result property="g_save_no" column="g_save_no" />
 		<result property="grade" column="grade" />
 		<result property="g_subject" column="g_subject" />
 		<result property="g_subject_grade" column="g_subject_grade" />
@@ -20,8 +21,28 @@
 		order by g_date desc, g_no desc limit 1
 	</select>
 	
+	<!-- 하나의 시험 성적을 저장할 때 부여되는 번호 -->
+	<select id="countSaveNo" resultType="int">
+		select distinct if(count(g_save_no) = 0, 1, g_save_no+1 ) as g_save_no 
+		from grade 
+		order by g_save_no desc limit 1
+	</select>
+	
+	<select id="selectTnoForGrade" resultType="int" >
+		select distinct tno from grade 
+		where uid = #{uid} 
+		order by tno
+	</select>
+	
+	<select id="selectAllGradeByTno" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid}
+			and tno = #{tno}
+		group by g_save_no
+	</select>
+	
 	<insert id="insertGrade">
-		insert into grade(uid, tno, grade, g_subject, g_subject_grade, g_date) 
-		values(#{user.uid}, #{testName.tno}, #{grade}, #{g_subject}, #{g_subject_grade}, #{g_date});
+		insert into grade(uid, tno, g_save_no, grade, g_subject, g_subject_grade, g_date) 
+		values(#{user.uid}, #{testName.tno}, #{g_save_no}, #{grade}, #{g_subject}, #{g_subject_grade}, #{g_date})
 	</insert>
 </mapper>

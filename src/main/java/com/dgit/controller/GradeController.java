@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +36,17 @@ public class GradeController {
 	@Autowired
 	private TestNameService nameService;
 	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public String gradeGET(HttpServletRequest req, Model model) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		List<TestNameVO> testNameList = gradeService.selectTnoForGrade(user.getUid());
+		
+		model.addAttribute("testNameList", testNameList);
+		
+		return "grade/grade_home";
+	}//gradeGET
+	
 	@ResponseBody
 	@RequestMapping(value="/insertGradePost", method=RequestMethod.POST)
 	public ResponseEntity<String> insertGradePost(HttpServletRequest req, int tno, int grade, String arrSubject, String arrSubjectGrade) throws Exception{
@@ -51,6 +63,8 @@ public class GradeController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd H:m");
 		String date = sdf.format(new Date());
 		
+		int g_save_no = gradeService.countSaveNo();
+		
 		for (int i = 0; i < subjectList.length; i++) {
 			String subject = subjectList[i];
 			int subjectGrade = Integer.parseInt(subjectGradeList[i]);
@@ -58,6 +72,7 @@ public class GradeController {
 			GradeVO vo = new GradeVO();
 			vo.setUser(user);
 			vo.setTestName(testName);
+			vo.setG_save_no(g_save_no);
 			vo.setGrade(grade);
 			vo.setG_subject(subject);
 			vo.setG_subject_grade(subjectGrade);
@@ -75,5 +90,5 @@ public class GradeController {
 		}
 		
 		return entity;
-	}
+	}//insertGradePost
 }

@@ -6,6 +6,7 @@ public class GradeVO {
 	private int g_no;
 	private UserVO user;
 	private TestNameVO testName;
+	private int g_save_no;
 	private int grade;
 	private String g_subject;
 	private int g_subject_grade;
@@ -28,6 +29,12 @@ public class GradeVO {
 	}
 	public void setTestName(TestNameVO testName) {
 		this.testName = testName;
+	}
+	public int getG_save_no() {
+		return g_save_no;
+	}
+	public void setG_save_no(int g_save_no) {
+		this.g_save_no = g_save_no;
 	}
 	public int getGrade() {
 		return grade;
@@ -53,5 +60,6 @@ public class GradeVO {
 	public void setG_date(String g_date) {
 		this.g_date = g_date;
 	}
+	
 	
 }
