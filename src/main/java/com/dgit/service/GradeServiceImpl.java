@@ -38,7 +38,7 @@ public class GradeServiceImpl implements GradeService{
 	public List<TestNameVO> selectTnoForGrade(String uid) throws Exception {
 		List<Integer> list =  dao.selectTnoForGrade(uid);
 		List<TestNameVO> testNameList = new ArrayList<>();
-		if(list.get(0) != null){
+		if(list.size() > 0){
 			for (Integer i : list) {
 				TestNameVO testName = nameService.selectOneTestName(i);
 				testNameList.add(testName);

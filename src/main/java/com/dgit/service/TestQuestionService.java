@@ -1,5 +1,6 @@
 package com.dgit.service;
 
+import java.io.File;
 import java.util.List;
 
 import com.dgit.domain.TestQuestionVO;
@@ -14,5 +15,5 @@ public interface TestQuestionService {
 	int selectCountBySubject(int tno, String tq_subject) throws Exception;
 	void insertTestQuestion(TestQuestionVO vo) throws Exception;
 	
-	List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception;
+	List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception; 
 }

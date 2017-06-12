@@ -1,9 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- alert -->
+<script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
 .section h1, .section label{
 	color:#eee;
+}
+.sweet-alert{
+	width:400px !important;
+	top:40% !important;
+	margin-left: -217px !important;
 }
 .testname-add-box{
 	display:none;
@@ -16,7 +24,52 @@
 	max-width:200px;
 	max-height:200px;
 }
-
+.how-to{
+	background:rgba(0,0,0,0.5);
+	padding:20px;
+}
+.how-to-name img, .how-to-question img, .how-to-example img{
+	float:left;
+	margin-right:12px;
+	width:500px;
+}
+.how-to-name ul, .how-to-question ul{
+	float:right;
+	width:700px;
+}
+.how-to-name ul li, .how-to-question ul li, .how-to-example ul li{
+	margin-bottom:14px;
+	color:#99cccc;
+}
+.how-to-name ul li span, .how-to-question ul li span, .how-to-example ul li span{
+	display:block;
+	margin-left:20px;
+	color:#cc9999;
+}
+li.down-li a{
+	font-weight:bold;
+	font-family: sans-serif;
+}
+li.down-li a:HOVER{
+	text-decoration: underline;
+}
+img.icon-down{
+	width:20px !important;
+}
+.clear{
+	clear:both;
+	width:100%;
+	padding:20px;
+}
+.clear span{
+	font-size:18px;
+	color:#ff6666;
+	display:block;
+	padding-top:20px;
+}
+.upload-file{
+	clear:both;
+}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
@@ -25,7 +78,96 @@
 			<h1>기출문제 등록</h1>
 			<div class="inner-section">
 				<div class="testname-box">
-					<h3>기출문제 선택</h3>
+					<div class="how-to">
+						<h3>기출문제 등록 방법</h3>
+						<div class="how-to-name">
+							<img src="${pageContext.request.contextPath}/resources/images/ex_name.png" alt="" />
+							<ul>
+								<li class='down-li'>
+									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+									<a href="${pageContext.request.contextPath}/admin/downloadExcel/name">testname.xlsx</a>
+								</li>
+								<li>
+									1. 기출문제번호<br />
+									<span>※ 기출문제번호는 기출문문제의 고유번호이기 때문에 모두 상이해야합니다</span>
+								</li>
+								<li>
+									2. 기출문제명 : 기출문제명 - 시행년도 - 회차 순으로 입력해주세요 <br />
+									<span>※  기출문제 목록을 가져올 때 이름순으로 가져오게 됩니다</span>
+								</li>
+								<li>
+									3. 시험날짜 : 시험 시행 날짜
+								</li>
+							</ul>
+						</div>
+						<div class="clear"></div>
+						<div class="how-to-question">
+							<img src="${pageContext.request.contextPath}/resources/images/ex_question.gif" alt="" />
+							<ul>
+								<li class='down-li'>
+									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+									<a href="${pageContext.request.contextPath}/admin/downloadExcel/question">testquestion.xlsx</a>
+								</li>
+								<li>
+									1. 문제고유번호<br />
+									<span>
+										※ 각 문제의 고유번호이기 때문에 모두 상이해야합니다<br />
+										&nbsp;&nbsp;&nbsp;&nbsp;기출문제의 문제를 등록할 때 고유번호의 마지막 번호가 100이었다면 다음 기출문제의 문제의<br /> 
+										&nbsp;&nbsp;&nbsp;&nbsp;고유번호는 101이 됩니다
+									</span>
+								</li>
+								<li>
+									2. 기출문제번호 : 등록하고자 하는 기출문제에 대응하는 기출문제번호
+								</li>
+								<li>
+									3. 과목명 : 기출문제의 과목명
+								</li>
+								<li>
+									4. 문제번호 : 각 문제번호<br />
+									<span>
+										※ 문제고유번호와 다릅니다<br />
+										&nbsp;&nbsp;&nbsp;&nbsp;기출문제의 각 문제의 번호입니다
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="clear"></div>
+						<div class="how-to-example">
+							<img src="${pageContext.request.contextPath}/resources/images/ex_example.png" alt="" />
+							<ul>
+								<li class='down-li'>
+									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+									<a href="${pageContext.request.contextPath}/admin/downloadExcel/example">testexample.xlsx</a>
+								</li>
+								<li>
+									1. 문제고유번호 : 각 문제에 대응하는 문제고유번호
+								</li>
+								<li>
+									2. 보기번호 : 각 문제의 보기 번호
+								</li>
+							</ul>
+						</div>
+						<div class="clear">
+							<span>※ 각 문제에 해당하는 이미지는 문제 등록 후 나오는 리스트에서 등록하시면 됩니다</span>
+						</div>
+					</div>
+					<div class="upload-file">
+						<form action="${pageContext.request.contextPath}/admin/uploadFile" method="post" enctype="multipart/form-data" id="uploadForm">
+							<p>
+								<label for="">기출문제 : </label><input type="file" name='nameFile' id='nameFile'/>
+							</p>
+							<p>
+								<label for="">문제 : </label><input type="file" name='questionFile' id='questionFile'/>
+							</p>
+							<p>
+								<label for="">보기 : </label><input type="file" name='exampleFile' id='exampleFile'/>
+							</p>
+							<p>
+								<button id='btnUpload'>등록</button>
+							</p>
+						</form>
+					</div>
+					
 					<div class="testname-list-box">
 						<label></label>
 						<select id="testNameList"></select>	
@@ -83,7 +225,59 @@
 	</section>
 </div>
 <script>
+
+function check() {
+	var file1 = $("#nameFile").val();
+	var file2 = $("#questionFile").val();
+	var file3 = $("#exampleFile").val();
+	
+	if (file1 == "" || file1 == null
+		|| file2 == "" || file2 == null
+		|| file3 == "" || file3 == null) {
+		swal({
+			title:"파일을 선택해주세요",
+			confirmButtonText: "확인"
+		});
+		return false;
+	} else if ( !checkFileType(file1, file2, file3) ) {
+		swal({
+			title:"엑셀(xlsx) 파일만 업로드 가능합니다",
+			confirmButtonText: "확인"
+		});
+		return false;
+	}
+	
+	swal({
+		title:"기출문제를 등록하시겠습니까?",
+		showCancelButton:true,
+		cancelButtonText: "아니오",
+		confirmButtonText: "네",
+	}, function(isConfirm){
+		if(isConfirm){
+			$("form#uploadForm").submit();
+		}
+	});
+	
+}
+
+function checkFileType(file1, file2, file3) {
+	var format1 = file1.split(".");
+	var format2 = file2.split(".");
+	var format3 = file3.split(".");
+	
+	if (format1.indexOf("xlsx") > -1 && format2.indexOf("xlsx") > -1 && format3.indexOf("xlsx") > -1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 $(function(){
+	$("#btnUpload").click(function(e){
+		e.preventDefault();
+		check();
+	});
+	
 	/* 자격증 리스트 */
 	setTestNameList();
 	

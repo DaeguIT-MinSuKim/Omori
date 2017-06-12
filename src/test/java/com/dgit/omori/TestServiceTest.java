@@ -83,7 +83,6 @@ public class TestServiceTest {
 		name.setTno(1);
 		TestQuestionVO vo = new TestQuestionVO();
 		vo.setTestName(name);
-		vo.setTq_subject_no(1);
 		questionService.selectAllTestQuestionForSubject(vo);
 	}
 	
@@ -104,7 +103,6 @@ public class TestServiceTest {
 		TestQuestionVO vo = new TestQuestionVO();
 		vo.setTestName(name);
 		vo.setTq_subject("데이터베이스");
-		vo.setTq_subject_no(1);
 		vo.setTq_small_no(1);
 		vo.setTq_question("이행적 함수 종속 관계를 의미하는 것은?");
 		vo.setTq_answer(1);
