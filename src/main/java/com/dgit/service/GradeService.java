@@ -12,5 +12,6 @@ public interface GradeService {
 	List<GradeVO> selectAllGradeGroupByTno(String uid, int tno) throws Exception;
 	List<String> selectGradeDate(String uid, int tno) throws Exception; 
 	List<GradeVO> selectListGradeByDate(String uid, int tno, String g_date) throws Exception;
+	List<GradeVO> selectListGradeBySubject(String uid, int tno, String g_subject) throws Exception;
 	void insertGrade(List<GradeVO> gradeList) throws Exception;
 }

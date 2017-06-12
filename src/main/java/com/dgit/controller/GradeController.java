@@ -3,6 +3,7 @@ package com.dgit.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -159,4 +160,27 @@ public class GradeController {
 		
 		return entity;
 	}//getGradeListByDate
+	
+	@ResponseBody
+	@RequestMapping(value="/getGradeListBySubject", method=RequestMethod.POST)
+	public ResponseEntity<List<GradeVO>> getGradeListBySubject(HttpServletRequest req, int tno, String g_subject){
+		ResponseEntity<List<GradeVO>> entity = null;
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		try {
+			TestNameVO testName = nameService.selectOneTestName(tno);
+			List<GradeVO> list = gradeService.selectListGradeBySubject(user.getUid(), tno, g_subject);
+			for (GradeVO gradeVO : list) {
+				gradeVO.setTestName(testName);
+			}
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getGradeListBySubject
+	
 }

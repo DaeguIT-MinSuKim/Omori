@@ -395,18 +395,16 @@ select distinct tno from grade where uid = 'test1' order by tno;
 select distinct g_date from grade where uid = 'test1' and tno = 2 order by g_date desc;
 -- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
 select * from grade where uid = 'test1'and g_date = '2017-06-11 2:6';
-
 -- 'test1'이 한 기출문제의 성적을 가져옴
 select * from grade where uid='test1' and tno = 2 group by g_save_no;
 -- 시험을 저장할 때 한 시험에 부여되는 번호
 select if(max(g_save_no) = 0, 1, max(g_save_no)+1 ) as no from grade;
-
 -- 'test1'이 과목별로 성적을 열람할 때
-select * from grade where uid = 'test1' and tno = 1 and g_subject = '데이터베이스' order by g_date desc;
-select * from grade;
+select * from grade where uid = 'test1' and tno = 2 and g_subject = '데이터베이스' order by g_date desc;
 
 delete from grade;
 alter table grade auto_increment = 1;
+
 
 insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());
 -- test1유저가 tno가 1인 문제에 오답풀이를 달은 모든 리스트

@@ -54,6 +54,14 @@
 			and g_date = #{g_date}
 	</select>
 	
+	<select id="selectListGradeBySubject" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid} 
+			and tno = #{tno} 
+			and g_subject = #{g_subject}
+		order by g_date desc
+	</select>
+	
 	<insert id="insertGrade">
 		insert into grade(uid, tno, g_save_no, grade, g_subject, g_subject_grade, g_date) 
 		values(#{user.uid}, #{testName.tno}, #{g_save_no}, #{grade}, #{g_subject}, #{g_subject_grade}, #{g_date})

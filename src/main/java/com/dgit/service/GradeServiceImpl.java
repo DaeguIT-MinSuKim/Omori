@@ -69,4 +69,9 @@ public class GradeServiceImpl implements GradeService{
 		return dao.selectListGradeByDate(uid, tno, g_date);
 	}
 
+	@Override
+	public List<GradeVO> selectListGradeBySubject(String uid, int tno, String g_subject) throws Exception {
+		return dao.selectListGradeBySubject(uid, tno, g_subject);
+	}
+
 }

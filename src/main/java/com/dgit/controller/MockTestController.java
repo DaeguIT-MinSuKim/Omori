@@ -61,8 +61,17 @@ public class MockTestController {
 	
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String mockTestHomeGET(){
-		logger.info("mockTestHome GET......................");
+	public String mockTestHomeGET(HttpServletRequest req, Model model) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		GradeVO grade = gradeService.selectOneGradeLatest(user.getUid());
+		if(grade != null){
+			TestNameVO testName = nameService.selectOneTestName(grade.getTestName().getTno());
+			model.addAttribute("testName", testName);
+		}
+		
+		List<TestNameVO> testNameList = nameService.selectAllTestName();
+		model.addAttribute("testNameList", testNameList);
 		
 		return "mock_test/mock_test_home";
 	}//mockTestHomeGET
@@ -86,6 +95,25 @@ public class MockTestController {
 		
 		model.addAttribute("testName", testName);
 		return "mock_test/start_test";
+	}//startTestGet
+	
+	@RequestMapping(value="/start_test_admin/{tno}", method=RequestMethod.GET)
+	public String startTestAdminGet(@PathVariable("tno") int tno, Model model) throws Exception{
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
+		
+		for(int i=0; i<questionList.size(); i++){
+			TestQuestionVO question = questionList.get(i);
+			int tq_no = question.getTq_no();
+			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
+			List<ImageVO> imageList = imageServie.selectImageByTqNo(tq_no);
+			
+			question.setExampleList(exampleList);
+			question.setImageList(imageList);
+		}
+		
+		model.addAttribute("testName", testName);
+		return "mock_test/start_test_admin";
 	}//startTestGet
 	
 	@RequestMapping(value="/test_result", method=RequestMethod.POST)

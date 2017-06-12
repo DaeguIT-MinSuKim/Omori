@@ -128,7 +128,14 @@
 						<canvas id="pie"></canvas>
 					</div>
 					<div class="graph-box-line">
-						<h3>데이터베이스</h3>
+						<select name="" id="stringTestName">
+							<c:forEach var="obj" items="${testNameList }">
+								<option value="${obj.tno}">${obj.tname}</option>
+							</c:forEach>
+						</select>
+						<select name="" id="selectSubject">
+							
+						</select>
 						<canvas id="canvasSubject"></canvas>
 					</div>
 				</c:if>
@@ -155,113 +162,76 @@
 	var g_date = "${dateList.get(0)}";
 	var color = Chart.helpers.color; //차트에 사용될 color
 	
+	var $option01 = "<option value='데이터베이스' selected='selected'>데이터베이스</option>"
+							+ "<option value='전자계산기구조'>전자계산기구조</option>"
+							+ "<option value='운영체제'>운영체제</option>"
+							+ "<option value='소프트웨어공학'>소프트웨어공학</option>"
+							+ "<option value='데이터통신'>데이터통신</option>";
+	
 	$(function(){
+		Chart.defaults.global.defaultFontColor = "#eee";
+		
 		getGradeGroupByTno(tno);
 		getGradeListByDate(tno, g_date);
 		
-		/* 날짜를 가져오기 위한 기출문제 선택 */
+		var strTestName = $("#stringTestName").find("option:selected").text();
+		if(strTestName.indexOf("정보처리기사") >= 0){
+			$("#selectSubject").html($option01);
+			
+			var subject = $("#selectSubject").val();
+			getGradeListBySubject(tno, subject);
+		}
+		
+		/* 기출문제 선택(막대차트) */
+		$(document).on("change", "#selectTestName", function(){
+			var sendTno = $(this).val();
+			
+			
+			$(this).parent(".graph-box-bar").slideUp("slow", function(){
+				getGradeGroupByTno(sendTno);
+				
+				$(this).slideDown("slow");
+			});
+		});
+		
+		/* 날짜를 가져오기 위한 기출문제 선택(파이차트) */
 		$(document).on("change", "#selectTestNameForDate", function(){
 			var tnoForDate = $(this).val();
+			
 			getDateList(tnoForDate);
 		});
-		/* 가져온 날짜 선택 */
+		/* 가져온 날짜 선택(파이차트) */
 		$(document).on("change", "#selectDate", function(){
 			var sendDate = $(this).val();
 			var sendTno = $("#selectTestNameForDate").find("option:selected").val();
+			
+			getGradeListByDate(sendTno, sendDate);
 		});
-        
-        /* ----------
-			파이 차트
-		-------------*/
-	    /* var ctx3 = document.getElementById("pie").getContext("2d");
-	    window.myPie = new Chart(ctx3, {
-	    	type: 'pie',
-			data: {
-				datasets: [{
-					data: [10,20,30,40,50],
-					backgroundColor: [
-						window.chartColors.red,
-						window.chartColors.orange,
-						window.chartColors.yellow,
-	                    window.chartColors.green,
-	                    window.chartColors.blue,
-					],
-					label: 'Dataset 1'
-				}],
-				labels: [
-					"Red",
-	                "Orange",
-	                "Yellow",
-	                "Green",
-	                "Blue"
-				]
-			},
-	        options: {
-	            responsive: true,
-	            maintainAspectRatio : false
-	        }
-	    }); */
-        
-        /* ----------
-			라인 차트
-		-------------*/
-        var ctx2 = document.getElementById("canvasSubject").getContext("2d");
-        window.myLine = new Chart(ctx2, {
-        	type: 'line',
-            data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "점수",
-                    backgroundColor: window.chartColors.blue,
-                    borderColor: window.chartColors.blue,
-                    data: [
-                           5,10,15,20,30,60,70
-                    ],
-                    fill: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                title:{
-                    display:false,
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Month'
-                        },
-                        gridLines:{
-                    		color:"#999999"
-                    	}
-                    }],
-                    yAxes: [{
-                        display: true,
-                        ticks : {
-                            max : 100,    
-                            min : 0,
-                        },
-                        gridLines:{
-                    		color:"#999999"
-                    	}
-                    }]
-                }
-            }
-        });
+		
+		/* 기출문제 이름 선택(라인차트) */
+		$(document).on("change", "#stringTestName", function(){
+			var sendTno = $(this).find("option:selected").val();
+
+			var strTestName = $(this).find("option:selected").text();
+			if(strTestName.indexOf("정보처리기사") >= 0){
+				$("#selectSubject").html($option01);
+				
+				var subject = $("#selectSubject").val();
+				getGradeListBySubject(sendTno, subject);
+			}
+		});
+		/* 과목 선택(라인차트) */
+		$(document).on("change", "#selectSubject", function(){
+			var sendTno = $("#stringTestName").find("option:selected").val();
+			var sendSubject = $(this).val();
+			
+			getGradeListBySubject(sendTno, sendSubject);
+		});
 	});
 	
-	/* -----------------
-		기출문제 점수 가져오기
-	--------------------*/
+	/* --------------------------------------
+		getGradeGroupByTno : 기출문제 점수 가져오기
+	----------------------------------------- */
 	function getGradeGroupByTno(tno){
 		$.ajax({
 			url:"${pageContext.request.contextPath}/grade/getGradeGroupByTno",
@@ -269,16 +239,17 @@
 			data:{tno:tno},
 			success:function(result){
 				console.log("getGradeGroupByTno...................");
-				makeBarChart(result)
+				makeBarChart(result);
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다");
 			}
 		});
 	}
-	/* ----------
-		막대 차트
-	-------------*/
+	/* ------------------------
+		makeBarChart : 막대 차트
+	--------------------------- */
+	var myBar;
 	function makeBarChart(result){
 		var maxSize = result.length < 5 ? result.length : 5;
 		var date = new Array();
@@ -302,10 +273,11 @@
 				}]
 		}
 		
-		Chart.defaults.global.defaultFontColor = "#eee";
+		if(window.myBar != null){
+			window.myBar.destroy();
+		}
 		var ctx = document.getElementById("canvasTest").getContext("2d");
-		ctx.width = ctx.width;
-        window.myBar = new Chart(ctx, {
+		window.myBar = new Chart(ctx, {
             type: 'bar',
             data: barChartData,
             options: {
@@ -345,7 +317,6 @@
 			data:{tno:tno, g_date:g_date},
 			success:function(result){
 				console.log("getGradeByDate..............");
-				console.log(result);
 				makePieChart(result);
 			},
 			error:function(e){
@@ -353,9 +324,10 @@
 			}
 		});
 	}
-	/* ----------
-		파이 차트
-	-------------*/
+	/* -----------------------
+		makePieChart : 파이 차트
+	-------------------------- */
+	var myPie;
 	function makePieChart(result){
 		var data = new Array();
 		var subject = new Array();
@@ -366,31 +338,36 @@
 			subject[i] = obj.g_subject;
 		}
 		
-		var ctx = document.getElementById("pie").getContext("2d");
-		ctx.clearRect(0,0, ctx.width, ctx.height);
-		
-		var myPie = new Chart(ctx, {
-	    	type: 'pie',
-			data: {
-				datasets: [{
-					data: data,
-					backgroundColor: [
+		var pieChartData = {
+				labels : subject,
+				datasets:[{
+					data : data,
+					label : 'Dataset 1',
+					backgroundColor : [
 						window.chartColors.red,
 						window.chartColors.orange,
 						window.chartColors.yellow,
-	                    window.chartColors.green,
-	                    window.chartColors.blue,
-					],
-					label: 'Dataset 1'
-				}],
-				labels: subject
-			},
+						window.chartColors.green,
+						window.chartColors.blue,
+					]
+				}]
+		};
+		
+		if(myPie != null){
+			myPie.destroy();
+		}
+		
+		var ctx = document.getElementById("pie").getContext("2d");
+		
+		myPie = new Chart(ctx, {
+	    	type: 'pie',
+			data: pieChartData,
 	        options: {
 	            responsive: true,
 	            maintainAspectRatio : false
 	        }
 	    });
-		
+
 		window.myPie = myPie;
 	}
 	/* --------------------------------
@@ -423,5 +400,93 @@
 		var sendTno = $("#selectTestNameForDate").find("option:selected").val();
 		
 		getGradeListByDate(sendTno, sendDate);
+	}
+	
+	/* -------------------------------------
+		getGradeListBySubject : 과목별 점수 보기
+	---------------------------------------- */
+	function getGradeListBySubject(tno, subject){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/grade/getGradeListBySubject",
+			type:"post",
+			data:{tno:tno, g_subject:subject},
+			success:function(result){
+				makeLineChart(result);
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다.");
+			}
+		});
+	}
+	/* ------------------------
+		makeLineChart : 라인 차트
+	--------------------------- */
+	function makeLineChart(result){
+		var maxSize = result.length > 7 ? 7 : result.length;
+		var grade = new Array();
+		var date = new Array();
+		var label = result[0].g_subject;
+		
+		for(var i=0; i<maxSize; i++){
+			var obj = result[i];
+			grade[i] = obj.g_subject_grade;
+			date[i] = obj.g_date;
+		}
+		
+		var lineChartData = {
+				labels : date,
+				datasets:[{
+					data : grade,
+					label : label,
+					backgroundColor : window.chartColors.blue,
+					borderColor: window.chartColors.blue,
+					fill:false
+				}]
+		};
+			
+		if(window.myLine != null){
+			window.myLine.destroy();
+		}
+		var ctx2 = document.getElementById("canvasSubject").getContext("2d");
+       	window.myLine = new Chart(ctx2, {
+        	type: 'line',
+            data: lineChartData,
+            options: {
+                responsive: true,
+                title:{
+                    display:false,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '날짜'
+                        },
+                        gridLines:{
+                    		color:"#999999"
+                    	}
+                    }],
+                    yAxes: [{
+                        display: true,
+                        ticks : {
+                            max : 100,    
+                            min : 0,
+                        },
+                        gridLines:{
+                    		color:"#999999"
+                    	}
+                    }]
+                }
+            }
+        });
 	}
 </script>

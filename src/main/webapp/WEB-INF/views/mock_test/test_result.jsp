@@ -257,7 +257,7 @@
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
+						<div class="loading-message">시험 결과 가져오는 중</div>
 						<div class="load-3">
 							<div class="line"></div>
 							<div class="line"></div>

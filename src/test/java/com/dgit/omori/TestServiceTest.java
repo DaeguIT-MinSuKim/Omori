@@ -193,11 +193,15 @@ public class TestServiceTest {
 		
 //		gradeService.insertGrade(vo);
 	}
-	
-	@Test
+
+//	@Test
 	public void selectOneGradeByDate() throws Exception{
 		gradeService.selectListGradeByDate("test1", 2, "2017-06-11 2:6");
-		
+	}
+	
+//	@Test
+	public void selectListGradeBySubject() throws Exception{
+		gradeService.selectListGradeBySubject("test1", 1, "데이터베이스");
 	}
 	
 	
