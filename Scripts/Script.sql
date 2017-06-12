@@ -315,8 +315,12 @@ LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\tes
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
 update testname set tno = 1 where tno = 7;
+-- 이름순가져오기
 select * from testname order by tname;
+-- 번호순가져오기
 select * from testname order by tno desc;
+-- 마지막 번호 가져오기
+select if(max(tno) is null, 1, max(tno)+1) as tno from testname;
 delete from testname;
 alter table testname auto_increment = 1;
 
@@ -338,7 +342,11 @@ select * from testquestion where tno = 2 order by tq_small_no;
 select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
-
+-- 마지막번호가져오기
+select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no from testquestion;
+-- 문제 번호들만 가져오기
+select tq_small_no from testquestion where tno = 1 order by tq_small_no;
+select * from testquestion;
 delete from testquestion;
 alter table testquestion auto_increment = 1;
 

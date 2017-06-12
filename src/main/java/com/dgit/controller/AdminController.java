@@ -59,7 +59,7 @@ public class AdminController {
 
 	@RequestMapping(value = "/insert_exam", method = RequestMethod.GET)
 	public String insertExamGET(Model model) throws Exception {
-		List<TestNameVO> list = nameService.selectAllTestNameOrderByTnoDesc();
+		List<TestNameVO> list = nameService.selectAllTestName();
 		
 		model.addAttribute("nameList", list);
 
@@ -84,6 +84,77 @@ public class AdminController {
 		
 		return entity;
 	}//insertTestName
+	
+	@ResponseBody
+	@RequestMapping(value = "/insertQuestionExample", method = RequestMethod.POST)
+	public ResponseEntity<String> insertQuestionExample(int tno, String tq_subject, int tq_small_no, String tq_question, int tq_answer, String[] te_content) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			TestQuestionVO vo = new TestQuestionVO();
+			
+			TestNameVO testName = new TestNameVO();
+			testName.setTno(tno);
+			
+			vo.setTestName(testName);
+			vo.setTq_subject(tq_subject);
+			vo.setTq_small_no(tq_small_no);
+			vo.setTq_question(tq_question);
+			vo.setTq_answer(tq_answer);
+			
+			questionService.insertTestQuestion(vo);
+
+			for(int i=0; i<te_content.length; i++){
+				TestExampleVO example = new TestExampleVO();
+				example.setQuestion(vo);
+				example.setTe_small_no(i+1);
+				example.setTe_content(te_content[i]);
+				exampleService.insertTestExample(example);
+			}
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//insertQuestionExample
+	
+	@ResponseBody
+	@RequestMapping(value = "/getLastTnoTqno", method = RequestMethod.POST)
+	public ResponseEntity<List<Integer>> getLastTnoTqno() throws Exception {
+		ResponseEntity<List<Integer>> entity = null;
+		
+		try {
+			int tno = nameService.selectLastTno();
+			int tqno = questionService.selectLastTqno();
+			List<Integer> list = new ArrayList<>();
+			list.add(tno);
+			list.add(tqno);
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getLastTnoTqno
+	
+	@ResponseBody
+	@RequestMapping(value = "/getTqSmallNoList", method = RequestMethod.POST)
+	public ResponseEntity<List<Integer>> getTqSmallNoList(int tno) throws Exception {
+		ResponseEntity<List<Integer>> entity = null;
+		
+		try {
+			List<Integer> list = questionService.selectAllTqSmallNoByTno(tno);
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getTqSmallNoList 
 
 	@RequestMapping(value = "/insert_result", method = RequestMethod.POST)
 	public String insertResultPOST(int tno, TestQuestionVO questionVO, String[] te_small_no, String[] te_content,
@@ -174,27 +245,6 @@ public class AdminController {
 		return entity;
 	}*/// selectSubjectNames
 
-	/*@ResponseBody
-	@RequestMapping(value = "/insertTestName", method = RequestMethod.POST)
-	public ResponseEntity<String> insertTestNamePost(String tname, String tdate) {
-		logger.info("insertTestName POST................");
-
-		ResponseEntity<String> entity = null;
-
-		TestNameVO vo = new TestNameVO();
-		vo.setTname(tname);
-		vo.setTdate(tdate);
-
-		try {
-			nameService.insertTestName(vo);
-
-			entity = new ResponseEntity<>("success", HttpStatus.OK);
-		} catch (Exception e) {
-			entity = new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}// insertTestNamePost
-*/
 	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
 	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
 		TestNameVO testName = nameService.selectOneTestName(tno);

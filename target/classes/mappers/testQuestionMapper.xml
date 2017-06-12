@@ -49,9 +49,21 @@
 			 and tq_subject = #{tq_subject}
 	</select>
 	
+	<select id="selectLastTqno" resultType="int">
+		select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no 
+		from testquestion
+	</select>
+	
 	
 	<insert id="insertTestQuestion">
 		insert into testquestion(tno, tq_subject, tq_small_no, tq_question, tq_answer, tq_per) 
 		values(#{testName.tno}, #{tq_subject}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
 	</insert>
+	
+	<select id="selectAllTqSmallNoByTno" resultType="int">
+		select tq_small_no 
+		from testquestion 
+		where tno = #{tno}
+		order by tq_small_no
+	</select>
 </mapper>

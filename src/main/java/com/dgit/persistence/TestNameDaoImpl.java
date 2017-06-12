@@ -31,7 +31,7 @@ public class TestNameDaoImpl implements TestNameDao{
 	}
 
 	@Override
-	public List<TestNameVO> selectAllTestNameOrderByTnoDesc() throws Exception {
-		return session.selectList(namespace + ".selectAllTestNameOrderByTnoDesc");
+	public int selectLastTno() throws Exception {
+		return session.selectOne(namespace + ".selectLastTno");
 	}
 }

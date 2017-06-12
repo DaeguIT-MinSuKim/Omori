@@ -104,4 +104,14 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	public List<String> selectOnlySubject(int tno) throws Exception {
 		return dao.selectOnlySubject(tno);
 	}
+
+	@Override
+	public int selectLastTqno() throws Exception {
+		return dao.selectLastTqno();
+	}
+
+	@Override
+	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
+		return dao.selectAllTqSmallNoByTno(tno);
+	}
 }

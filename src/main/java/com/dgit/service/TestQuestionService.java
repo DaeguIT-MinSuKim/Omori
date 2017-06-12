@@ -13,7 +13,8 @@ public interface TestQuestionService {
 	TestQuestionVO selectOneTestQuestionByTqno(int tq_no) throws Exception;
 	List<String> selectOnlySubject(int tno) throws Exception;
 	int selectCountBySubject(int tno, String tq_subject) throws Exception;
+	int selectLastTqno() throws Exception;
 	void insertTestQuestion(TestQuestionVO vo) throws Exception;
-	
+	List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception;
 	List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception; 
 }

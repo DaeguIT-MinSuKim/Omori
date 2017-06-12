@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login-join.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login-join.css" />
 <!-- alert -->
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
@@ -54,23 +54,23 @@ li.down-li a:HOVER{
 img.icon-down{
 	width:20px !important;
 }
-.clear{
+.clear-how{
 	clear:both;
 	width:100%;
 	padding:20px 0 0;
 }
-.clear span{
+.clear-how span{
 	font-size:18px;
 	color:#ff6666;
 	display:block;
 }
-.clear #uploadForm p{
+.clear-how #uploadForm p{
 	display: inline-block;
 	margin-right:30px;
 }
 
 
-/* -----------
+/* ------------
 	popup창 
 -------------*/
 .login-container .form {text-align: left;}
@@ -84,6 +84,38 @@ img.icon-down{
 .add-example-popup .login-page .form div{clear:both;}
 .add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
 .add-example-popup .login-page .form div textarea{width:90%; float:right;}
+
+a.can-sel-a{color:#333; font-weight: bold;}
+a.selected-no{color:#cc0000;}
+/* ------------
+	로딩 이미지
+-------------*/
+.add-question-popup .login-page .form .login-form{display:none;}
+
+.loading-box {display:none;}
+.loading-box .load-wrapp {float: left; width: 100%; text-align: center;}
+.loading-box .load-wrapp .loading-message{color:#303030;font-size:20px;margin-bottom:10px;}
+.loading-box .load-wrapp .load-3 .line {display: inline-block; width: 25px; height: 25px; margin:5px 4px 0; 
+										border-radius: 15px; background-color: #4b9cdb;}
+.loading-box .clear{clear:both;}
+
+.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
+.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
+.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
+
+.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
+.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
+.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
+
+.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
+.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
+.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
+
+@keyframes loadingC {
+    0 {transform: translate(0,0);}
+    50% {transform: translate(0, 20px);}
+    100% {transform: translate(0,0);}
+}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
@@ -103,20 +135,21 @@ img.icon-down{
 								</li>
 								<li>
 									1. 자격증번호<br />
-									<span>※ 자격증번호는 자격증의 고유번호이기 때문에 모두 상이해야합니다</span>
+									<span>※ 각 자격증의 고유번호이기 때문에 모두 상이해야합니다</span>
+									<span id='setLastTnoText'></span>
 								</li>
 								<li>
 									2. 자격증명 : 자격증명 - 시행년도 - 회차 순으로 입력해주세요 <br />
-									<span>※  기출문제 목록을 가져올 때 이름순으로 가져오게 됩니다</span>
+									<span>※ 기출문제 목록을 가져올 때 이름순으로 가져오게 됩니다</span>
 								</li>
 								<li>
 									3. 시험날짜 : 시험 시행 날짜
 								</li>
 							</ul>
 						</div>
-						<div class="clear"></div>
+						<div class="clear-how"></div>
 						<div class="how-to-question">
-							<img src="${pageContext.request.contextPath}/resources/images/ex_question.gif" alt="" />
+							<img src="${pageContext.request.contextPath}/resources/images/ex_question.PNG" alt="" />
 							<ul>
 								<li class='down-li'>
 									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
@@ -126,12 +159,13 @@ img.icon-down{
 									1. 문제고유번호<br />
 									<span>
 										※ 각 문제의 고유번호이기 때문에 모두 상이해야합니다<br />
-										&nbsp;&nbsp;&nbsp;&nbsp;기출문제의 문제를 등록할 때 고유번호의 마지막 번호가 100이었다면 다음 기출문제의 문제의<br /> 
+										&nbsp;&nbsp;&nbsp;&nbsp;ex) 기출문제의 문제를 등록할 때 고유번호의 마지막 번호가 100이었다면 다음 기출문제의 문제의<br /> 
 										&nbsp;&nbsp;&nbsp;&nbsp;고유번호는 101이 됩니다
 									</span>
+									<span id='setLastTqnoText'></span>
 								</li>
 								<li>
-									2. 자격증번호 : 등록하고자 하는 기출문제에 대응하는 기출문제번호
+									2. 자격증번호 : 등록하고자 하는 기출문제에 대응하는 기출문제번호를 입력해주세요
 								</li>
 								<li>
 									3. 과목명 : 기출문제의 과목명
@@ -140,12 +174,12 @@ img.icon-down{
 									4. 문제번호 : 각 문제번호<br />
 									<span>
 										※ 문제고유번호와 다릅니다<br />
-										&nbsp;&nbsp;&nbsp;&nbsp;기출문제의 각 문제의 번호입니다
+										&nbsp;&nbsp;&nbsp;&nbsp;기출문제 내 각 문제의 번호입니다
 									</span>
 								</li>
 							</ul>
 						</div>
-						<div class="clear"></div>
+						<div class="clear-how"></div>
 						<div class="how-to-example">
 							<img src="${pageContext.request.contextPath}/resources/images/ex_example.png" alt="" />
 							<ul>
@@ -161,7 +195,7 @@ img.icon-down{
 								</li>
 							</ul>
 						</div>
-						<div class="clear">
+						<div class="clear-how">
 							<span>※ 각 문제에 해당하는 이미지는 문제 등록 후 나오는 리스트에서 등록하시면 됩니다</span>
 							<form action="${pageContext.request.contextPath}/admin/uploadFile" method="post" enctype="multipart/form-data" id="uploadForm">
 								<p>
@@ -243,7 +277,7 @@ img.icon-down{
 	</section>
 </div>
 
-<!-- 자격 등록 팝업 -->
+<!-- 자격증 등록 팝업 -->
 <div class="login-container add-testname-popup">
 	<div class="login-page">
 		<div class="login-close">
@@ -252,11 +286,11 @@ img.icon-down{
 		<div class="form">
 			<form class="login-form">
 				<h2 class="form-title">자격증 등록</h2>
-				<label for="">자격증번호</label>
-				<input type="text" value='1' disabled="disabled"/>
-				<label for="">자격증명</label>
-				<input type="text" placeholder="정보처리기사 2016년 1회" id='addTname'/> 
-				<label for="">시험날짜</label>
+				<label for="">자격증 번호</label>
+				<input type="text" value='1' id='addTno' disabled="disabled"/>
+				<label for="">자격증 이름</label>
+				<input type="text" placeholder="정보처리기사 2016년 1회" id='addTname'/>
+				<label for="">시험 날짜</label>
 				<input type="text" placeholder="2016-03-06" id='addTdate'/>
 				<button id="btnInsertTestNameForm">등록</button>
 			</form>
@@ -271,18 +305,30 @@ img.icon-down{
 			<a href=""><img src="${pageContext.request.contextPath}/resources/images/ic-close-button.png" alt="" /></a>
 		</div>
 		<div class="form">
+			<!-- ajax로딩 될 때 뜨는 이미지 -->
+			<div class="loading-box">
+				<div class="load-wrapp">
+					<div class="loading-message">문제번호를 불러오는 중입니다</div>
+					<div class="load-3">
+						<div class="line"></div>
+						<div class="line"></div>
+						<div class="line"></div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
 			<form class="login-form">
 				<h2 class="form-title">기출문제 등록</h2>
-				<div><label for="">자격증 번호</label><span>1</span></div>
-				<div><label for="">자격증 이름</label><span>정보처리기사 2016년 1회</span></div>
-				<div><label for="">문제고유번호</label><span>1</span></div>
+				<div><label for="">자격증 번호</label><span id='q-tno'>1</span></div>
+				<div><label for="">자격증 이름</label><span id='q-tname'>정보처리기사 2016년 1회</span></div>
+				<div><label for="">문제 고유 번호</label><span id='q-tqno'>1</span></div>
 				<div><label for="">과목</label><select id="subjectList"></select></div>
 				<div>
-					<label for="">문제번호</label>
-					<div class="tqSmallNo">123456798</div>
+					<label for="">문제 번호</label>
+					<div class="tqsmallno-box"></div>
 				</div>
-				<label for="">문제내용</label>
-				<textarea name="" id="" cols="30" rows="3"></textarea>
+				<label for="">문제 내용</label>
+				<textarea id="q-question" cols="30" rows="3"></textarea>
 				<button id="btnInsertExample">보기 및 정답 등록</button>
 			</form>
 		</div>
@@ -298,10 +344,10 @@ img.icon-down{
 		<div class="form">
 			<form class="login-form">
 				<h2 class="form-title">보기 및 정답 등록</h2>
-				<div><input type="radio" value='1'/> 1. <textarea name="" id="" cols="30" rows="3"></textarea></div>
-				<div><input type="radio" value='2'/> 2. <textarea name="" id="" cols="30" rows="3"></textarea></div>
-				<div><input type="radio" value='3'/> 3. <textarea name="" id="" cols="30" rows="3"></textarea></div>
-				<div><input type="radio" value='4'/> 4. <textarea name="" id="" cols="30" rows="3"></textarea></div>
+				<div><input type="radio" value='1'/> 1. <textarea id="example01" cols="30" rows="3"></textarea></div>
+				<div><input type="radio" value='2'/> 2. <textarea id="example02" cols="30" rows="3"></textarea></div>
+				<div><input type="radio" value='3'/> 3. <textarea id="example03" cols="30" rows="3"></textarea></div>
+				<div><input type="radio" value='4'/> 4. <textarea id="example04" cols="30" rows="3"></textarea></div>
 				<button id="btnInsertQueAndExForm">기출문제 등록</button>
 			</form>
 		</div>
@@ -317,14 +363,15 @@ function insertTestNameAjax(){
 	
 	if(tname == "" || tdate == ""){
 		swal({
-			title: "모든 빈칸을 채워주세요!",
+			title: "모든 입력창을 채워주세요!",
 			confirmButtonText: "확인",
 		});
 		return;
 	}
 	
 	swal({
-		title: tname+"을 등록하시겠습니까?",
+		title: tname,
+		text:"등록하시겠습니까?",
 		showCancelButton:true,
 		cancelButtonText: "취소",
 		confirmButtonText: "등록",
@@ -336,86 +383,75 @@ function insertTestNameAjax(){
 				type:"post",
 				data:{"tname" : tname, "tdate":tdate},
 				success:function(result){
-					alert(result);
+					getLastTnoTqnoAjax();
+					$(".no-testname").css("display", "none");
+					swal({
+						title:"성공적으로 등록되었습니다",
+						confirmButtonText: "확인"
+					});
+					$(".login-container").fadeOut("fast");
 				},
 				error:function(e){
 					alert("에러가 발생하였습니다");
 				}
 			});
-
-			swal.close();
 		}
 	});
 }
 
-function check() {
-	var file1 = $("#nameFile").val();
-	var file2 = $("#questionFile").val();
-	var file3 = $("#exampleFile").val();
-	
-	if (file1 == "" || file1 == null
-		|| file2 == "" || file2 == null
-		|| file3 == "" || file3 == null) {
-		swal({
-			title:"파일을 선택해주세요",
-			confirmButtonText: "확인"
-		});
-		return false;
-	} else if ( !checkFileType(file1, file2, file3) ) {
-		swal({
-			title:"엑셀(xlsx) 파일만 업로드 가능합니다",
-			confirmButtonText: "확인"
-		});
-		return false;
-	}
-	
-	swal({
-		title:"기출문제를 등록하시겠습니까?",
-		showCancelButton:true,
-		cancelButtonText: "아니오",
-		confirmButtonText: "네",
-	}, function(isConfirm){
-		if(isConfirm){
-			$("form#uploadForm").submit();
+/*-------------------------------
+	마지막 tno, tqno 가져오는 ajax
+-------------------------------*/
+var lastTno;
+var lastTqno;
+function getLastTnoTqnoAjax(){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/getLastTnoTqno",
+		type:"post",
+		success:function(result){
+			lastTno = result[0];
+			lastTqno = result[1];
+			
+			$("#setLastTnoText").html("※ 지금까지 등록된 자격증번호는 "+ (lastTno-1) +"입니다<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 등록할 때 자격증번호는 "+ lastTno +"로 작성해주십시오");
+			
+			$("#setLastTqnoText").html("※ 지금까지 등록된 문제고유번호는 "+ (lastTqno-1) +"입니다<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 등록할 때 문제고유번호는 "+ lastTqno +"로 작성해주십시오");
+			
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");
 		}
 	});
-	
 }
 
-function checkFileType(file1, file2, file3) {
-	var format1 = file1.split(".");
-	var format2 = file2.split(".");
-	var format3 = file3.split(".");
-	
-	if (format1.indexOf("xlsx") > -1 && format2.indexOf("xlsx") > -1 && format3.indexOf("xlsx") > -1) {
-		return true;
-	} else {
-		return false;
-	}
+/* --------------------------
+	문제 번호 리스트 가져오는 ajax
+---------------------------*/
+var tqSmallNoList = new Array();
+function getTqSmallNoListAjax(no){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/getTqSmallNoList",
+		data:{"tno":no},
+		type:"post",
+		success:function(result){
+			if(result.length == 0){
+				tqSmallNoList = null;	
+			}else{
+				for(var i=0; i<result.length; i++){
+					tqSmallNoList[i] = result[i];
+				}
+			}
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");
+		}
+	});
 }
+
 
 $(function(){
-	/* 팝업창 X버튼 클릭 */
-	$(".login-close").find("a").click(function(e){
-		e.preventDefault();
-		if($(".add-example-popup").css("display") == "block"){
-			$(".add-example-popup").fadeOut("fast");
-			return;
-		}
-		$(".login-container").fadeOut("fast");
-	});
-	
-	/* 자격증등록 버튼을 클릭하면 팝업창 띄우도록*/
-	$("#btnAddTestName").click(function(e){
-		e.preventDefault();
-		$(".add-testname-popup").fadeIn("fast");
-	});
-	
-	/* 자격증등록 팝업창이 뜨고 등록 버튼을 눌렀을 때 */
-	$(".no-testname #btnInsertTestNameForm").click(function(e){
-		e.preventDefault();
-		insertTestNameAjax();
-	});
+	getLastTnoTqnoAjax();
 	
 	$(".each-testname-box a").click(function(e){
 		e.preventDefault();
@@ -435,7 +471,7 @@ $(function(){
 	
 	
 	/* 자격증 리스트 */
-	setTestNameList();
+	//setTestNameList();
 	
 	
 	/* 자격증 선택하면 그에 해당하는 과목이 나오도록 */
@@ -519,6 +555,53 @@ $(function(){
 	})
 });
 
+function check() {
+	var file1 = $("#nameFile").val();
+	var file2 = $("#questionFile").val();
+	var file3 = $("#exampleFile").val();
+	
+	if (file1 == "" || file1 == null
+		|| file2 == "" || file2 == null
+		|| file3 == "" || file3 == null) {
+		swal({
+			title:"파일을 선택해주세요",
+			confirmButtonText: "확인"
+		});
+		return false;
+	} else if ( !checkFileType(file1, file2, file3) ) {
+		swal({
+			title:"엑셀(xlsx) 파일만 업로드 가능합니다",
+			confirmButtonText: "확인"
+		});
+		return false;
+	}
+	
+	swal({
+		title:"기출문제를 등록하시겠습니까?",
+		showCancelButton:true,
+		cancelButtonText: "아니오",
+		confirmButtonText: "네",
+	}, function(isConfirm){
+		if(isConfirm){
+			$("form#uploadForm").submit();
+		}
+	});
+}
+
+function checkFileType(file1, file2, file3) {
+	var format1 = file1.split(".");
+	var format2 = file2.split(".");
+	var format3 = file3.split(".");
+	
+	if (format1.indexOf("xlsx") > -1 && format2.indexOf("xlsx") > -1 && format3.indexOf("xlsx") > -1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+
 	function getSubjectNames(no){
 		$.ajax({
 			url:"${pageContext.request.contextPath}/admin/selectSubjectNames",
@@ -581,3 +664,4 @@ $(function(){
 		});
 	}//insertTestName
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/insert-exam.js"></script>

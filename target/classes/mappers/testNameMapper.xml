@@ -14,9 +14,9 @@
 		order by tno desc
 	</select>
 	
-	<select id="selectOneTestName" resultType="TestNameVO">
-		select * from testname
-		where tno = #{tno}
+	<select id="selectLastTno" resultType="int">
+		select if(max(tno) is null, 1, max(tno)+1) as tno 
+		from testname
 	</select>
 	
 	<insert id="insertTestName">
