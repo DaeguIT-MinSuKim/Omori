@@ -399,7 +399,6 @@
 			$tr_question.attr("tqno", obj.tq_no);
 			$tr_question.attr("tno", obj.testName.tno);
 			$tr_question.attr("tqsubject", obj.tq_subject);
-			$tr_question.attr("tqsubjectno", obj.tq_subject_no);
 			$tr_question.attr("tqsmallno", obj.tq_small_no);
 			$tr_question.attr("tqper", obj.tq_per);
 			$tr_question.attr("tqanswer", obj.tq_answer);

@@ -14,13 +14,10 @@
 	margin-left: -217px !important;
 }
 .mocktest-box{
-	width:84%;
+	width:100%;
 	float:left;
 }
-.omr-box{
-	width:15%;
-	float:right;
-}
+
 /* ............ */
 /* table 		*/
 /* ............ */
@@ -72,17 +69,28 @@
 	padding-bottom:10px;
 	font-size:14px;
 }
+.table tr.question td a{
+	color:#303030 !important;
+}
+
+.table tr.question td a:HOVER{
+	color:#cc0000 !important;
+}
+
 .table tr.example td{
 	padding:5px 5px;
+	font-size:12px;
+	line-height:22px;
+	color:#333;
 }
-.table tr.example a{
+/* .table tr.example a{
 	line-height:22px;
 	color:#333;
 	font-size:12px;
 }
 .table tr.example a:HOVER{
 	color:#cc0000;
-}
+} */
 .table tr.example span.te_small_no{
 	border: 1px solid #cc0000;
     width: 20px;
@@ -91,7 +99,7 @@
     padding:2px 6px;
 }
 .table-left, .table-right{
-	width:500px;
+	width:800px;
 	vertical-align: top;
 	padding-bottom:30px;
 }
@@ -112,41 +120,6 @@
 }
 .changeColor{
 	color:#ff0000 !important;
-}
-
-/* .omr-box */
-.omr-box .table{
-	width:100%;
-	border-collapse: collapse;
-}
-.omr-box .table td{
-	width:25px;
-	text-align:center;
-	font-size:14px;
-	padding:3px 5px;
-	border:1px solid #999;
-}
-.omr-box .table td a{
-	color:#333;
-}
-.omr-box .table tr.num td{
-	color:#303030;
-	font-weight: bold;
-}
-.omr-box .table tr.answer td{
-	font-size:18px;
-	font-family:"digital-7";
-	height:30px;
-	color:#cc0000;
-}
-.omr-box #time-zone, #btnSendAnswer{
-	color:#303030;
-	font-size:20px;
-	font-weight:bold;
-	padding:20px 0;
-}
-.omr-box #time-zone{
-	color:#ff3333;
 }
 
 /* 로딩 이미지 */
@@ -199,12 +172,31 @@
     100% {transform: translate(0,0);}
 }
 
+/* 수정하는 form*/
+.update-box{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0);
+}
+.update-box .close-form{
+	width:500px;
+	margin:200px auto 0;
+	text-align: right;
+}
+.update-box .inner-form{
+	width:500px;
+	margin:10px auto 0;
+	border:1px solid red;
+}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>모의고사</h1>
+			<h1>기출문제 수정</h1>
 			<div class="inner-section">
 				<div class="mocktest-box">
 					<table class='table'>
@@ -228,17 +220,6 @@
 						</tr>
 					</table>
 				</div>
-				<div class="omr-box">
-					<!-- form영역 -->
-					<form action="${pageContext.request.contextPath}/mock_test/test_result" method="post" id="formSendAnswer">
-						<input type="hidden" name="tno" value="${testName.tno}" />
-						<table class="table">
-							<tr>
-								<td colspan="5" id="time-zone">00 : 00 : 00</td>
-							</tr>
-						</table>
-					</form>
-				</div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
@@ -255,6 +236,16 @@
 		</div>
 	</section>
 </div>
+<!-- 업데이트폼화면 -->
+<div class="update-box">
+	<div class="close-form">
+		<button id='btnCloseForm'><img src='${pageContext.request.contextPath}/resources/images/ic-close-button.png'></button>
+	</div>
+	<div class="inner-form">
+		<input type="text" value='123123'/>
+	</div>
+</div>
+
 <script>
 	var tno = ${testName.tno};
 	
@@ -270,60 +261,10 @@
 		
 		getQuestionAndExampleByTno();
 		clickPagingButton();
-		clickEachExampleButton();
+		clickEachQuestion();
 		
-		/* 답안제출버튼클릭했을 때 */
-		$(document).on("click", "td#btnSendAnswer a", function(e){
-			e.preventDefault();
-			
-			var emptyCheck = true;
-			
-			$(".omr-box tr.answer td").each(function(i, obj){
-				//답을 선택하지 않았으면 input에는 -1이 들어가도록 함
-				if($(obj).find("span").html() == ""){
-					$(obj).find("input[name='sa_answer']").val(-1);
-					
-					$(".omr-box tr.num td").each(function(j, element){
-						if($(obj).attr("tqno") == $(element).attr("tqno")){
-							$(element).addClass("changeColor");
-						}
-					});
-					
-					emptyCheck = false;
-				}
-			});
-			
-			if(!emptyCheck){
-				swal({
-					title:"남은 문제가 있습니다",
-					text:"답안을 제출하시겠습니까?",
-					showCancelButton:true,
-					cancelButtonText: "아니오",
-					confirmButtonText: "네",
-					closeOnConfirm:false
-				}, function(isConfirm){
-					if(isConfirm){
-						$("#formSendAnswer").submit();
-					}else{
-						
-					}
-				});
-			}else{
-				swal({
-					title:"답안을 제출하시겠습니까?",
-					showCancelButton:true,
-					cancelButtonText: "아니오",
-					confirmButtonText: "네",
-					closeOnConfirm:false
-				}, function(isConfirm){
-					if(isConfirm){
-						$("#formSendAnswer").submit();
-					}else{
-						
-					}
-				});
-			}
-			
+		$(".update-box #btnCloseForm").click(function(){
+			$(this).parents(".update-box").fadeOut("slow");
 		});
 	});
 	
@@ -333,54 +274,12 @@
 			url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
 			type:"post",
 			success:function(result){
-				setTimer(result[0].testName.tname);
 				makeTags(result);
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다.");
 			}
 		});
-	}
-	
-	/* 타이머 설정 함수 */
-	function setTimer(tname){
-		if(tname.indexOf("정보처리기사") != -1){
-			var hour = 2;
-			var minute = 30;
-			var second = 00;
-			$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour ) + " : "
-												+ ((minute < 10) ? '0'+minute : minute ) + " : "
-												+ ((second < 10) ? '0'+second : second ));
-			
-			var timer;
-			timer = setInterval(function() {
-				second--;
-				if(second < 0){
-					second = 59;
-					minute--;
-				}
-				if(minute < 0){
-					minute = 59;
-					hour--;
-				}
-				
-				$(".omr-box .table #time-zone").html( ((hour < 10) ? '0'+hour : hour )+ " : " + ((minute < 10) ? '0'+minute : minute ) + " : " + ((second < 10) ? '0'+second : second ));
-				
-				if(hour == 0 && minute == 0 && second == 0){
-					clearInterval(timer);
-					swal({
-						title:"시간이 종료되었습니다",
-						text:"계속 푸시겠습니까 ?",
-						showCancelButton:true,
-						cancelButtonText: "아니오",
-						confirmButtonText: "네",
-						closeOnConfirm:false
-					},function(isConfirm){
-						/* 아니오를 클릭하면 답안 제출 */
-					});
-				}
-			}, 1000);
-		}
 	}
 	
 	/* makeTags : 테이블 만드는 함수 */
@@ -428,15 +327,22 @@
 			//문제
 			var $tr_question = $("<tr class='question'>");
 			$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-			$tr_question.append("<td>"+obj.tq_question+"</td>");
+			$tr_question.append("<td><a href=''>"+obj.tq_question+"</a></td>");
 			$tr_question.attr("tqno", obj.tq_no);
 			$tr_question.attr("tno", obj.testName.tno);
 			$tr_question.attr("tqsubject", obj.tq_subject);
+			$tr_question.attr("tqsubjectno", obj.tq_subject_no);
 			$tr_question.attr("tqsmallno", obj.tq_small_no);
 			$tr_question.attr("tqper", obj.tq_per);
 			$tr_question.attr("tqanswer", obj.tq_answer);
 			
 			$table.append($tr_question);
+			
+			//정답
+			var $tr_answer = $("<tr class='answer'>");
+			$tr_answer.append($("<td>"));
+			$tr_answer.append($("<td>").html("정답 : "+obj.tq_answer));
+			$table.append($tr_answer);
 			
 			//이미지(이미지가 있을때만 삽입)
 			var imageList = obj.imageList; 
@@ -456,8 +362,8 @@
 			for(var j=0; j<exampleList.length; j++){
 				var example = exampleList[j];
 				var $tr_example = $("<tr class='example'>");
-				$tr_example.append("<td></td>");
-				$tr_example.append("<td><a href=''><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</a></td>");
+				$tr_example.append("<td></td>");;
+				$tr_example.append("<td><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</td>");
 				$tr_example.attr("teno", example.te_no);
 				$tr_example.attr("tqno", example.question.tq_no);
 				$tr_example.attr("tesmallno", example.te_small_no);
@@ -465,61 +371,19 @@
 				$table.append($tr_example);
 			}
 			
-			//omr
-			var $table_omr = $(".omr-box .table");
-			var $tr_num = $("<tr class='num'>");
-			var $tr_answer = $("<tr class='answer'>");
-			if(i % 5 == 0){
-				$table_omr.append($tr_num);
-				$table_omr.append($tr_answer);	
-			}
-			if(i == result.length - 1){
-				$table_omr.append("<tr><td colspan='5' id='btnSendAnswer'><a href=''>답안 제출</a></td></tr>");
-			}
-			
 		}//end of for
-		
-		//omr
-		for(var i = 0; i < result.length; i++){
-			var obj = result[i];
-			var index = 0;
-			
-			if(i < 5){ index = 0; }
-			else if(i < 10){ index = 1; }
-			else if(i < 15){ index = 2; }
-			else if(i < 20){ index = 3; }
-			else if(i < 25){ index = 4; }
-			else if(i < 30){ index = 5; }
-			else if(i < 35){ index = 6; }
-			else if(i < 40){ index = 7; }
-			else if(i < 45){ index = 8; }
-			else if(i < 50){ index = 9; }
-			else if(i < 55){ index = 10; }
-			else if(i < 60){ index = 11; }
-			else if(i < 65){ index = 12; }
-			else if(i < 70){ index = 13; }
-			else if(i < 75){ index = 14; }
-			else if(i < 80){ index = 15; }
-			else if(i < 85){ index = 16; }
-			else if(i < 90){ index = 17; }
-			else if(i < 95){ index = 18; }
-			else if(i < 100){ index = 19; }
-			
-			var $tr_num = $(".omr-box .table").find("tr.num").eq(index);
-			var $tr_answer = $(".omr-box .table").find("tr.answer").eq(index);
-			
-			$tr_num.append("<td tqno='"+obj.tq_no+"'>"+obj.tq_small_no+"</td>");
-			
-			var $td = $("<td tqno='"+obj.tq_no+"'>");
-			$td.append("<span></span>");
-			$td.append("<input type='hidden' name='sa_answer'/>");
-			$td.append("<input type='hidden' name='tq_no' value='"+obj.tq_no+"'/>");
-			$tr_answer.append($td);
-		}
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
 		$("td#paging").find("#allPage").html( (result.length / 10) );
+	}
+	
+	function clickEachQuestion(){
+		$(document).on("click", ".table tr.question a", function(e){
+			e.preventDefault();
+			
+			alert("click");
+		});
 	}
 	
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
@@ -556,37 +420,6 @@
 			}else{
 				$(".added-table").eq(index-2).css("display", "table-row");
 			}
-		});
-	}
-	
-	/* clickEachExampleButton : 보기번호 클릭하면 색깔이 빨강색으로 바뀜 */
-	function clickEachExampleButton(){
-		$(document).on("click", ".mocktest-box .table .example td a", function(e){
-			e.preventDefault();
-			
-			var tqno = $(this).parent().parent(".example").attr("tqno");
-			
-			$(".mocktest-box .table .example").each(function(i, obj){
-				if( $(obj).attr("tqno") == tqno ){
-					$(obj).find("td a").removeClass("answer-selected");
-				}
-			});
-			
-			var tesmallno = $(this).parent().parent(".example").attr("tesmallno");
-			
-			$(".omr-box .table tr.answer td").each(function(i, obj){
-				if( $(obj).attr("tqno") == tqno ){
-					$(obj).find("span").html(tesmallno);
-					$(obj).find("input[name='sa_answer']").val(tesmallno);
-				}
-			});
-			$(".omr-box .table tr.num td").each(function(i, obj){
-				if( $(obj).attr("tqno") == tqno ){
-					$(obj).removeClass("changeColor");
-				}
-			});
-
-			$(this).addClass("answer-selected");
 		});
 	}
 </script>

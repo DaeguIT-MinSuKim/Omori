@@ -9,6 +9,11 @@
 		order by tname
 	</select>
 	
+	<select id="selectAllTestNameOrderByTnoDesc" resultType="TestNameVO">
+		select * from testname 
+		order by tno desc
+	</select>
+	
 	<select id="selectOneTestName" resultType="TestNameVO">
 		select * from testname
 		where tno = #{tno}

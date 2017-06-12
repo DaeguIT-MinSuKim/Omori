@@ -97,25 +97,6 @@ public class MockTestController {
 		return "mock_test/start_test";
 	}//startTestGet
 	
-	@RequestMapping(value="/start_test_admin/{tno}", method=RequestMethod.GET)
-	public String startTestAdminGet(@PathVariable("tno") int tno, Model model) throws Exception{
-		TestNameVO testName = nameService.selectOneTestName(tno);
-		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
-		
-		for(int i=0; i<questionList.size(); i++){
-			TestQuestionVO question = questionList.get(i);
-			int tq_no = question.getTq_no();
-			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-			List<ImageVO> imageList = imageServie.selectImageByTqNo(tq_no);
-			
-			question.setExampleList(exampleList);
-			question.setImageList(imageList);
-		}
-		
-		model.addAttribute("testName", testName);
-		return "mock_test/start_test_admin";
-	}//startTestGet
-	
 	@RequestMapping(value="/test_result", method=RequestMethod.POST)
 	public String testResultPost(HttpServletRequest req, int tno, int[] tq_no, int[] sa_answer, Model model) throws Exception{
 		logger.info("testResult Post......................");

@@ -8,7 +8,6 @@
 		<id property="tq_no" column="tq_no" />
 		<result property="testName.tno" column="tno" />
 		<result property="tq_subject" column="tq_subject" />
-		<result property="tq_subject_no" column="tq_subject_no" />
 		<result property="tq_small_no" column="tq_small_no" />
 		<result property="tq_question" column="tq_question" />
 		<result property="tq_answer" column="tq_answer" />
@@ -52,7 +51,7 @@
 	
 	
 	<insert id="insertTestQuestion">
-		insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
-		values(#{testName.tno}, #{tq_subject}, #{tq_subject_no}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
+		insert into testquestion(tno, tq_subject, tq_small_no, tq_question, tq_answer, tq_per) 
+		values(#{testName.tno}, #{tq_subject}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
 	</insert>
 </mapper>

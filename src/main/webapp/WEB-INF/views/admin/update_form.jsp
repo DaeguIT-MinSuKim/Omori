@@ -13,195 +13,14 @@
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.mocktest-box{
-	width:100%;
-	float:left;
-}
-
-/* ............ */
-/* table 		*/
-/* ............ */
-.added-table{
-	display:none;
-}
-.table{
-	width:100%;
-	border:2px solid #999;
-	background:rgba(240,240,240,1);
-}
-.table td{
-	font-family: "돋움";
-}
-.table #testName{
-	padding-top:20px;
-	padding-bottom:20px;
-	text-align: center;
-	font-weight:bold;
-	font-size:20px;
-	color:#222;
-	border-bottom:2px solid #999;
-	
-}
-.table td.subject{
-	color:#3333cc;
-	font-weight: bold;
-	font-size:18px;
-	text-align: center;
-	padding-top:30px;
-}
-.table #paging{
-	padding-top:20px;
-	padding-bottom:20px;
-	text-align: left;
-	border-top:2px solid #999;
-}
-.table tr.question{
-	vertical-align: top;
-	font-weight: bold;
-	color:#303030;
-}
-.table tr.question td:FIRST-CHILD{
-	text-align: left;
-}
-
-.table tr.question td{
-	padding-top:30px;
-	padding-bottom:10px;
-	font-size:14px;
-}
-.table tr.example td{
-	padding:5px 5px;
-}
-.table tr.example a{
-	line-height:22px;
-	color:#333;
-	font-size:12px;
-}
-.table tr.example a:HOVER{
-	color:#cc0000;
-}
-.table tr.example span.te_small_no{
-	border: 1px solid #cc0000;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    padding:2px 6px;
-}
-.table-left, .table-right{
-	width:800px;
-	vertical-align: top;
-	padding-bottom:30px;
-}
-.table-left {
-	padding-left:12px;
-	padding-right:6px;
-	border-right:2px solid #999;
-}
-.table-right{
-	padding-right:12px;
-	padding-left:6px;
-}
-
-/* 보기 클릭 */
-.answer-selected{
-	color:#CC0000 !important;
-	font-weight:bold;
-}
-.changeColor{
-	color:#ff0000 !important;
-}
-
-/* 로딩 이미지 */
-.table, .omr-box{
-	display:none;
-}
-
-.loading-box{
-	display:none;
-}
-
-.load-wrapp {
-    float: left;
-    width: 100%;
-   	text-align: center;
-    margin-top:200px;
-}
-.loading-message{
-	color:#eee;
-	font-size:20px;
-	margin-bottom:10px;
-}
-.line {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin:5px 4px 0;
-    border-radius: 15px;
-    background-color: #4b9cdb;
-}
-.clear{
-	clear:both;
-}
-
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
-
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>모의고사</h1>
+			<h1>기출문제 수정</h1>
 			<div class="inner-section">
-				<div class="mocktest-box">
-					<table class='table'>
-						<tr>
-							<td colspan="2" id="testName">${testName.tname} <small>(${testName.tdate})</small></td>
-						</tr>
-						<tr class="first-table">
-							<td class="table-left">
-								<table></table>
-							</td>
-							<td class="table-right">
-								<table></table>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" id="paging">
-								<button id="prev">이전</button>
-								<span id="count"></span> / <span id="allPage"></span>
-								<button id="next">다음</button>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!-- ajax로딩 될 때 뜨는 이미지 -->
-				<div class="loading-box">
-					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
-						<div class="load-3">
-							<div class="line"></div>
-							<div class="line"></div>
-							<div class="line"></div>
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
+				
 			</div>
 		</div>
 	</section>
@@ -221,7 +40,7 @@
 		
 		getQuestionAndExampleByTno();
 		clickPagingButton();
-		clickEachExampleButton();
+		//clickEachExampleButton();
 	});
 	
 	/* getQuestionAndExampleByTno : ajax로 문제 리스트 받아오기 */
@@ -283,7 +102,7 @@
 			//문제
 			var $tr_question = $("<tr class='question'>");
 			$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-			$tr_question.append("<td>"+obj.tq_question+"</td>");
+			$tr_question.append("<td><a href='${pageContext.request.contextPath}/admin/update_form/'"+obj.testname.tno+"/"+obj.tq_no+">"+obj.tq_question+"</a></td>");
 			$tr_question.attr("tqno", obj.tq_no);
 			$tr_question.attr("tno", obj.testName.tno);
 			$tr_question.attr("tqsubject", obj.tq_subject);
@@ -293,6 +112,12 @@
 			$tr_question.attr("tqanswer", obj.tq_answer);
 			
 			$table.append($tr_question);
+			
+			//정답
+			var $tr_answer = $("<tr class='answer'>");
+			$tr_answer.append($("<td>"));
+			$tr_answer.append($("<td>").html("정답 : "+obj.tq_answer));
+			$table.append($tr_answer);
 			
 			//이미지(이미지가 있을때만 삽입)
 			var imageList = obj.imageList; 
@@ -312,8 +137,8 @@
 			for(var j=0; j<exampleList.length; j++){
 				var example = exampleList[j];
 				var $tr_example = $("<tr class='example'>");
-				$tr_example.append("<td></td>");
-				$tr_example.append("<td><a href=''><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</a></td>");
+				$tr_example.append("<td></td>");;
+				$tr_example.append("<td><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</td>");
 				$tr_example.attr("teno", example.te_no);
 				$tr_example.attr("tqno", example.question.tq_no);
 				$tr_example.attr("tesmallno", example.te_small_no);
@@ -362,25 +187,6 @@
 			}else{
 				$(".added-table").eq(index-2).css("display", "table-row");
 			}
-		});
-	}
-	
-	/* clickEachExampleButton : 보기번호 클릭하면 색깔이 빨강색으로 바뀜 */
-	function clickEachExampleButton(){
-		$(document).on("click", ".mocktest-box .table .example td a", function(e){
-			e.preventDefault();
-			
-			var tqno = $(this).parent().parent(".example").attr("tqno");
-			
-			$(".mocktest-box .table .example").each(function(i, obj){
-				if( $(obj).attr("tqno") == tqno ){
-					$(obj).find("td a").removeClass("answer-selected");
-				}
-			});
-			
-			var tesmallno = $(this).parent().parent(".example").attr("tesmallno");
-
-			$(this).addClass("answer-selected");
 		});
 	}
 </script>

@@ -43,7 +43,7 @@
 					</c:if>
 					<c:if test="${login.isadmin}">
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href="${pageContext.request.contextPath}/mock_test/start_test_admin/${obj.tno}">${obj.tname }</a></p>
+							<p><a href="${pageContext.request.contextPath}/admin/update_test/${obj.tno}">${obj.tname }</a></p>
 						</c:forEach>
 					</c:if>
 				</div>

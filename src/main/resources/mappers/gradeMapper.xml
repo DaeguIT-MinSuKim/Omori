@@ -23,14 +23,14 @@
 	
 	<!-- 하나의 시험 성적을 저장할 때 부여되는 번호 -->
 	<select id="countSaveNo" resultType="int">
-		select if(max(g_save_no) = 0, 1, max(g_save_no)+1 ) as no
+		select if(max(g_save_no) is null, 1, max(g_save_no)+1 ) as no 
 		from grade
 	</select>
 	
 	<select id="selectTnoForGrade" resultType="int" >
 		select distinct tno from grade 
 		where uid = #{uid} 
-		order by tno;
+		order by tno
 	</select>
 	
 	<select id="selectAllGradeGroupByTno" resultType="GradeVO" resultMap="GradeResult">

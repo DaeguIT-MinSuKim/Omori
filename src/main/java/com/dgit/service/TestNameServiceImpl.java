@@ -27,4 +27,9 @@ public class TestNameServiceImpl implements TestNameService{
 	public void insertTestName(TestNameVO vo) throws Exception {
 		nameDao.insertTestName(vo);
 	}
+
+	@Override
+	public List<TestNameVO> selectAllTestNameOrderByTnoDesc() throws Exception {
+		return nameDao.selectAllTestNameOrderByTnoDesc();
+	}
 }
