@@ -9,6 +9,16 @@
 		order by tname
 	</select>
 	
+	<select id="selectAllTestNameOrderByTnoDesc" resultType="TestNameVO">
+		select * from testname 
+		order by tno desc
+	</select>
+	
+	<select id="selectLastTno" resultType="int">
+		select if(max(tno) is null, 1, max(tno)+1) as tno 
+		from testname
+	</select>
+	
 	<select id="selectOneTestName" resultType="TestNameVO">
 		select * from testname
 		where tno = #{tno}

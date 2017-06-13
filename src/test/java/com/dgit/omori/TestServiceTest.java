@@ -69,6 +69,11 @@ public class TestServiceTest {
 		nameService.insertTestName(vo);
 	}
 	
+//	@Test
+	public void selectLastTno() throws Exception{
+		nameService.selectLastTno();
+	}
+	
 	/*......................*/
 	/*TestQuestion			*/
 	/*......................*/

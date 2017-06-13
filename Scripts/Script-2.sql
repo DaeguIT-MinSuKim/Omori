@@ -310,16 +310,23 @@ insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
 
-LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testname.txt" INTO TABLE testname 
+
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
 update testname set tno = 1 where tno = 7;
+-- 이름순가져오기
 select * from testname order by tname;
+-- 번호순가져오기
+select * from testname order by tno desc;
+-- 마지막 번호 가져오기
+select if(max(tno) is null, 1, max(tno)+1) as tno from testname;
 delete from testname;
+alter table testname auto_increment = 1;
 
-LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
-LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testquestion2.txt" INTO TABLE testquestion 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion2.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 values(1, '데이터베이스', 1, 1, '문제1', '1', '10');
@@ -332,10 +339,14 @@ select count(*) from testquestion where tno = 1 and tq_subject = '데이터베�
 -- 모의 시험
 select * from testquestion where tno = 2 order by tq_small_no;
 -- 과목별 시험
-select * from testquestion where tno = 1 and tq_subject = '데이터베이스' order by tq_small_no;
+select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
-
+-- 마지막번호가져오기
+select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no from testquestion;
+-- 문제 번호들만 가져오기
+select tq_small_no from testquestion where tno = 1 order by tq_small_no;
+select * from testquestion;
 delete from testquestion;
 alter table testquestion auto_increment = 1;
 
@@ -345,15 +356,14 @@ select * from image where tq_no = 1 order by tq_no;
 select * from image;
 delete from image;
 
-LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testexample.txt" INTO TABLE testexample 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample.txt" INTO TABLE testexample 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
-LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testexample2.txt" INTO TABLE testexample 
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample2.txt" INTO TABLE testexample 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testexample(tq_no, te_small_no, te_content) values(1, 1, '문제1번의 예시1');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 2, '문제1번의 예시2');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 3, '문제1번의 예시3');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 4, '문제1번의 예시4');
-select * from testexample;
 -- 문제 1번의 객관식 보기
 select * from testexample where tq_no = 101 order by te_small_no;
 -- 문제 1번의 보기와 답
@@ -361,6 +371,7 @@ select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_
 where e.tq_no = 1 and q.tq_no = 1;
 delete from testexample;
 alter table testexample auto_increment = 1;
+select * from testexample;
 
 insert into selected_answer(uid, tq_no, sa_answer, sa_date) values('test1', 1, 1, now());
 -- 문제 1번에 대해 제일 최근 test1유저가 선택한 답

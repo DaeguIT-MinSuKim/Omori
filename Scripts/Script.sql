@@ -68,7 +68,6 @@ CREATE TABLE omori.testquestion (
 	tq_no         INTEGER      NOT NULL, -- 문제번호
 	tno           INTEGER      NOT NULL, -- 자격증번호
 	tq_subject    VARCHAR(100) NULL,     -- 과목명
-	tq_subject_no INTEGER      NULL,     -- 과목번호
 	tq_small_no   INTEGER      NOT NULL, -- 작은번호
 	tq_question   TEXT         NOT NULL, -- 문제
 	tq_answer     INTEGER      NOT NULL, -- 정답
@@ -311,12 +310,19 @@ insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
 
+
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
 update testname set tno = 1 where tno = 7;
+-- 이름순가져오기
 select * from testname order by tname;
+-- 번호순가져오기
+select * from testname order by tno desc;
+-- 마지막 번호 가져오기
+select if(max(tno) is null, 1, max(tno)+1) as tno from testname;
 delete from testname;
+alter table testname auto_increment = 1;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
@@ -336,7 +342,11 @@ select * from testquestion where tno = 2 order by tq_small_no;
 select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
-
+-- 마지막번호가져오기
+select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no from testquestion;
+-- 문제 번호들만 가져오기
+select tq_small_no from testquestion where tno = 1 order by tq_small_no;
+select * from testquestion;
 delete from testquestion;
 alter table testquestion auto_increment = 1;
 
@@ -398,7 +408,7 @@ select * from grade where uid = 'test1'and g_date = '2017-06-11 2:6';
 -- 'test1'이 한 기출문제의 성적을 가져옴
 select * from grade where uid='test1' and tno = 2 group by g_save_no;
 -- 시험을 저장할 때 한 시험에 부여되는 번호
-select if(max(g_save_no) = 0, 1, max(g_save_no)+1 ) as no from grade;
+select if(max(g_save_no) is null, 1, max(g_save_no)+1 ) as no from grade;
 -- 'test1'이 과목별로 성적을 열람할 때
 select * from grade where uid = 'test1' and tno = 2 and g_subject = '데이터베이스' order by g_date desc;
 

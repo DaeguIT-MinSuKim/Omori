@@ -2,6 +2,7 @@ package com.dgit.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -57,11 +58,124 @@ public class AdminController {
 	private ImageService imageService;
 
 	@RequestMapping(value = "/insert_exam", method = RequestMethod.GET)
-	public String insertExamGET() throws Exception {
-		logger.info("insertExam GET................");
+	public String insertExamGET(Model model) throws Exception {
+		List<TestNameVO> list = nameService.selectAllTestName();
+		
+		model.addAttribute("nameList", list);
 
 		return "admin/insert_exam";
 	}// insertExamGET
+	
+	@ResponseBody
+	@RequestMapping(value = "/insertTestName", method = RequestMethod.POST)
+	public ResponseEntity<String> insertTestName(String tname, String tdate) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			TestNameVO vo = new TestNameVO();
+			vo.setTname(tname.trim());
+			vo.setTdate(tdate.trim());
+			nameService.insertTestName(vo);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//insertTestName
+	
+	@ResponseBody
+	@RequestMapping(value = "/insertQuestionExample", method = RequestMethod.POST)
+	public ResponseEntity<String> insertQuestionExample(int tno, String tq_subject, int tq_small_no, String tq_question, int tq_answer, 
+			String example1, String example2, String example3, String example4) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		String[] te_content = new String[]{example1, example2, example3, example4};
+		
+		try {
+			TestQuestionVO vo = new TestQuestionVO();
+			
+			TestNameVO testName = new TestNameVO();
+			testName.setTno(tno);
+			
+			vo.setTestName(testName);
+			vo.setTq_subject(tq_subject);
+			vo.setTq_small_no(tq_small_no);
+			vo.setTq_question(tq_question);
+			vo.setTq_answer(tq_answer);
+			
+			questionService.insertTestQuestion(vo);
+			TestQuestionVO question = questionService.selectOneTestQuestion(tno, tq_small_no);
+
+			for(int i=0; i<te_content.length; i++){
+				System.out.println(te_content[i]);
+				TestExampleVO example = new TestExampleVO();
+				example.setQuestion(question);
+				example.setTe_small_no(i+1);
+				example.setTe_content(te_content[i]);
+				exampleService.insertTestExample(example);
+			}
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//insertQuestionExample
+	
+	@ResponseBody
+	@RequestMapping(value = "/getLastTnoTqno", method = RequestMethod.POST)
+	public ResponseEntity<List<Integer>> getLastTnoTqno() throws Exception {
+		ResponseEntity<List<Integer>> entity = null;
+		
+		try {
+			int tno = nameService.selectLastTno();
+			int tqno = questionService.selectLastTqno();
+			List<Integer> list = new ArrayList<>();
+			list.add(tno);
+			list.add(tqno);
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getLastTnoTqno
+	
+	@ResponseBody
+	@RequestMapping(value = "/getTqSmallNoList", method = RequestMethod.POST)
+	public ResponseEntity<List<Integer>> getTqSmallNoList(int tno) throws Exception {
+		ResponseEntity<List<Integer>> entity = null;
+		
+		try {
+			List<Integer> list = questionService.selectAllTqSmallNoByTno(tno);
+			
+			entity = new ResponseEntity<>(list, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getTqSmallNoList 
+	
+	@ResponseBody
+	@RequestMapping(value = "/getTestNameList", method = RequestMethod.POST)
+	public ResponseEntity<List<TestNameVO>> getTestNameList() {
+		ResponseEntity<List<TestNameVO>> entity = null;
+		
+		logger.info("getTestNameList POST..........................");
+
+		try {
+			entity = new ResponseEntity<>(nameService.selectAllTestName(), HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}//getTestNameList
 
 	@RequestMapping(value = "/insert_result", method = RequestMethod.POST)
 	public String insertResultPOST(int tno, TestQuestionVO questionVO, String[] te_small_no, String[] te_content,
@@ -119,22 +233,9 @@ public class AdminController {
 		return "admin/insert_result";
 	}// insertExamPOST
 
-	@ResponseBody
-	@RequestMapping(value = "/selectAllTestName", method = RequestMethod.POST)
-	public ResponseEntity<List<TestNameVO>> selectAllTestNamePOST() {
-		logger.info("selectAllTestName POST................");
+	
 
-		ResponseEntity<List<TestNameVO>> entity = null;
-
-		try {
-			entity = new ResponseEntity<>(nameService.selectAllTestName(), HttpStatus.OK);
-		} catch (Exception e) {
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}// selectAllTestName
-
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/selectSubjectNames", method = RequestMethod.POST)
 	public ResponseEntity<String[]> selectSubjectNamesPOST(int tno) throws Exception {
 		logger.info("selectSubjectNames POST................");
@@ -150,28 +251,7 @@ public class AdminController {
 		}
 
 		return entity;
-	}// selectSubjectNames
-
-	@ResponseBody
-	@RequestMapping(value = "/insertTestName", method = RequestMethod.POST)
-	public ResponseEntity<String> insertTestNamePost(String tname, String tdate) {
-		logger.info("insertTestName POST................");
-
-		ResponseEntity<String> entity = null;
-
-		TestNameVO vo = new TestNameVO();
-		vo.setTname(tname);
-		vo.setTdate(tdate);
-
-		try {
-			nameService.insertTestName(vo);
-
-			entity = new ResponseEntity<>("success", HttpStatus.OK);
-		} catch (Exception e) {
-			entity = new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}// insertTestNamePost
+	}*/// selectSubjectNames
 
 	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
 	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
@@ -214,31 +294,8 @@ public class AdminController {
 		return entity;
 	}// update_form
 	
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	public String uploadFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException{
-		String root_path = req.getSession().getServletContext().getRealPath("/");
-		String innerUploadPath = "resources/upload";
-
-		File dir = new File(root_path + "/" + innerUploadPath);
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-		
-		UUID uid = UUID.randomUUID();
-		String savedName1 = uid.toString() + "_" + nameFile.getOriginalFilename(); //랜덤이름_원본이름
-		String savedName2 = uid.toString() + "_" + questionFile.getOriginalFilename();
-		String savedName3 = uid.toString() + "_" + exampleFile.getOriginalFilename();
-		
-		File target1 = new File(root_path + "/" + innerUploadPath, savedName1);
-		FileCopyUtils.copy(nameFile.getBytes(), target1);
-		
-		File target2 = new File(root_path + "/" + innerUploadPath, savedName2);
-		FileCopyUtils.copy(questionFile.getBytes(), target2);
-		
-		File target3 = new File(root_path + "/" + innerUploadPath, savedName3);
-		FileCopyUtils.copy(exampleFile.getBytes(), target3);
-		
-		FileInputStream fis = new FileInputStream(target2);
+	public void uploadExcelFile(File target) throws IOException{
+		FileInputStream fis = new FileInputStream(target);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		int rowindex = 0;
 		int columnindex = 0;
@@ -289,9 +346,38 @@ public class AdminController {
 				}
 			}
 		}
+	}
+	
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	public String uploadFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException{
+		String root_path = req.getSession().getServletContext().getRealPath("/");
+		String innerUploadPath = "resources/upload";
+
+		File dir = new File(root_path + "/" + innerUploadPath);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
+		UUID uid = UUID.randomUUID();
+		String savedName1 = uid.toString() + "_" + nameFile.getOriginalFilename(); //랜덤이름_원본이름
+		String savedName2 = uid.toString() + "_" + questionFile.getOriginalFilename();
+		String savedName3 = uid.toString() + "_" + exampleFile.getOriginalFilename();
+		
+		File target1 = new File(root_path + "/" + innerUploadPath, savedName1);
+		FileCopyUtils.copy(nameFile.getBytes(), target1);
+		
+		File target2 = new File(root_path + "/" + innerUploadPath, savedName2);
+		FileCopyUtils.copy(questionFile.getBytes(), target2);
+		
+		File target3 = new File(root_path + "/" + innerUploadPath, savedName3);
+		FileCopyUtils.copy(exampleFile.getBytes(), target3);
+		
+		uploadExcelFile(target1);
+		uploadExcelFile(target2);
+		uploadExcelFile(target3);
 		
 		return "/excelTest";
-	}
+	}//uploadFile
 
 	@ResponseBody
 	@RequestMapping(value = "/excelUploadAjax", method = RequestMethod.POST)

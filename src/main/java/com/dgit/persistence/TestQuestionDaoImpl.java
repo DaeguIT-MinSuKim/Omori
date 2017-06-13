@@ -57,4 +57,14 @@ public class TestQuestionDaoImpl implements TestQuestionDao{
 		map.put("tq_subject", tq_subject);
 		return session.selectOne(namespace + ".selectCountBySubject", map);
 	}
+
+	@Override
+	public int selectLastTqno() throws Exception {
+		return session.selectOne(namespace + ".selectLastTqno");
+	}
+
+	@Override
+	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
+		return session.selectList(namespace + ".selectAllTqSmallNoByTno", tno);
+	}
 }

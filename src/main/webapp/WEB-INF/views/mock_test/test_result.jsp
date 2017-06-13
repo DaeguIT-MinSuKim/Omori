@@ -321,7 +321,6 @@
 			type:"post",
 			success:function(result){
 				console.log("markMockTest............");
-				console.log(result);
 				getNowGradeList();
 				makeTags(result);
 			},

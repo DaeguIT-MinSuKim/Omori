@@ -29,4 +29,9 @@ public class TestNameDaoImpl implements TestNameDao{
 	public void insertTestName(TestNameVO vo) throws Exception {
 		session.insert(namespace+".insertTestName", vo);
 	}
+
+	@Override
+	public int selectLastTno() throws Exception {
+		return session.selectOne(namespace + ".selectLastTno");
+	}
 }
