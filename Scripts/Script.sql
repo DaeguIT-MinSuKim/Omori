@@ -364,7 +364,6 @@ insert into testexample(tq_no, te_small_no, te_content) values(1, 1, '문제1번
 insert into testexample(tq_no, te_small_no, te_content) values(1, 2, '문제1번의 예시2');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 3, '문제1번의 예시3');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 4, '문제1번의 예시4');
-select * from testexample;
 -- 문제 1번의 객관식 보기
 select * from testexample where tq_no = 101 order by te_small_no;
 -- 문제 1번의 보기와 답
@@ -372,6 +371,7 @@ select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_
 where e.tq_no = 1 and q.tq_no = 1;
 delete from testexample;
 alter table testexample auto_increment = 1;
+select * from testexample;
 
 insert into selected_answer(uid, tq_no, sa_answer, sa_date) values('test1', 1, 1, now());
 -- 문제 1번에 대해 제일 최근 test1유저가 선택한 답

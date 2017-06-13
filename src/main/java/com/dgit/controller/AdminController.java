@@ -2,7 +2,6 @@ package com.dgit.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -16,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -294,31 +296,46 @@ public class AdminController {
 		return entity;
 	}// update_form
 	
-	public void uploadExcelFile(File target) throws IOException{
+	@SuppressWarnings("resource")
+	public void uploadExcelFile(HttpServletRequest req, MultipartFile multipartFile) throws IOException{
+		String root_path = req.getSession().getServletContext().getRealPath("/");
+		String innerUploadPath = "resources/upload";
+
+		File dir = new File(root_path + "/" + innerUploadPath);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
+		UUID uid = UUID.randomUUID();
+		String savedName1 = uid.toString() + "_" + multipartFile.getOriginalFilename(); //랜덤이름_원본이름
+		
+		File target = new File(root_path + "/" + innerUploadPath, savedName1);
+		FileCopyUtils.copy(multipartFile.getBytes(), target);
+		
 		FileInputStream fis = new FileInputStream(target);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
+//		Workbook workbook = WorkbookFactory.create(fis);
 		int rowindex = 0;
 		int columnindex = 0;
-		// 시트 수 (첫번째에만 존재하므로 0을 준다)
-		// 만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다
-		XSSFSheet sheet = workbook.getSheetAt(0);
-		// 행의 수
-		int rows = sheet.getPhysicalNumberOfRows();
+		
+		XSSFSheet sheet = workbook.getSheetAt(0); //시트 번째 (만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다)
+//		Sheet sheet = workbook.getSheetAt(0);
+		int rows = sheet.getPhysicalNumberOfRows(); // 행의 수
+		
 		for (rowindex = 1; rowindex < rows; rowindex++) {
-			// 행을읽는다
-			XSSFRow row = sheet.getRow(rowindex);
+			XSSFRow row = sheet.getRow(rowindex); // 행을읽는다
 			if (row != null) {
-				// 셀의 수
-				int cells = row.getPhysicalNumberOfCells();
+				int cells = row.getPhysicalNumberOfCells(); // 셀의 수
+				
+				System.out.println("cell의 수" + cells);
+				
 				for (columnindex = 0; columnindex <= cells; columnindex++) {
-					// 셀값을 읽는다
-					XSSFCell cell = row.getCell(columnindex);
+					XSSFCell cell = row.getCell(columnindex); // 셀값을 읽는다
 					String value = "";
-					// 셀이 빈값일경우를 위한 널체크
-					if (cell == null) {
+					
+					if (cell == null) {// 셀이 빈값일경우를 위한 널체크
 						continue;
-					} else {
-						// 타입별로 내용 읽기
+					} else { // 타입별로 내용 읽기
 						switch (cell.getCellType()) {
 						case XSSFCell.CELL_TYPE_FORMULA:
 							value = cell.getCellFormula();
@@ -348,37 +365,34 @@ public class AdminController {
 		}
 	}
 	
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	public String uploadFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException{
-		String root_path = req.getSession().getServletContext().getRealPath("/");
-		String innerUploadPath = "resources/upload";
-
-		File dir = new File(root_path + "/" + innerUploadPath);
-		if (!dir.exists()) {
-			dir.mkdir();
+	@ResponseBody
+	@RequestMapping(value = "/uploadExcelFile", method = RequestMethod.POST)
+	public ResponseEntity<String> uploadExcelFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException{
+		ResponseEntity<String> entity = null;
+		
+		try {
+			if(nameFile != null){
+				uploadExcelFile(req, nameFile);
+				
+			}
+			if(questionFile != null){
+				uploadExcelFile(req, questionFile);
+				
+			}
+			if(exampleFile != null){
+				uploadExcelFile(req, exampleFile);
+				
+			}
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		UUID uid = UUID.randomUUID();
-		String savedName1 = uid.toString() + "_" + nameFile.getOriginalFilename(); //랜덤이름_원본이름
-		String savedName2 = uid.toString() + "_" + questionFile.getOriginalFilename();
-		String savedName3 = uid.toString() + "_" + exampleFile.getOriginalFilename();
-		
-		File target1 = new File(root_path + "/" + innerUploadPath, savedName1);
-		FileCopyUtils.copy(nameFile.getBytes(), target1);
-		
-		File target2 = new File(root_path + "/" + innerUploadPath, savedName2);
-		FileCopyUtils.copy(questionFile.getBytes(), target2);
-		
-		File target3 = new File(root_path + "/" + innerUploadPath, savedName3);
-		FileCopyUtils.copy(exampleFile.getBytes(), target3);
-		
-		uploadExcelFile(target1);
-		uploadExcelFile(target2);
-		uploadExcelFile(target3);
-		
-		return "/excelTest";
+		return entity;
 	}//uploadFile
 
+	@SuppressWarnings("resource")
 	@ResponseBody
 	@RequestMapping(value = "/excelUploadAjax", method = RequestMethod.POST)
 	public String excelUploadAjax(MultipartFile excelFile, HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -501,8 +515,6 @@ public class AdminController {
 	
 	@RequestMapping(value = "/downloadExcel/{filename}", method=RequestMethod.GET)
 	public String downloadExcel(HttpServletRequest req, HttpServletResponse res, @PathVariable String filename) throws IOException {
-		//ResponseEntity<String> entity = null;
-		
 		String root_path = req.getSession().getServletContext().getRealPath("/");
 		String innerUploadPath = "resources/upload";
 		String savedName = filename+".xlsx";
@@ -531,14 +543,13 @@ public class AdminController {
 		
 		res.setContentType(sMimeType);
 		
-		//한글 깨지지 않도록
-		String sEncoding = URLEncoder.encode(savedName, "utf-8");
+		
+		String sEncoding = URLEncoder.encode(savedName, "utf-8"); //한글 깨지지 않도록
 
-		//브라우저에 다운 파일 인식
-		res.setHeader("Content-Disposition", "attachment; filename=" + sEncoding);
+		res.setHeader("Content-Disposition", "attachment; filename=" + sEncoding); //브라우저에 다운 파일 인식
 		ServletOutputStream out = res.getOutputStream();
 		
-		//파일 데이터 읽어오기
+//		파일 데이터 읽어오기
 		int numRead;
 		while ( (numRead = in.read(b, 0, b.length)) != -1) {
 			out.write(b, 0, numRead);

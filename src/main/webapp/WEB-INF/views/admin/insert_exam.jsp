@@ -111,7 +111,7 @@ a.selected-no{color:#cc0000 !important;}
 			<div class="inner-section">
 				<div class="testname-box">
 					<div class="how-to">
-						<h3>기출문제 등록 방법(한꺼번에 등록하기)</h3>
+						<h3>기출문제 한꺼번에 등록하는 방법</h3>
 						<div class="how-to-name">
 							<img src="${pageContext.request.contextPath}/resources/images/ex_name.png" alt="" />
 							<ul>
@@ -183,7 +183,7 @@ a.selected-no{color:#cc0000 !important;}
 						</div>
 						<div class="clear-how">
 							<span>※ 각 문제에 해당하는 이미지는 문제 등록 후 나오는 리스트에서 등록하시면 됩니다</span>
-							<form action="${pageContext.request.contextPath}/admin/uploadFile" method="post" enctype="multipart/form-data" id="uploadForm">
+							<form action="" method="post" enctype="multipart/form-data" id="uploadForm">
 								<p>
 									<label for="">기출문제 : </label><input type="file" name='nameFile' id='nameFile'/>
 								</p>
@@ -199,7 +199,7 @@ a.selected-no{color:#cc0000 !important;}
 							</form>
 						</div>
 						<hr />
-						<h3>기출문제 등록 방법(한꺼번에 등록하기)</h3>
+						<h3>기출문제 낱개로 등록</h3>
 						<c:if test="${nameList.size() < 1}">
 							<div class="no-testname">
 								<p>등록된 자격증이 없습니다. 자격증을 등록 후 기출문제를 등록해주세요. >> <a href="" class="btnAddTestName">자격증등록</a></p>
@@ -336,6 +336,9 @@ function insertTestNameAjax(){
 					$(".login-container").fadeOut("fast");
 					
 					getTestNameListAjax();
+					
+					$(".add-testname-popup #addTname").val("");
+					$(".add-testname-popup #addTdate").val("");
 				},
 				error:function(e){
 					alert("에러가 발생하였습니다");
@@ -395,7 +398,7 @@ function getTestNameListAjax(){
 /* --------------------------
 	문제 번호 리스트 가져오는 ajax
 ---------------------------*/
-var tqSmallNoList = new Array();
+var tqSmallNoList;
 function getTqSmallNoListAjax(no){
 	$.ajax({
 		url:"${pageContext.request.contextPath}/admin/getTqSmallNoList",
@@ -405,8 +408,8 @@ function getTqSmallNoListAjax(no){
 			if(result.length == 0){
 				tqSmallNoList = null;	
 			}else{
+				tqSmallNoList = new Array();
 				for(var i=0; i<result.length; i++){
-					tqSmallNoList = new Array();
 					tqSmallNoList[i] = result[i];
 				}
 			}
@@ -444,11 +447,121 @@ function insertQuestionExampleAjax(){
 				title:"등록되었습니다",
 				confirmButtonText: "확인"
 			});
+			$(".login-container").fadeOut("fast");
+			
+			$("#example04").val("");
+			$("#example03").val("");
+			$("#example02").val("");
+			$("#example01").val("");
+			$(".add-example-popup").find("input[type='radio']").prop("checked", false);
+			$("#q-question").val("");
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");	
 		}
 	});
+}
+
+/*---------------------
+	엑셀 파일 업로드 ajax 
+---------------------*/
+function check() {
+	var file1 = $("#nameFile").val();
+	var file2 = $("#questionFile").val();
+	var file3 = $("#exampleFile").val();
+	
+	if ( (file1 == "" || file1 == null)
+		&& (file2 == "" || file2 == null)
+		&& (file3 == "" || file3 == null) ) {
+		swal({
+			title:"파일을 하나 이상 등록해주세요",
+			confirmButtonText: "확인"
+		});
+		return false;
+		
+	} else {
+		if(file1 != "" && file1 != null){
+			if( !checkFileType(file1) ){
+				swal({
+					title:"엑셀(.xlsx) 파일만 업로드 가능합니다",
+					confirmButtonText: "확인"
+				});
+				return false;
+			}
+		}
+		
+		if(file2 != "" && file2 != null){
+			if( !checkFileType(file2) ){
+				swal({
+					title:"엑셀(.xlsx) 파일만 업로드 가능합니다",
+					confirmButtonText: "확인"
+				});
+				return false;
+			}
+		}
+		
+		if(file3 != "" && file3 != null){
+			if( !checkFileType(file3) ){
+				swal({
+					title:"엑셀(.xlsx) 파일만 업로드 가능합니다",
+					confirmButtonText: "확인"
+				});
+				return false;
+			}
+		}
+	}
+	
+	swal({
+		title:"기출문제를 등록하시겠습니까?",
+		showCancelButton:true,
+		cancelButtonText: "아니오",
+		confirmButtonText: "네",
+	}, function(isConfirm){
+		if(isConfirm){
+			//var formData = $("form#uploadForm").serialize();
+			var sendForm = $("form#uploadForm")[0];
+			var formData = new FormData(sendForm);
+			
+			$.ajax({
+				url:"${pageContext.request.contextPath}/admin/uploadExcelFile",
+				method:"post",
+				enctype:"multipart/form-data",
+				data:formData,
+				processData: false,
+                contentType: false,
+				success:function(result){
+					alert("result");
+				},
+				error:function(e){
+					alert("에러가 발생하였습니다");
+				}
+			})
+
+			/*$("form#uploadForm").ajaxForm({
+				url:"${pageContext.request.contextPath}/admin/uploadExcelFile",
+				method:"post",
+				enctype:"multipart/form-data",
+				success:function(result){
+					alert("result");
+				},
+				error:function(e){
+					alert("에러가 발생하였습니다");
+				}
+			});
+			$("form#uploadForm").submit();*/
+			
+		}
+	});
+}
+
+function checkFileType(file) {
+	var format = file.split(".");
+	
+	if (format.indexOf("xlsx") > -1) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 $(function(){
@@ -493,7 +606,6 @@ $(function(){
 		}
 	}); */
 });
-
 
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/insert-exam.js"></script>

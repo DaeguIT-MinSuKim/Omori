@@ -104,62 +104,23 @@ function makeTqSmallNoButton(){
 		$div.html($a);
 	}else{
 		//문제중에 빈 문제가 있으면 선택가능함
-		var maxSize = tqSmallNoList[tqSmallNoList.length-1];
-		for(var i=0; i<maxSize+1; i++){
-			var $a = $("<a href='' tqsmallno='"+(i+1)+"'>").html(i+1);
+		for(var i=0; i<100; i++){
+			var text;
+			if( i+1 < 10 ){
+				text = "0"+(i+1);
+			}else{
+				text = (i+1);
+			}
+			var $a = $("<a href='' tqsmallno='"+text+"'>").html(text);
 			for(var j=0; j<tqSmallNoList.length; j++){
-				var obj = tqSmallNoList[i];
-				if(i+1 == obj){
+				if(tqSmallNoList[j] == (i+1)){
 					$a.addClass("cant-sel-a");
-					break;
 				}
+			}
+			if(i > 9 && i % 10 == 0){
+				$div.append("<br>");
 			}
 			$div.append($a);
 		}
-	}
-}
-
-function check() {
-	var file1 = $("#nameFile").val();
-	var file2 = $("#questionFile").val();
-	var file3 = $("#exampleFile").val();
-	
-	if ( (file1 == "" || file1 == null)
-		&& (file2 == "" || file2 == null)
-		&& (file3 == "" || file3 == null) ) {
-		swal({
-			title:"파일을 하나 이상 등록해주세요",
-			confirmButtonText: "확인"
-		});
-		return false;
-	} else if ( !checkFileType(file1, file2, file3) ) {
-		swal({
-			title:"엑셀(xlsx) 파일만 업로드 가능합니다",
-			confirmButtonText: "확인"
-		});
-		return false;
-	}
-	
-	swal({
-		title:"기출문제를 등록하시겠습니까?",
-		showCancelButton:true,
-		cancelButtonText: "아니오",
-		confirmButtonText: "네",
-	}, function(isConfirm){
-		if(isConfirm){
-			$("form#uploadForm").submit();
-		}
-	});
-}
-
-function checkFileType(file1, file2, file3) {
-	var format1 = file1.split(".");
-	var format2 = file2.split(".");
-	var format3 = file3.split(".");
-	
-	if (format1.indexOf("xlsx") > -1 && format2.indexOf("xlsx") > -1 && format3.indexOf("xlsx") > -1) {
-		return true;
-	} else {
-		return false;
 	}
 }
