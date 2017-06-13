@@ -321,8 +321,16 @@ select * from testname order by tname;
 select * from testname order by tno desc;
 -- 마지막 번호 가져오기
 select if(max(tno) is null, 1, max(tno)+1) as tno from testname;
-delete from testname;
+-- autoincrement
+SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = "omori" AND TABLE_NAME = "testname";
+-- 자격증 수정
+update testname set tname = '정보처리기사 2016년 3회', tdate = '2016-11-11' where tno = 1;
+-- 자격증 삭제
+delete from testname where tno = 7;
+-- 자동증가 초기화
 alter table testname auto_increment = 1;
+delete from testname;
+select * from testname;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';

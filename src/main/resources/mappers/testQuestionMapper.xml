@@ -66,4 +66,8 @@
 		where tno = #{tno}
 		order by tq_small_no
 	</select>
+	
+	<update id="initAutoIncrementQue">
+		alter table testquestion auto_increment = 1; 
+	</update>
 </mapper>

@@ -74,6 +74,11 @@ public class TestServiceTest {
 		nameService.selectLastTno();
 	}
 	
+	@Test
+	public void initAutoIncrementName() throws Exception{
+		nameService.initAutoIncrementName();
+	}
+	
 	/*......................*/
 	/*TestQuestion			*/
 	/*......................*/

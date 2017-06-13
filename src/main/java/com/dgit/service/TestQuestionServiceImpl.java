@@ -114,4 +114,9 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
 		return dao.selectAllTqSmallNoByTno(tno);
 	}
+
+	@Override
+	public void initAutoIncrementQue() throws Exception {
+		dao.initAutoIncrementQue();
+	}
 }

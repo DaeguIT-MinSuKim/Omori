@@ -14,6 +14,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -102,9 +103,9 @@ public class AdminController {
 			testName.setTno(tno);
 			
 			vo.setTestName(testName);
-			vo.setTq_subject(tq_subject);
+			vo.setTq_subject(tq_subject.trim());
 			vo.setTq_small_no(tq_small_no);
-			vo.setTq_question(tq_question);
+			vo.setTq_question(tq_question.trim());
 			vo.setTq_answer(tq_answer);
 			
 			questionService.insertTestQuestion(vo);
@@ -115,7 +116,7 @@ public class AdminController {
 				TestExampleVO example = new TestExampleVO();
 				example.setQuestion(question);
 				example.setTe_small_no(i+1);
-				example.setTe_content(te_content[i]);
+				example.setTe_content(te_content[i].trim());
 				exampleService.insertTestExample(example);
 			}
 			
@@ -129,6 +130,45 @@ public class AdminController {
 	}//insertQuestionExample
 	
 	@ResponseBody
+	@RequestMapping(value = "/updateTestName", method = RequestMethod.POST)
+	public ResponseEntity<String> updateTestName(int tno, String tname, String tdate) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			TestNameVO vo = new TestNameVO();
+			vo.setTno(tno);
+			vo.setTname(tname.trim());
+			vo.setTdate(tdate.trim());
+			
+			nameService.updateTestName(vo);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//updateTestName
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteTestName", method = RequestMethod.POST)
+	public ResponseEntity<String> deleteTestName(int tno) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			nameService.deleteTestName(tno);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//deleteTestName
+	
+	@ResponseBody
 	@RequestMapping(value = "/getLastTnoTqno", method = RequestMethod.POST)
 	public ResponseEntity<List<Integer>> getLastTnoTqno() throws Exception {
 		ResponseEntity<List<Integer>> entity = null;
@@ -136,6 +176,13 @@ public class AdminController {
 		try {
 			int tno = nameService.selectLastTno();
 			int tqno = questionService.selectLastTqno();
+			if(tno == 1){
+				nameService.initAutoIncrementName();
+				questionService.initAutoIncrementQue();
+			}
+			if(tqno == 1){
+				questionService.initAutoIncrementQue();
+			}
 			List<Integer> list = new ArrayList<>();
 			list.add(tno);
 			list.add(tqno);
@@ -235,26 +282,6 @@ public class AdminController {
 		return "admin/insert_result";
 	}// insertExamPOST
 
-	
-
-	/*@ResponseBody
-	@RequestMapping(value = "/selectSubjectNames", method = RequestMethod.POST)
-	public ResponseEntity<String[]> selectSubjectNamesPOST(int tno) throws Exception {
-		logger.info("selectSubjectNames POST................");
-
-		ResponseEntity<String[]> entity = null;
-
-		TestNameVO vo = nameService.selectOneTestName(tno);
-
-		try {
-			entity = new ResponseEntity<>(vo.getSubjectNames(), HttpStatus.OK);
-		} catch (Exception e) {
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-
-		return entity;
-	}*/// selectSubjectNames
-
 	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
 	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
 		TestNameVO testName = nameService.selectOneTestName(tno);
@@ -296,8 +323,45 @@ public class AdminController {
 		return entity;
 	}// update_form
 	
-	@SuppressWarnings("resource")
-	public void uploadExcelFile(HttpServletRequest req, MultipartFile multipartFile) throws IOException{
+	/* -----------
+	 * 엑셀 파일 업로드	
+	 * -----------*/
+	@ResponseBody
+	@RequestMapping(value = "/uploadExcelFile", method = RequestMethod.POST)
+	public ResponseEntity<String> uploadExcelFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException, InvalidFormatException{
+		ResponseEntity<String> entity = null;
+		
+		try {
+			String result = "";
+			
+			if(nameFile.getSize() > 0){
+				result = uploadExcelFile(req, nameFile, "nameFile");
+			}
+			if(questionFile.getSize() > 0){
+				result = uploadExcelFile(req, questionFile, "questionFile");
+			}
+			if(exampleFile.getSize() > 0){
+				result = uploadExcelFile(req, exampleFile, "exampleFile");
+			}
+			
+			if(result == null){
+				entity = new ResponseEntity<>("success", HttpStatus.OK);
+			}else if(result.equals("matchingError")){
+				entity = new ResponseEntity<>("matchingError", HttpStatus.OK);
+			}else if(result.equals("testNameNull")){
+				entity = new ResponseEntity<>("testNameNull", HttpStatus.OK);
+			}else if(result.equals("testQuestoinNull")){
+				entity = new ResponseEntity<>("testQuestoinNull", HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//uploadExcelFile
+	
+	public String uploadExcelFile(HttpServletRequest req, MultipartFile multipartFile, String fileName) throws Exception{
 		String root_path = req.getSession().getServletContext().getRealPath("/");
 		String innerUploadPath = "resources/upload";
 
@@ -313,24 +377,55 @@ public class AdminController {
 		FileCopyUtils.copy(multipartFile.getBytes(), target);
 		
 		FileInputStream fis = new FileInputStream(target);
-		XSSFWorkbook workbook = new XSSFWorkbook(fis);
-//		Workbook workbook = WorkbookFactory.create(fis);
+		Workbook workbook = WorkbookFactory.create(fis);
+		Sheet sheet = workbook.getSheetAt(0); //시트 번째 (만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다)
+		int rows = sheet.getPhysicalNumberOfRows(); // 행의 수
 		int rowindex = 0;
 		int columnindex = 0;
 		
-		XSSFSheet sheet = workbook.getSheetAt(0); //시트 번째 (만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다)
-//		Sheet sheet = workbook.getSheetAt(0);
-		int rows = sheet.getPhysicalNumberOfRows(); // 행의 수
+		String returnText = null;
 		
+		//행 읽는 for문
 		for (rowindex = 1; rowindex < rows; rowindex++) {
-			XSSFRow row = sheet.getRow(rowindex); // 행을읽는다
+			XSSFRow row = (XSSFRow) sheet.getRow(rowindex); //각 행 읽기
 			if (row != null) {
 				int cells = row.getPhysicalNumberOfCells(); // 셀의 수
 				
-				System.out.println("cell의 수" + cells);
+				if(fileName.equals("nameFile")){
+					if(cells != 3) {
+						returnText = "matchingError";
+						break;
+					}
+				}else if(fileName.equals("questionFile")){
+					if(nameService.selectLastTno() == 1){
+						returnText = "testNameNull";
+						break;
+					}
+					if(cells != 6){
+						returnText = "matchingError";
+						break;
+					}
+				}else if(fileName.equals("exampleFile")){
+					if(questionService.selectLastTqno() == 1){
+						returnText = "testQuestoinNull";
+					}
+					if(cells != 3){
+						returnText = "matchingError";
+						break;
+					}
+				}
 				
-				for (columnindex = 0; columnindex <= cells; columnindex++) {
-					XSSFCell cell = row.getCell(columnindex); // 셀값을 읽는다
+				//셀 읽는 for문
+				try {
+					addToDB(cells, row, fileName);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				/*for (columnindex = 0; columnindex <= cells; columnindex++) {
+					XSSFCell cell = row.getCell(columnindex); //각 셀 읽기
 					String value = "";
 					
 					if (cell == null) {// 셀이 빈값일경우를 위한 널체크
@@ -347,6 +442,7 @@ public class AdminController {
 							}else{
 								value = (int) cell.getNumericCellValue() + "";
 							}
+							value = (int) cell.getNumericCellValue() + "";
 							break;
 						case XSSFCell.CELL_TYPE_STRING:
 							value = cell.getStringCellValue() + "";
@@ -360,37 +456,143 @@ public class AdminController {
 						}
 					}
 					System.out.println("각 셀 내용 :" + value);
+				}*///end of child for
+			}
+		}//end of parent for
+		
+		return returnText;
+	}
+	
+	public void addToDB(int cells, XSSFRow row, String fileName) throws Exception{
+		//nameFile
+		List<String> tnoList = new ArrayList<>(); //공통
+		List<String> tnameList = new ArrayList<>();
+		List<String> tdateList = new ArrayList<>();
+		//questionFile
+		List<String> tqNoList = new ArrayList<>(); //공통
+		List<String> subjectList = new ArrayList<>();
+		List<String> smallNoList = new ArrayList<>();
+		List<String> questionList = new ArrayList<>();
+		List<String> answerList = new ArrayList<>();
+		//exampleFile
+		List<String> teSmallNoList = new ArrayList<>();
+		List<String> contentList = new ArrayList<>();
+		
+		for (int columnindex = 0; columnindex <= cells; columnindex++) {
+			XSSFCell cell = row.getCell(columnindex); // 셀값을 읽는다
+			String value = "";
+			
+			if (cell == null) {// 셀이 빈값일경우를 위한 널체크
+				continue;
+			} else { // 타입별로 내용 읽기
+				switch (cell.getCellType()) {
+				case XSSFCell.CELL_TYPE_FORMULA:
+					value = cell.getCellFormula();
+					break;
+				case XSSFCell.CELL_TYPE_NUMERIC:
+					if(fileName.equals("nameFile")){
+						if(DateUtil.isCellDateFormatted(cell)){
+							Date date = cell.getDateCellValue();
+							value = new SimpleDateFormat("yyyy-MM-dd").format(date);
+						}else{
+							value = (int) cell.getNumericCellValue() + "";
+						}
+					}else{
+						value = (int) cell.getNumericCellValue() + "";
+					}
+					break;
+				case XSSFCell.CELL_TYPE_STRING:
+					value = cell.getStringCellValue() + "";
+					break;
+				case XSSFCell.CELL_TYPE_BLANK:
+					value = cell.getBooleanCellValue() + "";
+					break;
+				case XSSFCell.CELL_TYPE_ERROR:
+					value = cell.getErrorCellValue() + "";
+					break;
 				}
+			}
+			System.out.println("각 셀 내용 :" + value);
+			
+			if(fileName.equals("nameFile")){
+				switch (columnindex) {
+				case 0: tnoList.add(value); break;
+				case 1: tnameList.add(value); break;
+				case 2: tdateList.add(value); break;
+				}
+			}else if(fileName.equals("questionFile")){
+				switch (columnindex) {
+				case 0: tqNoList.add(value); break;
+				case 1: tnoList.add(value); break;
+				case 2: subjectList.add(value); break;
+				case 3: smallNoList.add(value); break;
+				case 4: questionList.add(value); break;
+				case 5: answerList.add(value); break;
+				}
+			}else if(fileName.equals("exampleFile")){
+				switch (columnindex) {
+				case 0: tqNoList.add(value); break;
+				case 1: teSmallNoList.add(value); break;
+				case 2: contentList.add(value); break;
+				}
+			}
+			
+			System.out.println("셀 : "+value);
+		}//end of child for
+		
+		if(fileName.equals("nameFile")){
+			for (int i = 0; i < tnoList.size(); i++) {
+				int tno = Integer.parseInt(tnoList.get(i));
+				String tname = tnameList.get(i);
+				String tdate = tdateList.get(i);
+				
+				TestNameVO vo = new TestNameVO();
+				vo.setTno(tno);
+				vo.setTname(tname);
+				vo.setTdate(tdate);
+				nameService.insertTestName(vo);
+			}
+		}else if(fileName.equals("questionFile")){
+			for (int i = 0; i < tqNoList.size(); i++) {
+				int tno = Integer.parseInt(tnoList.get(i));
+				int tq_no = Integer.parseInt(tqNoList.get(i));
+				String tq_subject = subjectList.get(i);
+				int tq_small_no = Integer.parseInt(smallNoList.get(i));
+				String tq_question = questionList.get(i);
+				int tq_answer = Integer.parseInt(answerList.get(i));
+				
+				TestQuestionVO vo = new TestQuestionVO();
+				vo.setTq_no(tq_no);
+				
+				TestNameVO testName = nameService.selectOneTestName(tno);
+				vo.setTestName(testName);
+				
+				vo.setTq_subject(tq_subject);
+				vo.setTq_small_no(tq_small_no);
+				vo.setTq_question(tq_question);
+				vo.setTq_answer(tq_answer);
+				
+				questionService.insertTestQuestion(vo);
+			}
+		}else if(fileName.equals("exampleFile")){
+			for (int i = 0; i < teSmallNoList.size(); i++) {
+				int tq_no = Integer.parseInt(tqNoList.get(i));
+				int te_small_no = Integer.parseInt(teSmallNoList.get(i));
+				String te_content = contentList.get(i);
+				
+				TestExampleVO vo = new TestExampleVO();
+				
+				TestQuestionVO question = questionService.selectOneTestQuestionByTqno(tq_no);
+				vo.setQuestion(question);
+				
+				vo.setTe_small_no(te_small_no);
+				vo.setTe_content(te_content);
+				
+				exampleService.insertTestExample(vo);
 			}
 		}
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/uploadExcelFile", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadExcelFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException{
-		ResponseEntity<String> entity = null;
-		
-		try {
-			if(nameFile != null){
-				uploadExcelFile(req, nameFile);
-				
-			}
-			if(questionFile != null){
-				uploadExcelFile(req, questionFile);
-				
-			}
-			if(exampleFile != null){
-				uploadExcelFile(req, exampleFile);
-				
-			}
-			entity = new ResponseEntity<>("success", HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		return entity;
-	}//uploadFile
 
 	@SuppressWarnings("resource")
 	@ResponseBody
@@ -457,8 +659,11 @@ public class AdminController {
 					System.out.println("각 셀 내용 :" + value);
 				}
 			}
+			
 		}
 
+		
+		
 		/**
 		 * 다운로드 부분
 		 */

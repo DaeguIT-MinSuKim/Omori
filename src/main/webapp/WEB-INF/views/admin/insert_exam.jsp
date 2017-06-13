@@ -23,37 +23,25 @@
 	max-height:200px;
 }
 .how-to{background:rgba(0,0,0,0.5);padding:10px 20px;}
-.how-to img{float:left;margin-right:12px;width:510px;}
 .how-to ul{float:right;width:680px;}
 .how-to ul li{margin-bottom:14px;color:#99cccc;}
 .how-to ul li span{display:block;margin-left:20px;color:#cc9999;}
 .how-to ul li span.more-emphasis{color:ff6666 !important;}
+.how-to ul li.down-li a{font-weight:bold; font-family: sans-serif;}
+.how-to ul li.down-li a:HOVER{text-decoration: underline;}
+.how-to img {float:left;margin-right:12px;width:510px;}
 
-li.down-li a{
-	font-weight:bold;
-	font-family: sans-serif;
-}
-li.down-li a:HOVER{
-	text-decoration: underline;
-}
-img.icon-down{
-	width:20px !important;
-}
-.clear-how{
-	clear:both;
-	width:100%;
-	padding:20px 0 0;
-}
-.clear-how span{
-	font-size:18px;
-	color:#ff6666;
-	display:block;
-}
-.clear-how #uploadForm p{
-	display: inline-block;
-	margin-right:30px;
-}
+.clear-how{clear:both;width:100%;padding:20px 0 0;}
+.clear-how span{font-size:18px;color:#ff6666;display:block;}
+.clear-how #uploadForm p{display: inline-block;margin-right:30px;}
 
+img.icon-down{width:20px !important;}
+img.icon-edit{width:20px !important; float:none; cursor: pointer; position:relative; 
+			padding:0 5px; margin-left:5px; margin-bottom:-5px;}
+
+.testname-select-box{}
+.each-testname-box div{margin:10px 15px; display:inline-block;}
+.each-testname-box div a{padding:5px 0;}
 
 /* ------------
 	popup창 
@@ -70,9 +58,14 @@ img.icon-down{
 .add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
 .add-example-popup .login-page .form div textarea{width:90%; float:right;}
 
+.edit-testname-popup .login-page .form .button-box{text-align: center;}
+.edit-testname-popup .login-page .form .button-box button{width:49%;}
+
 .add-question-popup .login-page .tqsmallno-box a{color:#333; font-weight: bold; padding:4px; margin:2px 4px;}
 a.cant-sel-a{cursor: default; color:#ddd !important; font-weight: lighter !important;}
 a.selected-no{color:#cc0000 !important;}
+
+
 /* ------------
 	로딩 이미지
 -------------*/
@@ -233,7 +226,7 @@ a.selected-no{color:#cc0000 !important;}
 				<input type="text" value='1' id='addTno' disabled="disabled"/>
 				<label for="">자격증 이름</label>
 				<input type="text" placeholder="정보처리기사 2016년 1회" id='addTname'/>
-				<label for="">시험 날짜</label>
+				<label for="">시행 날짜</label>
 				<input type="text" placeholder="2016-03-06" id='addTdate'/>
 				<button id="btnInsertTestNameForm">등록</button>
 			</form>
@@ -296,6 +289,32 @@ a.selected-no{color:#cc0000 !important;}
 		</div>
 	</div>
 </div>
+
+<!-- 자격증 수정 팝업 -->
+<div class="login-container edit-testname-popup">
+	<div class="login-page">
+		<div class="login-close">
+			<a href=""><img src="${pageContext.request.contextPath}/resources/images/ic-close-button.png" alt="" /></a>
+		</div>
+		<div class="form">
+			<form class="login-form">
+				<h2 class="form-title">자격증 수정</h2>
+				<label for="">자격증 번호</label>
+				<input type="text" id='editTno' disabled="disabled"/>
+				<label for="">자격증 이름</label>
+				<input type="text" id='editTname'/>
+				<label for="">시행 날짜</label>
+				<input type="text" id='editTdate'/>
+				<div class='button-box'>
+					<button id="btnUpTestName">수정</button>
+					<button id="btnDelTestName">삭제</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
 <script>
 /*---------------
 	자격증등록 ajax
@@ -348,9 +367,65 @@ function insertTestNameAjax(){
 	});
 }
 
-/*-------------------------------
-	마지막 tno, tqno 가져오는 ajax
--------------------------------*/
+/* ----------------
+	자격증 수정 ajax
+-----------------*/
+function updateTestNameAjax(){
+	var tno = $("#editTno").val();
+	var tname = $("#editTname").val();
+	var tdate = $("#editTdate").val();
+	
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/updateTestName",
+		type:"post",
+		data:{"tno":tno, "tname":tname, "tdate":tdate},
+		success:function(result){
+			getLastTnoTqnoAjax();
+			getTestNameListAjax();
+			
+			swal({
+				title:"자격증이 수정되었습니다",
+				confirmButtonText: "확인"
+			});
+			
+			$(".login-container").fadeOut("fast");
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");
+		}
+	});
+}
+
+/*-----------------
+	자격증삭제 ajax
+-----------------*/
+function deleteTestNameAjax(){
+	var tno = $("#editTno").val();
+	
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/deleteTestName",
+		type:"post",
+		data:{"tno":tno},
+		success:function(result){
+			getLastTnoTqnoAjax();
+			getTestNameListAjax();
+			
+			swal({
+				title:"삭제되었습니다",
+				confirmButtonText: "확인"
+			});
+			
+			$(".login-container").fadeOut("fast");
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");	
+		}
+	});
+}
+
+/*----------------------------------------------
+	자격증 마지막 tno, 기출문제 마지막 tqno 가져오는 ajax
+----------------------------------------------*/
 var lastTno;
 var lastTqno;
 function getLastTnoTqnoAjax(){
@@ -362,10 +437,10 @@ function getLastTnoTqnoAjax(){
 			lastTqno = result[1];
 			
 			$("#setLastTnoText").html("※ 지금까지 등록된 자격증번호는 "+ (lastTno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 "+ lastTno +"로 시작해주십시오");
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 "+ lastTno +"(으)로 시작해주십시오");
 			
 			$("#setLastTqnoText").html("※ 지금까지 등록된 문제고유번호는 "+ (lastTqno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 "+ lastTqno +"로 시작해주십시오");
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 "+ lastTqno +"(으)로 시작해주십시오");
 			
 		},
 		error:function(e){
@@ -384,8 +459,12 @@ function getTestNameListAjax(){
 			$(".testname-select-box").find(".each-testname-box").html("");
 			for(var i=0; i<result.length; i++){
 				var obj = result[i];
-				var $a = "<a href='' tno='"+obj.tno+"'>"+obj.tname+"</a>";
-				$(".testname-select-box").find(".each-testname-box").append($a);
+				var $a = "<a href='' tno='"+obj.tno+"' tdate='"+obj.tdate+"'>"+obj.tname+"</a>";
+				var $img = "<img src='${pageContext.request.contextPath}/resources/images/ic-edit-button.png' class='icon-edit'/>";
+				var $div = $("<div>");
+				$div.append($a);
+				$div.append($img);
+				$(".testname-select-box").find(".each-testname-box").append($div);
 				$(".testname-select-box").css("display", "block");
 			}
 		},
@@ -405,13 +484,9 @@ function getTqSmallNoListAjax(no){
 		data:{"tno":no},
 		type:"post",
 		success:function(result){
-			if(result.length == 0){
-				tqSmallNoList = null;	
-			}else{
-				tqSmallNoList = new Array();
-				for(var i=0; i<result.length; i++){
-					tqSmallNoList[i] = result[i];
-				}
+			tqSmallNoList = new Array();
+			for(var i=0; i<result.length; i++){
+				tqSmallNoList[i] = result[i];
 			}
 		},
 		error:function(e){
@@ -420,9 +495,9 @@ function getTqSmallNoListAjax(no){
 	});
 }
 
-/* ------------------
-	믄제 및 보기 제출하기
--------------------*/
+/* -----------------------
+	믄제 및 보기 등록하는 ajax
+------------------------*/
 function insertQuestionExampleAjax(){
 	//$(".add-question-popup").find()
 	var sendTno = $("#q-tno").text();
@@ -443,6 +518,8 @@ function insertQuestionExampleAjax(){
 				"tq_question":sendTqQuestion, "tq_answer":sendTqAnswer,
 				"example1":example1,"example2":example2,"example3":example3,"example4":example4},
 		success:function(result){
+			getLastTnoTqnoAjax();
+			
 			swal({
 				title:"등록되었습니다",
 				confirmButtonText: "확인"
@@ -516,9 +593,9 @@ function check() {
 		showCancelButton:true,
 		cancelButtonText: "아니오",
 		confirmButtonText: "네",
+		closeOnConfirm:false
 	}, function(isConfirm){
 		if(isConfirm){
-			//var formData = $("form#uploadForm").serialize();
 			var sendForm = $("form#uploadForm")[0];
 			var formData = new FormData(sendForm);
 			
@@ -530,26 +607,37 @@ function check() {
 				processData: false,
                 contentType: false,
 				success:function(result){
-					alert("result");
-				},
-				error:function(e){
-					alert("에러가 발생하였습니다");
-				}
-			})
+					
+					var title;
+					var text = "";
+					if(result == "success"){
+						title = "정상적으로 등록되었습니다";
+					}else if(result == "matchingError"){
+						title = "파일이 일치하지 않습니다!";
+						text = "각 분야에 맞는 파일을 넣었는지 확인해주세요";
+					}else if(result == "testNameNull"){
+						title = "기출문제가 존재하지 않습니다!";
+						text = "자격증을 먼저 등록하고 수행해주세요";
+					}else if(reuslt == "testQuestionNull"){
+						title = "문제가 존재하지 않습니다!";
+						text = "문제를 먼저 등록하고 수행해주세요";
+					}
+					
+					swal({
+						title:title,
+						text:text,
+						confirmButtonText: "확인"
+					});
 
-			/*$("form#uploadForm").ajaxForm({
-				url:"${pageContext.request.contextPath}/admin/uploadExcelFile",
-				method:"post",
-				enctype:"multipart/form-data",
-				success:function(result){
-					alert("result");
+					getLastTnoTqnoAjax();
+					getTestNameListAjax();
+					
+					$("#uploadForm input[type='file']").val("");
 				},
 				error:function(e){
 					alert("에러가 발생하였습니다");
 				}
 			});
-			$("form#uploadForm").submit();*/
-			
 		}
 	});
 }

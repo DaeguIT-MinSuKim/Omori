@@ -28,6 +28,46 @@ $(function(){
 		insertTestNameAjax();
 	});
 	
+	/*자격증 수정 이미지 클릭하면 자격증 수정 팝업창 뜸*/
+	$(document).on("click", ".icon-edit", function(e){
+		e.preventDefault();
+		
+		var tno = $(this).parent("div").find("a").attr("tno");
+		var tname = $(this).parent("div").find("a").text();
+		var tdate = $(this).parent("div").find("a").attr("tdate");
+		
+		$(".edit-testname-popup").find("#editTno").val(tno);
+		$(".edit-testname-popup").find("#editTname").val(tname);
+		$(".edit-testname-popup").find("#editTdate").val(tdate);
+		$(".edit-testname-popup").fadeIn("fast");
+	});
+	
+	/*자격증 수정 팝업 뜬 후 수정버튼 클릭했을 때*/
+	$("#btnUpTestName").click(function(e){
+		e.preventDefault();
+		updateTestNameAjax();
+	});
+	
+	/*자격증 수정 팝업 뜬 후 삭제버튼 클릭했을 때*/
+	$("#btnDelTestName").click(function(e){
+		e.preventDefault();
+		var tname = $("#editTname").val();
+		
+		swal({
+			html:true,
+			title:tname,
+			text:"기출문제가 모두 삭제됩니다<br>그래도 삭제하시겠습니까?",
+			showCancelButton:true,
+			cancelButtonText: "아니오",
+			confirmButtonText: "네",
+			closeOnConfirm:false
+		}, function(isConfirm){
+			if(isConfirm){
+				deleteTestNameAjax();
+			}
+		});
+	});
+	
 	/*기출문제 등록 팝업에서 보기 및 정답 등록 버튼 클릭*/
 	$(".add-question-popup #btnInsertExample").click(function(e){
 		e.preventDefault();
@@ -99,28 +139,23 @@ function makeTqSmallNoButton(){
 	var $div = $(".add-question-popup .login-form .tqsmallno-box");
 	$div.html("");
 	
-	if(tqSmallNoList == null){
-		var $a = $("<a href='' tqsmallno='1'>").html(1);
-		$div.html($a);
-	}else{
-		//문제중에 빈 문제가 있으면 선택가능함
-		for(var i=0; i<100; i++){
-			var text;
-			if( i+1 < 10 ){
-				text = "0"+(i+1);
-			}else{
-				text = (i+1);
-			}
-			var $a = $("<a href='' tqsmallno='"+text+"'>").html(text);
-			for(var j=0; j<tqSmallNoList.length; j++){
-				if(tqSmallNoList[j] == (i+1)){
-					$a.addClass("cant-sel-a");
-				}
-			}
-			if(i > 9 && i % 10 == 0){
-				$div.append("<br>");
-			}
-			$div.append($a);
+	//문제중에 빈 문제가 있으면 선택가능함
+	for(var i=0; i<100; i++){
+		var text;
+		if( i+1 < 10 ){
+			text = "0"+(i+1);
+		}else{
+			text = (i+1);
 		}
-	}
+		var $a = $("<a href='' tqsmallno='"+text+"'>").html(text);
+		for(var j=0; j<tqSmallNoList.length; j++){
+			if(tqSmallNoList[j] == (i+1)){
+				$a.addClass("cant-sel-a");
+			}
+		}
+		if(i > 9 && i % 10 == 0){
+			$div.append("<br>");
+		}
+		$div.append($a);
+	}	
 }

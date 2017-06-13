@@ -14,4 +14,5 @@ public interface TestQuestionDao {
 	int selectLastTqno() throws Exception;
 	void insertTestQuestion(TestQuestionVO vo) throws Exception;
 	List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception;
+	void initAutoIncrementQue() throws Exception;
 }

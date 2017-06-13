@@ -28,4 +28,20 @@
 		insert into testname(tname, tdate)
 		values(#{tname}, #{tdate})
 	</insert>
+	
+	<update id="updateTestName">
+		update testname 
+		set tname = #{tname}, 
+			tdate = #{tdate}
+		where tno = #{tno}
+	</update>
+	
+	<delete id="deleteTestName">
+		delete from testname 
+		where tno = #{tno}
+	</delete>
+	
+	<update id="initAutoIncrementName">
+		alter table testname auto_increment = 1; 
+	</update>
 </mapper>
