@@ -114,4 +114,19 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
 		return dao.selectAllTqSmallNoByTno(tno);
 	}
+
+	@Override
+	public void initAutoIncrementQue(int num) throws Exception {
+		dao.initAutoIncrementQue(num);
+	}
+
+	@Override
+	public void deleteTestQuestion(int tq_no) throws Exception {
+		dao.deleteTestQuestion(tq_no);
+	}
+
+	@Override
+	public void updateTestQuestion(TestQuestionVO vo) throws Exception {
+		dao.updateTestQuestion(vo);
+	}
 }

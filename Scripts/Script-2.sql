@@ -321,8 +321,16 @@ select * from testname order by tname;
 select * from testname order by tno desc;
 -- 마지막 번호 가져오기
 select if(max(tno) is null, 1, max(tno)+1) as tno from testname;
-delete from testname;
+-- autoincrement
+SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = "omori" AND TABLE_NAME = "testname";
+-- 자격증 수정
+update testname set tname = '정보처리기사 2016년 3회', tdate = '2016-11-11' where tno = 1;
+-- 자격증 삭제
+delete from testname where tno = 7;
+-- 자동증가 초기화
 alter table testname auto_increment = 1;
+delete from testname;
+select * from testname;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
@@ -367,11 +375,14 @@ insert into testexample(tq_no, te_small_no, te_content) values(1, 4, '문제1번
 -- 문제 1번의 객관식 보기
 select * from testexample where tq_no = 101 order by te_small_no;
 -- 문제 1번의 보기와 답
-select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_answer
-where e.tq_no = 1 and q.tq_no = 1;
+select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_answer where e.tq_no = 1 and q.tq_no = 1;
+-- 수정
+update testexample set set tq_no = 9, te_small_no = 4, te_content = '제약조건' where te_no = 436;
+
 delete from testexample;
 alter table testexample auto_increment = 1;
 select * from testexample;
+select * from testexample where tq_no = 1 and te_small_no = 1;
 
 insert into selected_answer(uid, tq_no, sa_answer, sa_date) values('test1', 1, 1, now());
 -- 문제 1번에 대해 제일 최근 test1유저가 선택한 답
@@ -414,6 +425,7 @@ select * from grade where uid = 'test1' and tno = 2 and g_subject = '데이터�
 
 delete from grade;
 alter table grade auto_increment = 1;
+select * from grade;
 
 
 insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());

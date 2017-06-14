@@ -58,7 +58,9 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectOneTestName() throws Exception{
-		TestNameVO vo =  nameService.selectOneTestName(1);
+		if(nameService.selectOneTestName(7) != null){
+			System.out.println("not null");
+		}
 	}
 	
 //	@Test
@@ -72,6 +74,11 @@ public class TestServiceTest {
 //	@Test
 	public void selectLastTno() throws Exception{
 		nameService.selectLastTno();
+	}
+	
+//	@Test
+	public void initAutoIncrementName() throws Exception{
+		nameService.initAutoIncrementName(2);
 	}
 	
 	/*......................*/

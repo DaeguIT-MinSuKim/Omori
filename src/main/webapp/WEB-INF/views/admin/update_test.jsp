@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login-join.css" />
 <!-- alert -->
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
@@ -172,25 +173,28 @@
     100% {transform: translate(0,0);}
 }
 
-/* 수정하는 form*/
-.update-box{
-	position:fixed;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	background:rgba(0,0,0,0);
-}
-.update-box .close-form{
-	width:500px;
-	margin:200px auto 0;
-	text-align: right;
-}
-.update-box .inner-form{
-	width:500px;
-	margin:10px auto 0;
-	border:1px solid red;
-}
+/* ------------
+	popup창 
+-------------*/
+.login-container .form {text-align: left;}
+
+.add-question-popup .login-page {width:600px;}
+.add-question-popup .login-page .form {max-width:600px;}
+.add-question-popup .login-page .form label {display: inline-block; width:120px;}
+
+.add-example-popup .login-page {width:700px; margin-top:-50px;}
+.add-example-popup .login-page .form {max-width:700px; }
+.add-example-popup .login-page .form div{clear:both;}
+.add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
+.add-example-popup .login-page .form div textarea{width:90%; float:right;}
+
+.edit-testname-popup .login-page .form .button-box{text-align: center;}
+.edit-testname-popup .login-page .form .button-box button{width:49%;}
+
+.add-question-popup .login-page .tqsmallno-box a{color:#333; font-weight: bold; padding:4px; margin:2px 4px;}
+a.cant-sel-a{cursor: default; color:#ddd !important; font-weight: lighter !important;}
+a.selected-no{color:#cc0000 !important;}
+
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
@@ -236,16 +240,31 @@
 		</div>
 	</section>
 </div>
-<!-- 업데이트폼화면 -->
-<div class="update-box">
-	<div class="close-form">
-		<button id='btnCloseForm'><img src='${pageContext.request.contextPath}/resources/images/ic-close-button.png'></button>
-	</div>
-	<div class="inner-form">
-		<input type="text" value='123123'/>
+
+<!-- 기출문제 수정 팝업 -->
+<div class="login-container edit-que-ex-popup">
+	<div class="login-page">
+		<div class="login-close">
+			<a href=""><img src="${pageContext.request.contextPath}/resources/images/ic-close-button.png" alt="" /></a>
+		</div>
+		<div class="form">
+			<form class="login-form">
+				<h2 class="form-title">기출문제 수정</h2>
+				<div><label for="">문제 번호</label><span id="edit-small-no"></span></div>
+				<div><label for="">과목</label><select id="subjectList"></select></div>
+				<label for="">문제 내용</label>
+				<textarea id="edit-quesiton" cols="30" rows="3"></textarea>
+				<div><span>1. </span><textarea id="example01" cols="30" rows="3"></textarea></div>
+				<div><span>2. </span><textarea id="example02" cols="30" rows="3"></textarea></div>
+				<div><span>3. </span><textarea id="example03" cols="30" rows="3"></textarea></div>
+				<div><span>4. </span><textarea id="example04" cols="30" rows="3"></textarea></div>
+				<button id="btnUpQueAndEx">수정</button>
+				<button id="btnDelQueAndEx">삭제</button>
+			</form>
+		</div>
 	</div>
 </div>
-
+<script src="${pageContext.request.contextPath}/resources/js/update_test.js"></script>
 <script>
 	var tno = ${testName.tno};
 	
@@ -262,10 +281,6 @@
 		getQuestionAndExampleByTno();
 		clickPagingButton();
 		clickEachQuestion();
-		
-		$(".update-box #btnCloseForm").click(function(){
-			$(this).parents(".update-box").fadeOut("slow");
-		});
 	});
 	
 	/* getQuestionAndExampleByTno : ajax로 문제 리스트 받아오기 */
@@ -327,7 +342,7 @@
 			//문제
 			var $tr_question = $("<tr class='question'>");
 			$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-			$tr_question.append("<td><a href=''>"+obj.tq_question+"</a></td>");
+			$tr_question.append("<td><a href=''>"+obj.tq_question+"</a><button class='btnUpdatePopup'>수정</button></td>");
 			$tr_question.attr("tqno", obj.tq_no);
 			$tr_question.attr("tno", obj.testName.tno);
 			$tr_question.attr("tqsubject", obj.tq_subject);

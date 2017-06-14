@@ -32,4 +32,19 @@ public class TestNameServiceImpl implements TestNameService{
 	public int selectLastTno() throws Exception {
 		return nameDao.selectLastTno();
 	}
+
+	@Override
+	public void updateTestName(TestNameVO vo) throws Exception {
+		nameDao.updateTestName(vo);
+	}
+
+	@Override
+	public void deleteTestName(int tno) throws Exception {
+		nameDao.deleteTestName(tno);
+	}
+
+	@Override
+	public void initAutoIncrementName(int num) throws Exception {
+		nameDao.initAutoIncrementName(num);
+	}
 }

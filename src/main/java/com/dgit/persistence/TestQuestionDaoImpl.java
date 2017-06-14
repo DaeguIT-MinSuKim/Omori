@@ -67,4 +67,19 @@ public class TestQuestionDaoImpl implements TestQuestionDao{
 	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
 		return session.selectList(namespace + ".selectAllTqSmallNoByTno", tno);
 	}
+
+	@Override
+	public void initAutoIncrementQue(int num) throws Exception {
+		session.update(namespace+".initAutoIncrementQue", num);
+	}
+
+	@Override
+	public void deleteTestQuestion(int tq_no) throws Exception {
+		session.delete(namespace+".deleteTestQuestion", tq_no);
+	}
+
+	@Override
+	public void updateTestQuestion(TestQuestionVO vo) throws Exception {
+		session.update(namespace+".updateTestQuestion", vo);
+	}
 }

@@ -9,4 +9,7 @@ public interface TestNameService {
 	int selectLastTno() throws Exception;
 	TestNameVO selectOneTestName(int tno) throws Exception;
 	void insertTestName(TestNameVO vo) throws Exception;
+	void updateTestName(TestNameVO vo) throws Exception;
+	void deleteTestName(int tno) throws Exception;
+	void initAutoIncrementName(int num) throws Exception;
 }

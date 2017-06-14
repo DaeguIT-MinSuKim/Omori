@@ -28,4 +28,24 @@ public class TestExampleServiceImpl implements TestExampleService{
 		dao.insertTestExample(vo);
 	}
 
+	@Override
+	public TestExampleVO selectOneTestExampleNotTeNo(int tq_no, int te_small_no) throws Exception {
+		return dao.selectOneTestExampleNotTeNo(tq_no, te_small_no);
+	}
+
+	@Override
+	public void deleteTestExampleByTqnoTesmallno(int tq_no, int te_small_no) throws Exception {
+		dao.deleteTestExampleByTqnoTesmallno(tq_no, te_small_no);
+	}
+
+	@Override
+	public TestExampleVO selectOneTestExampleByTeNo(int te_no) throws Exception {
+		return dao.selectOneTestExampleByTeNo(te_no);
+	}
+
+	@Override
+	public void updateTestExample(TestExampleVO vo) throws Exception {
+		dao.updateTestExample(vo);
+	}
+
 }

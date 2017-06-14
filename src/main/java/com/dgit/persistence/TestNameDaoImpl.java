@@ -34,4 +34,19 @@ public class TestNameDaoImpl implements TestNameDao{
 	public int selectLastTno() throws Exception {
 		return session.selectOne(namespace + ".selectLastTno");
 	}
+
+	@Override
+	public void updateTestName(TestNameVO vo) throws Exception {
+		session.update(namespace+".updateTestName", vo);
+	}
+
+	@Override
+	public void deleteTestName(int tno) throws Exception {
+		session.delete(namespace+".deleteTestName", tno);
+	}
+
+	@Override
+	public void initAutoIncrementName(int num) throws Exception {
+		session.update(namespace+".initAutoIncrementName", num);
+	}
 }

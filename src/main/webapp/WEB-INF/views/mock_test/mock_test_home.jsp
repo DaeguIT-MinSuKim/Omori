@@ -19,7 +19,12 @@
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>모의고사</h1>
+			<c:if test="${!login.isadmin}">
+				<h1>모의고사</h1>
+			</c:if>
+			<c:if test="${login.isadmin}">
+				<h1>기출문제 수정</h1>
+			</c:if>
 			<div class="inner-section">
 				<c:if test="${!login.isadmin}">
 					<div class="latest-test">
