@@ -301,6 +301,45 @@ public class AdminController {
 		model.addAttribute("testName", testName);
 		return "admin/update_test";
 	}// update_test
+	
+	@ResponseBody
+	@RequestMapping(value = "/updateQueAndEx", method = RequestMethod.POST)
+	public ResponseEntity<String> updateQueAndEx(int tqno, String subject, int answer, String question,
+												int teno1, int teno2, int teno3, int teno4,
+												String ex1, String ex2, String ex3, String ex4) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			TestQuestionVO que =  questionService.selectOneTestQuestionByTqno(tqno);
+			que.setTq_subject(subject);
+			que.setTq_answer(answer);
+			que.setTq_question(question);
+			questionService.insertTestQuestion(que);
+			
+			TestExampleVO exVO1 = exampleService.selectOneTestExampleByTeNo(teno1);
+			exVO1.setTe_content(ex1);
+			exampleService.insertTestExample(exVO1);
+			
+			TestExampleVO exVO2 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO2.setTe_content(ex2);
+			exampleService.insertTestExample(exVO2);
+			
+			TestExampleVO exVO3 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO3.setTe_content(ex3);
+			exampleService.insertTestExample(exVO3);
+			
+			TestExampleVO exVO4 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO4.setTe_content(ex4);
+			exampleService.insertTestExample(exVO4);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//updateQueAndEx
+	
 
 	@RequestMapping(value = "/update_form/{tno}/{tq_no}", method = RequestMethod.POST)
 	public ResponseEntity<TestQuestionVO> update_form(@PathVariable("tno") int tno, @PathVariable("tq_no") int tq_no,

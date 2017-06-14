@@ -178,6 +178,19 @@
 -------------*/
 .login-container .form {text-align: left;}
 
+.edit-que-ex-popup .login-page {width:700px; margin-top:-90px;}
+.edit-que-ex-popup .login-page .form {max-width:700px;}
+.edit-que-ex-popup .login-page .form hr{margin-bottom:25px;}
+.edit-que-ex-popup .login-page .form label {display: inline-block; width:80px; float:left;}
+.edit-que-ex-popup .login-page .form .answer-box span{cursor: pointer; display: inline-block; padding:0 4px; margin-right:10px;}
+.edit-que-ex-popup .login-page .form textarea#edit-quesiton{width:86.8% !important;display: inline-block;}
+.edit-que-ex-popup .login-page .form div {clear:both; margin-bottom:5px;}
+.edit-que-ex-popup .login-page .form .ex p {width:15px; display:inline-block; clear:both;}
+.edit-que-ex-popup .login-page .form .ex textarea{width:96%; float:right;}
+.edit-que-ex-popup .login-page .form .button-box{text-align: center;}
+.edit-que-ex-popup .login-page .form .button-box button{width:49%;}
+span.selected-answer{color:#cc0000 !important; font-weight: bold;}
+/* 
 .add-question-popup .login-page {width:600px;}
 .add-question-popup .login-page .form {max-width:600px;}
 .add-question-popup .login-page .form label {display: inline-block; width:120px;}
@@ -194,7 +207,7 @@
 .add-question-popup .login-page .tqsmallno-box a{color:#333; font-weight: bold; padding:4px; margin:2px 4px;}
 a.cant-sel-a{cursor: default; color:#ddd !important; font-weight: lighter !important;}
 a.selected-no{color:#cc0000 !important;}
-
+ */
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
@@ -252,20 +265,64 @@ a.selected-no{color:#cc0000 !important;}
 				<h2 class="form-title">기출문제 수정</h2>
 				<div><label for="">문제 번호</label><span id="edit-small-no"></span></div>
 				<div><label for="">과목</label><select id="subjectList"></select></div>
+				<div class='answer-box'>
+					<label for="">정답</label>
+					<span>1</span><span>2</span><span>3</span><span>4</span>
+				</div>
 				<label for="">문제 내용</label>
 				<textarea id="edit-quesiton" cols="30" rows="3"></textarea>
-				<div><span>1. </span><textarea id="example01" cols="30" rows="3"></textarea></div>
-				<div><span>2. </span><textarea id="example02" cols="30" rows="3"></textarea></div>
-				<div><span>3. </span><textarea id="example03" cols="30" rows="3"></textarea></div>
-				<div><span>4. </span><textarea id="example04" cols="30" rows="3"></textarea></div>
-				<button id="btnUpQueAndEx">수정</button>
-				<button id="btnDelQueAndEx">삭제</button>
+				<hr />
+				<div class='ex'><p>1. </p><textarea id="example01" cols="30" rows="3"></textarea></div>
+				<div class='ex'><p>2. </p><textarea id="example02" cols="30" rows="3"></textarea></div>
+				<div class='ex'><p>3. </p><textarea id="example03" cols="30" rows="3"></textarea></div>
+				<div class='ex'><p>4. </p><textarea id="example04" cols="30" rows="3"></textarea></div>
+				<div class="button-box">
+					<button id="btnUpQueAndEx">수정</button>
+					<button id="btnDelQueAndEx">삭제</button>
+				</div>
 			</form>
 		</div>
 	</div>
 </div>
 <script src="${pageContext.request.contextPath}/resources/js/update_test.js"></script>
 <script>
+/*----------------
+	문제 및 보기 수정
+----------------*/
+function updateQueAndExAjax(){
+	var tqno = $("#edit-small-no").attr("tqno");
+	var subject = $("#subjectList").val();
+	var answer = $(".answer-box").find(".selected-answer").text();
+	var question = $("#edit-question").val();
+	var teno1 = $("#example01").attr("teno");
+	var ex1 = $("#example01").val();
+	var teno2 = $("#example02").attr("teno");
+	var ex2 = $("#example02").val();
+	var teno3 = $("#example03").attr("teno");
+	var ex3 = $("#example03").val();
+	var teno4 = $("#example03").attr("teno");
+	var ex4 = $("#example03").val();
+	
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/updateQueAndEx",
+		data:{"tqno":tqno, "subject":subject, "answer":answer, "question":question,
+			"teno1":teno1, "teno2":teno2, "teno3":tqno, "teno3":tqno, "teno4":teno4,
+			"ex1":ex1, "ex2":ex2, "ex3":ex3, "ex4":ex4},
+		type:"post",
+		success:function(result){
+			alert(result);
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");
+		}
+	});
+}
+
+
+
+
+
+
 	var tno = ${testName.tno};
 	
 	$(function(){
