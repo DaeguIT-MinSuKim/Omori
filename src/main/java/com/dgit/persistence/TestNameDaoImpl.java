@@ -46,7 +46,7 @@ public class TestNameDaoImpl implements TestNameDao{
 	}
 
 	@Override
-	public void initAutoIncrementName() throws Exception {
-		session.update(namespace+".initAutoIncrementName");
+	public void initAutoIncrementName(int num) throws Exception {
+		session.update(namespace+".initAutoIncrementName", num);
 	}
 }

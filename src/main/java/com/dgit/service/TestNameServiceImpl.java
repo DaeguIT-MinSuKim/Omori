@@ -44,7 +44,7 @@ public class TestNameServiceImpl implements TestNameService{
 	}
 
 	@Override
-	public void initAutoIncrementName() throws Exception {
-		nameDao.initAutoIncrementName();
+	public void initAutoIncrementName(int num) throws Exception {
+		nameDao.initAutoIncrementName(num);
 	}
 }

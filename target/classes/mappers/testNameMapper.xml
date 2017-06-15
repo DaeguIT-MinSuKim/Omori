@@ -42,6 +42,6 @@
 	</delete>
 	
 	<update id="initAutoIncrementName">
-		alter table testname auto_increment = 1; 
+		alter table testname auto_increment = #{num}; 
 	</update>
 </mapper>

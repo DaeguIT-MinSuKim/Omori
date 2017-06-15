@@ -11,5 +11,5 @@ public interface TestNameDao {
 	void insertTestName(TestNameVO vo) throws Exception;
 	void updateTestName(TestNameVO vo) throws Exception;
 	void deleteTestName(int tno) throws Exception;
-	void initAutoIncrementName() throws Exception;
+	void initAutoIncrementName(int num) throws Exception;
 }

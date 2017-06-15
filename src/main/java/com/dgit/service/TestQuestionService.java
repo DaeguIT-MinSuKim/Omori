@@ -17,5 +17,7 @@ public interface TestQuestionService {
 	void insertTestQuestion(TestQuestionVO vo) throws Exception;
 	List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception;
 	List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception; 
-	void initAutoIncrementQue() throws Exception;
+	void initAutoIncrementQue(int num) throws Exception;
+	void deleteTestQuestion(int tq_no) throws Exception;
+	void updateTestQuestion(TestQuestionVO vo) throws Exception;
 }

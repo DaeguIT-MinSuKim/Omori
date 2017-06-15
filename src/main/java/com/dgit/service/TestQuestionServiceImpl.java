@@ -116,7 +116,17 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	}
 
 	@Override
-	public void initAutoIncrementQue() throws Exception {
-		dao.initAutoIncrementQue();
+	public void initAutoIncrementQue(int num) throws Exception {
+		dao.initAutoIncrementQue(num);
+	}
+
+	@Override
+	public void deleteTestQuestion(int tq_no) throws Exception {
+		dao.deleteTestQuestion(tq_no);
+	}
+
+	@Override
+	public void updateTestQuestion(TestQuestionVO vo) throws Exception {
+		dao.updateTestQuestion(vo);
 	}
 }

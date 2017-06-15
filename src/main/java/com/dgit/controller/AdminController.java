@@ -60,14 +60,14 @@ public class AdminController {
 	@Autowired
 	private ImageService imageService;
 
-	@RequestMapping(value = "/insert_exam", method = RequestMethod.GET)
-	public String insertExamGET(Model model) throws Exception {
+	@RequestMapping(value = "/test_managing", method = RequestMethod.GET)
+	public String testManagingGET(Model model) throws Exception {
 		List<TestNameVO> list = nameService.selectAllTestName();
 		
 		model.addAttribute("nameList", list);
 
-		return "admin/insert_exam";
-	}// insertExamGET
+		return "admin/test_managing";
+	}//test_managing
 	
 	@ResponseBody
 	@RequestMapping(value = "/insertTestName", method = RequestMethod.POST)
@@ -177,11 +177,11 @@ public class AdminController {
 			int tno = nameService.selectLastTno();
 			int tqno = questionService.selectLastTqno();
 			if(tno == 1){
-				nameService.initAutoIncrementName();
-				questionService.initAutoIncrementQue();
+				nameService.initAutoIncrementName(1);
+				questionService.initAutoIncrementQue(1);
 			}
 			if(tqno == 1){
-				questionService.initAutoIncrementQue();
+				questionService.initAutoIncrementQue(1);
 			}
 			List<Integer> list = new ArrayList<>();
 			list.add(tno);
@@ -189,6 +189,7 @@ public class AdminController {
 			
 			entity = new ResponseEntity<>(list, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -300,6 +301,45 @@ public class AdminController {
 		model.addAttribute("testName", testName);
 		return "admin/update_test";
 	}// update_test
+	
+	@ResponseBody
+	@RequestMapping(value = "/updateQueAndEx", method = RequestMethod.POST)
+	public ResponseEntity<String> updateQueAndEx(int tqno, String subject, int answer, String question,
+												int teno1, int teno2, int teno3, int teno4,
+												String ex1, String ex2, String ex3, String ex4) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			TestQuestionVO que =  questionService.selectOneTestQuestionByTqno(tqno);
+			que.setTq_subject(subject);
+			que.setTq_answer(answer);
+			que.setTq_question(question);
+			questionService.insertTestQuestion(que);
+			
+			TestExampleVO exVO1 = exampleService.selectOneTestExampleByTeNo(teno1);
+			exVO1.setTe_content(ex1);
+			exampleService.insertTestExample(exVO1);
+			
+			TestExampleVO exVO2 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO2.setTe_content(ex2);
+			exampleService.insertTestExample(exVO2);
+			
+			TestExampleVO exVO3 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO3.setTe_content(ex3);
+			exampleService.insertTestExample(exVO3);
+			
+			TestExampleVO exVO4 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO4.setTe_content(ex4);
+			exampleService.insertTestExample(exVO4);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//updateQueAndEx
+	
 
 	@RequestMapping(value = "/update_form/{tno}/{tq_no}", method = RequestMethod.POST)
 	public ResponseEntity<TestQuestionVO> update_form(@PathVariable("tno") int tno, @PathVariable("tq_no") int tq_no,
@@ -380,13 +420,10 @@ public class AdminController {
 		Workbook workbook = WorkbookFactory.create(fis);
 		Sheet sheet = workbook.getSheetAt(0); //시트 번째 (만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다)
 		int rows = sheet.getPhysicalNumberOfRows(); // 행의 수
-		int rowindex = 0;
-		int columnindex = 0;
-		
 		String returnText = null;
 		
 		//행 읽는 for문
-		for (rowindex = 1; rowindex < rows; rowindex++) {
+		for (int rowindex = 1; rowindex < rows; rowindex++) {
 			XSSFRow row = (XSSFRow) sheet.getRow(rowindex); //각 행 읽기
 			if (row != null) {
 				int cells = row.getPhysicalNumberOfCells(); // 셀의 수
@@ -424,7 +461,7 @@ public class AdminController {
 				}
 				
 				
-				/*for (columnindex = 0; columnindex <= cells; columnindex++) {
+				/*for (int columnindex = 0; columnindex <= cells; columnindex++) {
 					XSSFCell cell = row.getCell(columnindex); //각 셀 읽기
 					String value = "";
 					
@@ -543,6 +580,8 @@ public class AdminController {
 		if(fileName.equals("nameFile")){
 			for (int i = 0; i < tnoList.size(); i++) {
 				int tno = Integer.parseInt(tnoList.get(i));
+				
+				System.out.println("tno-------------------" + tno);
 				String tname = tnameList.get(i);
 				String tdate = tdateList.get(i);
 				
@@ -550,7 +589,12 @@ public class AdminController {
 				vo.setTno(tno);
 				vo.setTname(tname);
 				vo.setTdate(tdate);
-				nameService.insertTestName(vo);
+				
+				if(nameService.selectOneTestName(tno) != null){
+					nameService.updateTestName(vo);
+				}else{
+					nameService.insertTestName(vo);
+				}
 			}
 		}else if(fileName.equals("questionFile")){
 			for (int i = 0; i < tqNoList.size(); i++) {
@@ -572,7 +616,11 @@ public class AdminController {
 				vo.setTq_question(tq_question);
 				vo.setTq_answer(tq_answer);
 				
-				questionService.insertTestQuestion(vo);
+				if(questionService.selectOneTestQuestionByTqno(tq_no) != null){
+					questionService.updateTestQuestion(vo);
+				}else{
+					questionService.insertTestQuestion(vo);
+				}
 			}
 		}else if(fileName.equals("exampleFile")){
 			for (int i = 0; i < teSmallNoList.size(); i++) {
@@ -588,7 +636,13 @@ public class AdminController {
 				vo.setTe_small_no(te_small_no);
 				vo.setTe_content(te_content);
 				
-				exampleService.insertTestExample(vo);
+				if(exampleService.selectOneTestExampleNotTeNo(tq_no, te_small_no) != null){
+					TestExampleVO temp =  exampleService.selectOneTestExampleNotTeNo(tq_no, te_small_no);
+					vo.setTe_no(temp.getTe_no());
+					exampleService.updateTestExample(vo);
+				}else{
+					exampleService.insertTestExample(vo);
+				}
 			}
 		}
 	}

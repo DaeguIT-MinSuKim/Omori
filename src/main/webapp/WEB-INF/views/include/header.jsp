@@ -60,7 +60,8 @@ $(function(){
 						<li>
 							<a href="" class="click-event" id="admin-menu-btn">관리자 메뉴</a>
 							<div class="admin-sub-menu">
-								<a href="${pageContext.request.contextPath}/admin/insert_exam">기출문제 등록</a>
+								<a href="${pageContext.request.contextPath}/admin/test_managing">기출문제 등록</a>
+								<a href="${pageContext.request.contextPath}/mock_test/">기출문제 수정</a>
 							</div>
 						</li>
 					</c:if>

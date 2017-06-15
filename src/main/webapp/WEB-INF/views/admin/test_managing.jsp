@@ -40,7 +40,7 @@ img.icon-edit{width:20px !important; float:none; cursor: pointer; position:relat
 			padding:0 5px; margin-left:5px; margin-bottom:-5px;}
 
 .testname-select-box{}
-.each-testname-box div{margin:10px 15px; display:inline-block;}
+.each-testname-box div{margin:10px 15px;}
 .each-testname-box div a{padding:5px 0;}
 
 /* ------------
@@ -175,7 +175,7 @@ a.selected-no{color:#cc0000 !important;}
 							</ul>
 						</div>
 						<div class="clear-how">
-							<span>※ 각 문제에 해당하는 이미지는 문제 등록 후 나오는 리스트에서 등록하시면 됩니다</span>
+							<span>※ 각 문제에 해당하는 이미지는 기출문제 수정 메뉴에서 수정 / 등록하시면 됩니다</span>
 							<form action="" method="post" enctype="multipart/form-data" id="uploadForm">
 								<p>
 									<label for="">기출문제 : </label><input type="file" name='nameFile' id='nameFile'/>
@@ -437,10 +437,12 @@ function getLastTnoTqnoAjax(){
 			lastTqno = result[1];
 			
 			$("#setLastTnoText").html("※ 지금까지 등록된 자격증번호는 "+ (lastTno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 "+ lastTno +"(으)로 시작해주십시오");
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 "+ lastTno +"(으)로 시작해주십시오<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;그렇지 않으면 덮어 씌워서 등록이 됩니다");
 			
 			$("#setLastTqnoText").html("※ 지금까지 등록된 문제고유번호는 "+ (lastTqno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 "+ lastTqno +"(으)로 시작해주십시오");
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 "+ lastTqno +"(으)로 시작해주십시오<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;그렇지 않으면 덮어 씌워서 등록이 됩니다");
 			
 		},
 		error:function(e){
@@ -593,6 +595,7 @@ function check() {
 		showCancelButton:true,
 		cancelButtonText: "아니오",
 		confirmButtonText: "네",
+		showLoaderOnConfirm: true,
 		closeOnConfirm:false
 	}, function(isConfirm){
 		if(isConfirm){
@@ -631,6 +634,7 @@ function check() {
 
 					getLastTnoTqnoAjax();
 					getTestNameListAjax();
+					$(".no-testname").css("display","none");
 					
 					$("#uploadForm input[type='file']").val("");
 				},
