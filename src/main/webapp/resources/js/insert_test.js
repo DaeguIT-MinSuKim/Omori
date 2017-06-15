@@ -80,6 +80,42 @@ $(function(){
 		$(this).prop("checked", true);
 	});
 	
+	/* ---------------
+		보기 이미지 등록 
+	----------------*/
+	$("#add-img").change(function() {
+		$(".preview").html("");
+		var files = document.getElementById("add-img").files;
+		
+		if( files != null){
+			//이미지 파일이 아니면 리턴
+			if( (files[0].type).indexOf("image") < 0 ){
+				swal({
+					title:"이미지 파일만 등록해주세요!",
+					confirmButtonText:"확인"
+				});
+				return false;
+			}
+			
+			//이미지 태그 생성
+			var file = files[0];
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var $img = $("<img>").attr("src", e.target.result);
+				var $a = $("<a>").html("X");
+				$(".preview").append($img);
+				$(".preview").append($a);
+	        }
+			reader.readAsDataURL(file);
+		}
+	});
+	
+	/* 이미지의 X버튼 클릭 */
+	$(document).on("click", ".preview a", function(e){
+		$(".preview").html("");
+		$("#add-img").val("");
+	});
+	
 	/*문제와 보기 제출하기*/
 	$(".add-example-popup #btnInsertQueAndExForm").click(function(e){
 		e.preventDefault();

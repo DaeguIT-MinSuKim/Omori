@@ -21,9 +21,9 @@
 	</select>
 	
 	<select id="selectAllTestQuestionForSubject" resultType="TestQuestionVO" resultMap="TestQuestionResult">
-		select * from testquestion
-		where tno = #{testName.tno} 
-			and tq_subject_no = #{tq_subject_no}
+		select * from testquestion 
+		where tno = #{tno}
+			and tq_subject = #{tq_subject} 
 		order by tq_small_no
 	</select>
 		

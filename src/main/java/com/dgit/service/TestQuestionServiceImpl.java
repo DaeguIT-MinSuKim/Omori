@@ -43,8 +43,8 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	}
 
 	@Override
-	public List<TestQuestionVO> selectAllTestQuestionForSubject(TestQuestionVO vo) throws Exception {
-		return dao.selectAllTestQuestionForSubject(vo);
+	public List<TestQuestionVO> selectAllTestQuestionForSubject(int tno, String tq_subject) throws Exception {
+		return dao.selectAllTestQuestionForSubject(tno, tq_subject);
 	}
 
 	@Override
@@ -68,7 +68,38 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	}
 
 	@Override
-	public List<TestQuestionVO> selectQuestionAndAnswer(int tno, String uid) throws Exception {
+	public List<String> selectOnlySubject(int tno) throws Exception {
+		return dao.selectOnlySubject(tno);
+	}
+
+	@Override
+	public int selectLastTqno() throws Exception {
+		return dao.selectLastTqno();
+	}
+
+	@Override
+	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
+		return dao.selectAllTqSmallNoByTno(tno);
+	}
+
+	@Override
+	public void initAutoIncrementQue(int num) throws Exception {
+		dao.initAutoIncrementQue(num);
+	}
+
+	@Override
+	public void deleteTestQuestion(int tq_no) throws Exception {
+		dao.deleteTestQuestion(tq_no);
+	}
+
+	@Override
+	public void updateTestQuestion(TestQuestionVO vo) throws Exception {
+		dao.updateTestQuestion(vo);
+	}
+	
+
+	@Override
+	public List<TestQuestionVO> selectQuestionAndAnswerWithNote(int tno, String uid) throws Exception {
 		List<TestQuestionVO> questionList = dao.selectAllTestQuestionForMock(tno);
 		TestNameVO testName = nameDao.selectOneTestName(tno);
 		
@@ -101,32 +132,35 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 	}
 
 	@Override
-	public List<String> selectOnlySubject(int tno) throws Exception {
-		return dao.selectOnlySubject(tno);
-	}
-
-	@Override
-	public int selectLastTqno() throws Exception {
-		return dao.selectLastTqno();
-	}
-
-	@Override
-	public List<Integer> selectAllTqSmallNoByTno(int tno) throws Exception {
-		return dao.selectAllTqSmallNoByTno(tno);
-	}
-
-	@Override
-	public void initAutoIncrementQue(int num) throws Exception {
-		dao.initAutoIncrementQue(num);
-	}
-
-	@Override
-	public void deleteTestQuestion(int tq_no) throws Exception {
-		dao.deleteTestQuestion(tq_no);
-	}
-
-	@Override
-	public void updateTestQuestion(TestQuestionVO vo) throws Exception {
-		dao.updateTestQuestion(vo);
+	public List<TestQuestionVO> selectQuestionAndAnswerBySubjectWithNote(int tno, String uid, String subject) throws Exception {
+		List<TestQuestionVO> questionList = dao.selectAllTestQuestionForSubject(tno, subject);
+		TestNameVO testName = nameDao.selectOneTestName(tno);
+		
+		for(int i = 0; i < questionList.size(); i++){
+			TestQuestionVO que = questionList.get(i);
+			int tqno = que.getTq_no();
+			
+			SelectedAnswerVO answer =  answerDao.selectOneAnswerByTqno(tqno, uid);
+			que.setAnswer(answer);
+			que.setTestName(testName);
+			
+			List<TestExampleVO> exampleList = exampleDao.selectAllTestExampleByTqNo(tqno);
+			que.setExampleList(exampleList);
+			
+			List<ImageVO> imageList = imageDao.selectImageByTqNo(tqno);
+			que.setImageList(imageList);
+			
+			NoteVO note = noteDao.selectOneNoteByTnoTqno(uid, tno, tqno);
+			if(note != null){
+				note.setNote_content(note.getNote_content().replaceAll("`", "'"));
+				note.setNote_content(note.getNote_content().replaceAll("\r\n", "<br>"));
+				note.setNote_content(note.getNote_content().replaceAll("u0020", "&nbsp;"));
+				note.setNote_memo(note.getNote_memo().replaceAll("`", "'"));
+				note.setNote_memo(note.getNote_memo().replaceAll("\r\n", "<br>"));
+				note.setNote_memo(note.getNote_memo().replaceAll("u0020", "&nbsp;"));
+			}
+			que.setNote(note);
+		}
+		return questionList;
 	}
 }

@@ -200,6 +200,7 @@
 			
 			getDateList(tnoForDate);
 		});
+		
 		/* 가져온 날짜 선택(파이차트) */
 		$(document).on("change", "#selectDate", function(){
 			var sendDate = $(this).val();

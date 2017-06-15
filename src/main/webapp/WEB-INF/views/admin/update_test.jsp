@@ -33,6 +33,7 @@
 .table td{
 	font-family: "돋움";
 }
+.table td img{max-width:500px; max-height:300px;}
 .table #testName{
 	padding-top:20px;
 	padding-bottom:20px;
@@ -41,7 +42,6 @@
 	font-size:20px;
 	color:#222;
 	border-bottom:2px solid #999;
-	
 }
 .table td.subject{
 	color:#3333cc;
@@ -61,37 +61,18 @@
 	font-weight: bold;
 	color:#303030;
 }
-.table tr.question td:FIRST-CHILD{
-	text-align: left;
-}
-
+.table tr.question td:FIRST-CHILD{text-align: left;}
 .table tr.question td{
 	padding-top:30px;
 	padding-bottom:10px;
 	font-size:14px;
 }
-.table tr.question td a{
-	color:#303030 !important;
-}
-
-.table tr.question td a:HOVER{
-	color:#cc0000 !important;
-}
-
 .table tr.example td{
 	padding:5px 5px;
 	font-size:12px;
 	line-height:22px;
 	color:#333;
 }
-/* .table tr.example a{
-	line-height:22px;
-	color:#333;
-	font-size:12px;
-}
-.table tr.example a:HOVER{
-	color:#cc0000;
-} */
 .table tr.example span.te_small_no{
 	border: 1px solid #cc0000;
     width: 20px;
@@ -100,7 +81,7 @@
     padding:2px 6px;
 }
 .table-left, .table-right{
-	width:800px;
+	width:50%;
 	vertical-align: top;
 	padding-bottom:30px;
 }
@@ -183,13 +164,20 @@
 .edit-que-ex-popup .login-page .form hr{margin-bottom:25px;}
 .edit-que-ex-popup .login-page .form label {display: inline-block; width:80px; float:left;}
 .edit-que-ex-popup .login-page .form .answer-box span{cursor: pointer; display: inline-block; padding:0 4px; margin-right:10px;}
-.edit-que-ex-popup .login-page .form textarea#edit-quesiton{width:86.8% !important;display: inline-block;}
+.edit-que-ex-popup .login-page .form textarea#edit-question{width:86.8% !important;display: inline-block;}
 .edit-que-ex-popup .login-page .form div {clear:both; margin-bottom:5px;}
 .edit-que-ex-popup .login-page .form .ex p {width:15px; display:inline-block; clear:both;}
 .edit-que-ex-popup .login-page .form .ex textarea{width:96%; float:right;}
 .edit-que-ex-popup .login-page .form .button-box{text-align: center;}
 .edit-que-ex-popup .login-page .form .button-box button{width:49%;}
+.edit-que-ex-popup input[type='file']{background: none;display: inline-block;width: 80%; padding: 0 !important; 
+										padding-left: 20px !important;margin-top: -5px !important;}
 span.selected-answer{color:#cc0000 !important; font-weight: bold;}
+
+.preview img{max-width:200px;max-height:200px; padding-left: 25px;margin-top: 15px;margin-bottom: 15px;}
+.preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;padding: 5px; width: 15px; height: 15px;
+			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black;
+    		display: inline-block;font-weight: bold;text-align: center;}
 /* 
 .add-question-popup .login-page {width:600px;}
 .add-question-popup .login-page .form {max-width:600px;}
@@ -270,8 +258,13 @@ a.selected-no{color:#cc0000 !important;}
 					<span>1</span><span>2</span><span>3</span><span>4</span>
 				</div>
 				<label for="">문제 내용</label>
-				<textarea id="edit-quesiton" cols="30" rows="3"></textarea>
+				<textarea id="edit-question" cols="30" rows="3"></textarea>
 				<hr />
+				<div>
+					<label for="">보기이미지</label>
+					<input type="file" id='add-img' />
+					<div class="preview"></div>
+				</div>
 				<div class='ex'><p>1. </p><textarea id="example01" cols="30" rows="3"></textarea></div>
 				<div class='ex'><p>2. </p><textarea id="example02" cols="30" rows="3"></textarea></div>
 				<div class='ex'><p>3. </p><textarea id="example03" cols="30" rows="3"></textarea></div>
@@ -300,17 +293,41 @@ function updateQueAndExAjax(){
 	var ex2 = $("#example02").val();
 	var teno3 = $("#example03").attr("teno");
 	var ex3 = $("#example03").val();
-	var teno4 = $("#example03").attr("teno");
-	var ex4 = $("#example03").val();
+	var teno4 = $("#example04").attr("teno");
+	var ex4 = $("#example04").val();
+	var preDelImg = null;
+	if($("#add-img").attr("preImgDel") != null){
+		preDelImg = $("#add-img").attr("preImgDel");
+	}
+	
+	var formData = new FormData();
+	formData.append("tqno", tqno);
+	formData.append("subject", subject);
+	formData.append("answer", answer);
+	formData.append("question", question);
+	formData.append("teno1", teno1);
+	formData.append("ex1", ex1);
+	formData.append("teno2", teno2);
+	formData.append("ex2", ex2);
+	formData.append("teno3", teno3);
+	formData.append("ex3", ex3);
+	formData.append("teno4", teno4);
+	formData.append("ex4", ex4);
+	formData.append("file", $("#add-img")[0].files[0]);
+	formData.append("preDelImg", preDelImg);
 	
 	$.ajax({
 		url:"${pageContext.request.contextPath}/admin/updateQueAndEx",
-		data:{"tqno":tqno, "subject":subject, "answer":answer, "question":question,
-			"teno1":teno1, "teno2":teno2, "teno3":tqno, "teno3":tqno, "teno4":teno4,
-			"ex1":ex1, "ex2":ex2, "ex3":ex3, "ex4":ex4},
+		processData: false,
+	    contentType: false,
+		data:formData,
 		type:"post",
 		success:function(result){
-			alert(result);
+			swal({
+				title:"수정되었습니다",
+				confirmButtonText: "확인"
+			});
+			updateTable();
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");
@@ -318,180 +335,260 @@ function updateQueAndExAjax(){
 	});
 }
 
+/*---------------------
+	이미지 가져오는 ajax
+---------------------*/
+function getImageAjax(tqno){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/admin/getImage",
+		data:{"tqno" : tqno},
+		type:"post",
+		success:function(result){
+			if(result.length > 0){
+				$(".image").each(function(i, obj) {
+					if($(obj).attr("tqno") == tqno){
+						$(obj).html("");
+						$(obj).append("<td></td>");
+						$(obj).append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+result[0].imgsource+"'/></td>");
+					}
+				});
+			}else{
+				$(".image").each(function(i, obj) {
+					if($(obj).attr("tqno") == tqno){
+						$(obj).html("");
+					}
+				});
+			}
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다");
+		}
+	});
+}
 
-
-
-
-
-	var tno = ${testName.tno};
+function updateTable(){
+	var tqno = $("#edit-small-no").attr("tqno");
+	var subject = $("#subjectList").val();
+	var answer = $(".answer-box").find(".selected-answer").text();
+	var question = $("#edit-question").val();
+	var teno1 = $("#example01").attr("teno");
+	var ex1 = $("#example01").val();
+	var teno2 = $("#example02").attr("teno");
+	var ex2 = $("#example02").val();
+	var teno3 = $("#example03").attr("teno");
+	var ex3 = $("#example03").val();
+	var teno4 = $("#example04").attr("teno");
+	var ex4 = $("#example04").val();
 	
-	$(function(){
-		/* 로딩이미지띄우기 */
-		$(window).ajaxStart(function(){
-			$(".loading-box").css("display", "block");
-		}).ajaxComplete(function(){
-			$(".loading-box").css("display", "none");
-			$(".table").css("display","table");
-			$(".omr-box").css("display","table");
-		});
-		
-		getQuestionAndExampleByTno();
-		clickPagingButton();
-		clickEachQuestion();
+	//이미지있으면 뿌리기
+	getImageAjax(tqno);
+	
+	$(".question").each(function(i, obj) {
+		if($(obj).attr("tqno") == tqno){
+			$(obj).find("span").text(question);
+		}
+	});
+	$(".answer").each(function(i, obj) {
+		if($(obj).attr("tqno") == tqno){
+			$(obj).find("td").last().text("정답 : "+ answer);
+		}
+	});
+	$(".example").each(function(i, obj){
+		if($(obj).attr("tqno") == tqno){
+			if($(obj).attr("teno") == teno1){
+				$(obj).find("td").last().html("<span class='te_small_no'>1</span>"+ex1);
+			}else if($(obj).attr("teno") == teno2){
+				$(obj).find("td").last().html("<span class='te_small_no'>2</span>"+ex2);
+			}else if($(obj).attr("teno") == teno3){
+				$(obj).find("td").last().html("<span class='te_small_no'>3</span>"+ex3);
+			}else if($(obj).attr("teno") == teno4){
+				$(obj).find("td").last().html("<span class='te_small_no'>4</span>"+ex4);
+			}
+		}
+	});
+
+	$(".login-container").fadeOut("fast");
+}
+
+
+
+var tno = ${testName.tno};
+	
+$(function(){
+	/* 로딩이미지띄우기 */
+	$(window).ajaxStart(function(){
+		$(".loading-box").css("display", "block");
+	}).ajaxComplete(function(){
+		$(".loading-box").css("display", "none");
+		$(".table").css("display","table");
+		$(".omr-box").css("display","table");
 	});
 	
-	/* getQuestionAndExampleByTno : ajax로 문제 리스트 받아오기 */
-	function getQuestionAndExampleByTno(){
-		$.ajax({
-			url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
-			type:"post",
-			success:function(result){
-				makeTags(result);
-			},
-			error:function(e){
-				alert("에러가 발생하였습니다.");
-			}
-		});
-	}
-	
-	/* makeTags : 테이블 만드는 함수 */
-	function makeTags(result){
-		for(var i=0; i<result.length; i++){
-			var obj = result[i];
-			
-			//테이블 생성 (좌 : 5개, 우 : 5개)
-			var $table;
-			if(i == 0){
-				$table = $(".first-table").find(".table-left").find("table");
-			}else if(i == 5){
-				$table = $(".first-table").find(".table-right").find("table");
-			}else if(i == 10){
-				//.first-table을 더 생성
-				var $copy_table = $(".first-table").html();
-				var $new_table = $("<tr>").html($copy_table);
-				$(".first-table").after($new_table);
-				$new_table.addClass("added-table");
-				$new_table.find("table").html("");
-				
-				$table = $(".added-table").last().find(".table-left").find("table");
-			}else if(i == 15){
-				$table = $(".added-table").last().find(".table-right").find("table");
-			}else if(i == 20 || i == 30 || i == 40 || i== 50 || i == 60 || i == 70 || i == 80 || i == 90){
-				var $copy_table = $(".first-table").html();
-				var $new_table = $("<tr>").html($copy_table);
-				$(".added-table").last().after($new_table);
-				$new_table.addClass("added-table");
-				$new_table.find("table").html("");
-				
-				$table = $(".added-table").last().find(".table-left").find("table");
-			}else if(i == 25 || i == 35 || i == 45 || i == 55 || i == 65 || i == 75 || i == 85 || i == 95){
-				$table = $(".added-table").last().find(".table-right").find("table");
-			}
-			
-			//과목(과목명이 이전과 달라지면 그 때 과목명을 한 번 더 삽입)
-			var $tr_subject = $("<tr>").html("<td colspan='2' class='subject'>"+obj.tq_subject+"</td>");
-			if( i == 0 ){
-				$table.append($tr_subject);
-			}else if( (i>0) && (result[i-1].tq_subject != result[i].tq_subject) ){
-				$table.append($tr_subject);
-			}
-			
-			//문제
-			var $tr_question = $("<tr class='question'>");
-			$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-			$tr_question.append("<td><a href=''>"+obj.tq_question+"</a><button class='btnUpdatePopup'>수정</button></td>");
-			$tr_question.attr("tqno", obj.tq_no);
-			$tr_question.attr("tno", obj.testName.tno);
-			$tr_question.attr("tqsubject", obj.tq_subject);
-			$tr_question.attr("tqsubjectno", obj.tq_subject_no);
-			$tr_question.attr("tqsmallno", obj.tq_small_no);
-			$tr_question.attr("tqper", obj.tq_per);
-			$tr_question.attr("tqanswer", obj.tq_answer);
-			
-			$table.append($tr_question);
-			
-			//정답
-			var $tr_answer = $("<tr class='answer'>");
-			$tr_answer.append($("<td>"));
-			$tr_answer.append($("<td>").html("정답 : "+obj.tq_answer));
-			$table.append($tr_answer);
-			
-			//이미지(이미지가 있을때만 삽입)
-			var imageList = obj.imageList; 
-			if(imageList.length > 0){
-				for(var j=0; j<imageList.length; j++){
-					var $tr_image = $("<tr>");
-					$tr_image.append("<td></td>");
-					$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
-					$tr_image.attr("tqno", imageList[j].question.tq_no);
-					
-					$table.append($tr_image);
-				}
-			}
-			
-			//보기
-			var exampleList = obj.exampleList;
-			for(var j=0; j<exampleList.length; j++){
-				var example = exampleList[j];
-				var $tr_example = $("<tr class='example'>");
-				$tr_example.append("<td></td>");;
-				$tr_example.append("<td><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</td>");
-				$tr_example.attr("teno", example.te_no);
-				$tr_example.attr("tqno", example.question.tq_no);
-				$tr_example.attr("tesmallno", example.te_small_no);
-				
-				$table.append($tr_example);
-			}
-			
-		}//end of for
-		
-		//페이징
-		$("td#paging").find("#count").html("1");
-		$("td#paging").find("#allPage").html( (result.length / 10) );
-	}
-	
-	function clickEachQuestion(){
-		$(document).on("click", ".table tr.question a", function(e){
-			e.preventDefault();
-			
-			alert("click");
-		});
-	}
-	
-	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
-	function clickPagingButton(){
-		var index = 1;
-		$("#next").click(function(){
-			if(index == 10){
-				return;
-			}
-			if($(".first-table").css("display") != "none"){
-				index = 1;
-			}
-			$(".first-table").css("display", "none");
-			$(".added-table").css("display", "none");
-			$(".added-table").eq(index-1).css("display", "table-row");
-			
-			index++;
-			
-			$("td#paging").find("#count").html(index);
-		});
-		
-		$("#prev").click(function(){
-			if(index == 1){
-				return;
-			}
-			
-			index--;
-			
-			$("td#paging").find("#count").html(index);
-			$(".added-table").css("display", "none");
+	getQuestionAndExampleByTno();
+});//end of ready
 
-			if(index == 1){
-				$(".first-table").css("display", "table-row");
-			}else{
-				$(".added-table").eq(index-2).css("display", "table-row");
+/* getQuestionAndExampleByTno : ajax로 문제 리스트 받아오기 */
+function getQuestionAndExampleByTno(){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
+		type:"post",
+		success:function(result){
+			makeTags(result);
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다.");
+		}
+	});
+}
+
+/* makeTags : 테이블 만드는 함수 */
+function makeTags(result){
+	for(var i=0; i<result.length; i++){
+		var obj = result[i];
+		
+		//테이블 생성 (좌 : 5개, 우 : 5개)
+		var $table;
+		if(i == 0){
+			$table = $(".first-table").find(".table-left").find("table");
+		}else if(i == 5){
+			$table = $(".first-table").find(".table-right").find("table");
+		}else if(i == 10){
+			//.first-table을 더 생성
+			var $copy_table = $(".first-table").html();
+			var $new_table = $("<tr>").html($copy_table);
+			$(".first-table").after($new_table);
+			$new_table.addClass("added-table");
+			$new_table.find("table").html("");
+			
+			$table = $(".added-table").last().find(".table-left").find("table");
+		}else if(i == 15){
+			$table = $(".added-table").last().find(".table-right").find("table");
+		}else if(i == 20 || i == 30 || i == 40 || i== 50 || i == 60 || i == 70 || i == 80 || i == 90){
+			var $copy_table = $(".first-table").html();
+			var $new_table = $("<tr>").html($copy_table);
+			$(".added-table").last().after($new_table);
+			$new_table.addClass("added-table");
+			$new_table.find("table").html("");
+			
+			$table = $(".added-table").last().find(".table-left").find("table");
+		}else if(i == 25 || i == 35 || i == 45 || i == 55 || i == 65 || i == 75 || i == 85 || i == 95){
+			$table = $(".added-table").last().find(".table-right").find("table");
+		}
+		
+		//과목(과목명이 이전과 달라지면 그 때 과목명을 한 번 더 삽입)
+		var $tr_subject = $("<tr>").html("<td colspan='2' class='subject'>"+obj.tq_subject+"</td>");
+		if( i == 0 ){
+			$table.append($tr_subject);
+		}else if( (i>0) && (result[i-1].tq_subject != result[i].tq_subject) ){
+			$table.append($tr_subject);
+		}
+		
+		//문제
+		var $tr_question = $("<tr class='question'>");
+		$tr_question.append("<td>"+obj.tq_small_no+". </td>");
+		$tr_question.append("<td><span class='que'>"+obj.tq_question+"</span><button class='btnUpdatePopup'>수정</button></td>");
+		$tr_question.attr("tqno", obj.tq_no);
+		$tr_question.attr("tno", obj.testName.tno);
+		$tr_question.attr("tqsubject", obj.tq_subject);
+		$tr_question.attr("tqsubjectno", obj.tq_subject_no);
+		$tr_question.attr("tqsmallno", obj.tq_small_no);
+		$tr_question.attr("tqper", obj.tq_per);
+		$tr_question.attr("tqanswer", obj.tq_answer);
+		
+		$table.append($tr_question);
+		
+		//정답
+		var $tr_answer = $("<tr class='answer' tqno='"+obj.tq_no+"'>");
+		$tr_answer.append($("<td>"));
+		$tr_answer.append($("<td>").html("정답 : "+obj.tq_answer));
+		$table.append($tr_answer);
+		
+		//이미지
+		var imageList = obj.imageList; 
+		if(imageList.length > 0){
+			for(var j=0; j<imageList.length; j++){
+				var $tr_image = $("<tr class='image' tqno='"+obj.tq_no+"'>");
+				$tr_image.append("<td></td>");
+				$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
+				$tr_image.attr("tqno", imageList[j].question.tq_no);
+				
+				$table.append($tr_image);
 			}
-		});
-	}
+		}else{
+			var $tr_image = $("<tr class='image' tqno='"+obj.tq_no+"'>");
+			$table.append($tr_image);
+		}
+		
+		//보기
+		var exampleList = obj.exampleList;
+		for(var j=0; j<exampleList.length; j++){
+			var example = exampleList[j];
+			var $tr_example = $("<tr class='example'>");
+			$tr_example.append("<td></td>");;
+			$tr_example.append("<td><span class='te_small_no'>"+example.te_small_no+"</span>"+example.te_content+"</td>");
+			$tr_example.attr("teno", example.te_no);
+			$tr_example.attr("tqno", example.question.tq_no);
+			$tr_example.attr("tesmallno", example.te_small_no);
+			
+			$table.append($tr_example);
+		}
+		
+	}//end of for
+	
+	//페이징
+	$("td#paging").find("#count").html("1");
+	var lastNum = 0;
+	if(result.length-1 < 10) lastNum = 1
+	else if(result.length-1 < 20) lastNum = 2
+	else if(result.length-1 < 30) lastNum = 3
+	else if(result.length-1 < 40) lastNum = 4
+	else if(result.length-1 < 50) lastNum = 5
+	else if(result.length-1 < 60) lastNum = 6
+	else if(result.length-1 < 70) lastNum = 7
+	else if(result.length-1 < 80) lastNum = 8
+	else if(result.length-1 < 90) lastNum = 9
+	else if(result.length-1 < 100) lastNum = 10
+	$("td#paging").find("#allPage").text(lastNum);
+	
+	clickPagingButton();
+}
+
+/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
+function clickPagingButton(){
+	var index = 1;
+	var lastNum = Number($("td#paging").find("#allPage").text());
+	
+	$("#next").click(function(){
+		if(index == lastNum){
+			return;
+		}
+		if($(".first-table").css("display") != "none"){
+			index = 1;
+		}
+		$(".first-table").css("display", "none");
+		$(".added-table").css("display", "none");
+		$(".added-table").eq(index-1).css("display", "table-row");
+		
+		index++;
+		
+		$("td#paging").find("#count").html(index);
+	});
+	
+	$("#prev").click(function(){
+		if(index == 1){
+			return;
+		}
+		
+		index--;
+		
+		$("td#paging").find("#count").html(index);
+		$(".added-table").css("display", "none");
+
+		if(index == 1){
+			$(".first-table").css("display", "table-row");
+		}else{
+			$(".added-table").eq(index-2).css("display", "table-row");
+		}
+	});
+}
 </script>

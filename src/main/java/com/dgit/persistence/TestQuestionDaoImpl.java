@@ -23,8 +23,11 @@ public class TestQuestionDaoImpl implements TestQuestionDao{
 	}
 
 	@Override
-	public List<TestQuestionVO> selectAllTestQuestionForSubject(TestQuestionVO vo) throws Exception {
-		return session.selectList(namespace + ".selectAllTestQuestionForSubject", vo);
+	public List<TestQuestionVO> selectAllTestQuestionForSubject(int tno, String tq_subject) throws Exception {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("tno",tno);
+		paramMap.put("tq_subject", tq_subject);
+		return session.selectList(namespace + ".selectAllTestQuestionForSubject", paramMap);
 	}
 
 	@Override

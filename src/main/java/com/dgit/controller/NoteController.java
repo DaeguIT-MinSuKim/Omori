@@ -27,7 +27,6 @@ public class NoteController {
 	@Autowired
 	private NoteService noteService;
 
-	
 	@ResponseBody
 	@RequestMapping(value="/insertNotePost", method=RequestMethod.POST)
 	public ResponseEntity<String> insertNotePost(HttpServletRequest req, int tno, int tq_no, String note_content, String note_memo) throws Exception{
@@ -70,6 +69,7 @@ public class NoteController {
 			
 			entity = new ResponseEntity<>("success", HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			entity = new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
 		}
 		

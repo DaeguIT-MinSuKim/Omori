@@ -310,7 +310,6 @@ insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
 
-
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
@@ -347,7 +346,7 @@ select count(*) from testquestion where tno = 1 and tq_subject = '데이터베�
 -- 모의 시험
 select * from testquestion where tno = 2 order by tq_small_no;
 -- 과목별 시험
-select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
+select * from testquestion where tno = 1 and tq_subject = '데이터베이스' order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
 -- 마지막번호가져오기
@@ -361,7 +360,11 @@ alter table testquestion auto_increment = 1;
 insert into image values(1, 'image1');
 -- 문제 1번 이미지
 select * from image where tq_no = 1 order by tq_no;
+LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\image1.txt" INTO TABLE image 
+FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
+update image set tq_no = 2 where tq_no = 0; 
 select * from image;
+
 delete from image;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample.txt" INTO TABLE testexample 
@@ -410,9 +413,9 @@ select * from grade where uid = 'test1' order by g_date desc, g_no desc limit 1;
 -- 'test1'이 시험본 tno만 가져옴
 select distinct tno from grade where uid = 'test1' order by tno;
 -- 'test1'이 시험본 tno의 날짜를 가져옴
-select distinct g_date from grade where uid = 'test1' and tno = 2 order by g_date desc;
+select distinct g_date from grade where uid = 'test1' and tno = 1 order by g_date desc;
 -- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
-select * from grade where uid = 'test1'and g_date = '2017-06-11 2:6';
+select * from grade where uid = 'test1'and g_date = '2017-06-15 22:18';
 -- 'test1'이 한 기출문제의 성적을 가져옴
 select * from grade where uid='test1' and tno = 2 group by g_save_no;
 -- 시험을 저장할 때 한 시험에 부여되는 번호

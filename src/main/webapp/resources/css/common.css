@@ -12,6 +12,7 @@ li{list-style: none; padding:0; margin:0;}
 .width1400{width:1400px;margin:0 auto;}
 
 button{cursor: pointer;}
+button:disabled{cursor:default;}
 
 /* ..................... */
 /* 헤더					 */

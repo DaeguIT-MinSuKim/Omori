@@ -1,9 +1,7 @@
 package com.dgit.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
-import com.dgit.domain.NoteVO;
 import com.dgit.domain.NowGradeVO;
 import com.dgit.domain.SelectedAnswerVO;
 import com.dgit.domain.TestExampleVO;
@@ -32,7 +29,6 @@ import com.dgit.domain.UserVO;
 import com.dgit.interceptor.LoginInterceptor;
 import com.dgit.service.GradeService;
 import com.dgit.service.ImageService;
-import com.dgit.service.NoteService;
 import com.dgit.service.NowGradeService;
 import com.dgit.service.SelectedAnswerService;
 import com.dgit.service.TestExampleService;
@@ -78,21 +74,7 @@ public class MockTestController {
 	
 	@RequestMapping(value="/start_test/{tno}", method=RequestMethod.GET)
 	public String startTestGet(@PathVariable("tno") int tno, Model model) throws Exception{
-		logger.info("startTest GET......................");
-		
 		TestNameVO testName = nameService.selectOneTestName(tno);
-		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
-		
-		for(int i=0; i<questionList.size(); i++){
-			TestQuestionVO question = questionList.get(i);
-			int tq_no = question.getTq_no();
-			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-			List<ImageVO> imageList = imageServie.selectImageByTqNo(tq_no);
-			
-			question.setExampleList(exampleList);
-			question.setImageList(imageList);
-		}
-		
 		model.addAttribute("testName", testName);
 		return "mock_test/start_test";
 	}//startTestGet
@@ -180,7 +162,7 @@ public class MockTestController {
 		
 		ResponseEntity<List<TestQuestionVO>> entity = null;
 		
-		List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswer(tno, user.getUid());
+		List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswerWithNote(tno, user.getUid());
 		nowService.insertNowGrade(questionWithAnswerList, user);
 		
 		try {

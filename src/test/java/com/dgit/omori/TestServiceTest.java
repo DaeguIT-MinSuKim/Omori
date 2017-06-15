@@ -91,11 +91,7 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectAllTestQuestionForSubject() throws Exception{
-		TestNameVO name = new TestNameVO();
-		name.setTno(1);
-		TestQuestionVO vo = new TestQuestionVO();
-		vo.setTestName(name);
-		questionService.selectAllTestQuestionForSubject(vo);
+		
 	}
 	
 //	@Test
@@ -124,7 +120,7 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectQuestionAndAnswer() throws Exception{
-		List<TestQuestionVO> questionList = questionService.selectQuestionAndAnswer(1, "test1");
+		List<TestQuestionVO> questionList = questionService.selectQuestionAndAnswerWithNote(1, "test1");
 		System.out.println(questionList.get(0).getAnswer().getSa_answer() + "을 선택했다");
 	}
 	

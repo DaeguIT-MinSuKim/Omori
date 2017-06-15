@@ -15,7 +15,18 @@
 		order by tq_no
 	</select>
 	
+	<update id="updateImage">
+		update image
+		set imgsource = #{imgsource}
+		where tq_no = #{tq_no}	
+	</update>
+	
 	<insert id="insertImage">
 		insert into image values(#{question.tq_no}, #{imgsource})
 	</insert>
+	
+	<delete id="deleteImage">
+		delete from image
+		where tq_no = #{tq_no}
+	</delete>
 </mapper>

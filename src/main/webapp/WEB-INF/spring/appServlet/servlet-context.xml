@@ -46,9 +46,10 @@
 			<beans:ref bean="loginInterceptor"/>			
 		</interceptor>
 		<interceptor>
-			<mapping path="/mock_test/" />
-			<mapping path="/mock_test/start_test/*" />
-			<mapping path="/grade/" />
+			<mapping path="/mock_test/*" />
+			<mapping path="/subject_test/*" />
+			<mapping path="/one_test/*" />
+			<mapping path="/grade/*" />
 			<beans:ref bean="authInterceptor"/>
 		</interceptor>
 	</interceptors>

@@ -304,7 +304,7 @@
 				closeOnConfirm:false
 			}, function(isConfirm){
 				if(isConfirm){
-					insertGradePost(grade, arrSubject, arrSubjectGrade);
+					insertGradeAllAjax(grade, arrSubject, arrSubjectGrade);
 					$("#btnSaveGrade").css("display", "none");
 					swal.close();
 				}
@@ -766,9 +766,9 @@
 	}
 	
 	/* 성적저장 ajax */
-	function insertGradePost(grade, arrSubject, arrSubjectGrade){
+	function insertGradeAllAjax(grade, arrSubject, arrSubjectGrade){
 		$.ajax({
-			url:"${pageContext.request.contextPath}/grade/insertGradePost",
+			url:"${pageContext.request.contextPath}/grade/insertGradeAll",
 			type:"post",
 			data:{tno : tno, grade : grade, arrSubject : arrSubject, arrSubjectGrade : arrSubjectGrade},
 			succes:function(result){

@@ -35,6 +35,7 @@
 .table td{
 	font-family: "돋움";
 }
+.table td img{max-width:500px; max-height:300px;}
 .table #testName{
 	padding-top:20px;
 	padding-bottom:20px;
@@ -43,7 +44,6 @@
 	font-size:20px;
 	color:#222;
 	border-bottom:2px solid #999;
-	
 }
 .table td.subject{
 	color:#3333cc;
@@ -63,10 +63,7 @@
 	font-weight: bold;
 	color:#303030;
 }
-.table tr.question td:FIRST-CHILD{
-	text-align: left;
-}
-
+.table tr.question td:FIRST-CHILD{text-align: left;}
 .table tr.question td{
 	padding-top:30px;
 	padding-bottom:10px;
@@ -230,7 +227,7 @@
 				</div>
 				<div class="omr-box">
 					<!-- form영역 -->
-					<form action="${pageContext.request.contextPath}/mock_test/test_result" method="post" id="formSendAnswer">
+					<form action="${pageContext.request.contextPath}/subject_test/test_result" method="post" id="formSendAnswer">
 						<input type="hidden" name="tno" value="${testName.tno}" />
 						<table class="table">
 							<tr>
@@ -239,6 +236,7 @@
 						</table>
 					</form>
 				</div>
+				<div class="clear"></div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
@@ -269,7 +267,6 @@
 		});
 		
 		getQuestionAndExampleByTno();
-		clickPagingButton();
 		clickEachExampleButton();
 		
 		/* 답안제출버튼클릭했을 때 */
@@ -519,14 +516,28 @@
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
-		$("td#paging").find("#allPage").html( (result.length / 10) );
+		var lastNum = 0;
+		if(result.length-1 < 10) lastNum = 1
+		else if(result.length-1 < 20) lastNum = 2
+		else if(result.length-1 < 30) lastNum = 3
+		else if(result.length-1 < 40) lastNum = 4
+		else if(result.length-1 < 50) lastNum = 5
+		else if(result.length-1 < 60) lastNum = 6
+		else if(result.length-1 < 70) lastNum = 7
+		else if(result.length-1 < 80) lastNum = 8
+		else if(result.length-1 < 90) lastNum = 9
+		else if(result.length-1 < 100) lastNum = 10
+		$("td#paging").find("#allPage").text(lastNum);
+		
+		clickPagingButton();
 	}
 	
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
 	function clickPagingButton(){
 		var index = 1;
+		var lastNum = Number($("td#paging").find("#allPage").text());
 		$("#next").click(function(){
-			if(index == 10){
+			if(index == lastNum){
 				return;
 			}
 			if($(".first-table").css("display") != "none"){

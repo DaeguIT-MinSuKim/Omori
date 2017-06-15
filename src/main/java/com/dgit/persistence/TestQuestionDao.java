@@ -6,7 +6,7 @@ import com.dgit.domain.TestQuestionVO;
 
 public interface TestQuestionDao {
 	List<TestQuestionVO> selectAllTestQuestionForMock(int tno) throws Exception;
-	List<TestQuestionVO> selectAllTestQuestionForSubject(TestQuestionVO vo) throws Exception;
+	List<TestQuestionVO> selectAllTestQuestionForSubject(int tno, String tq_subject) throws Exception;
 	TestQuestionVO selectOneTestQuestion(int tno, int tq_small_no) throws Exception;
 	TestQuestionVO selectOneTestQuestionByTqno(int tq_no) throws Exception;
 	List<String> selectOnlySubject(int tno) throws Exception;

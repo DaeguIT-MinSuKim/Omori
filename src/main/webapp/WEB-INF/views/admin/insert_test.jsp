@@ -18,10 +18,6 @@
 	width:300px;
 	height:50px;
 }
-.preview img{
-	max-width:200px;
-	max-height:200px;
-}
 .how-to{background:rgba(0,0,0,0.5);padding:10px 20px;}
 .how-to ul{float:right;width:680px;}
 .how-to ul li{margin-bottom:14px;color:#99cccc;}
@@ -57,6 +53,12 @@ img.icon-edit{width:20px !important; float:none; cursor: pointer; position:relat
 .add-example-popup .login-page .form div{clear:both;}
 .add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
 .add-example-popup .login-page .form div textarea{width:90%; float:right;}
+.add-example-popup .login-page .form input[type='file']{background: none;display: inline-block;width: 80%;}
+.preview{padding:0 15px 15px;}
+.preview img{max-width:200px;max-height:200px;}
+.preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;margin-top: -10px;padding: 5px;
+			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black; width: 15px; height: 15px;
+    		display: inline-block;font-weight: bold;text-align: center;}
 
 .edit-testname-popup .login-page .form .button-box{text-align: center;}
 .edit-testname-popup .login-page .form .button-box button{width:49%;}
@@ -280,6 +282,10 @@ a.selected-no{color:#cc0000 !important;}
 		<div class="form">
 			<form class="login-form">
 				<h2 class="form-title">보기 및 정답 등록</h2>
+				<div>
+					<label for="">보기이미지</label><input type="file" id="add-img" /><br />
+					<div class="preview"></div>
+				</div>
 				<div><input type="radio" value='1'/> 1. <textarea id="example01" cols="30" rows="3"></textarea></div>
 				<div><input type="radio" value='2'/> 2. <textarea id="example02" cols="30" rows="3"></textarea></div>
 				<div><input type="radio" value='3'/> 3. <textarea id="example03" cols="30" rows="3"></textarea></div>
@@ -513,12 +519,24 @@ function insertQuestionExampleAjax(){
 	var example3 = $("#example03").val();
 	var example4 = $("#example04").val();
 	
+	var formData = new FormData();
+	formData.append("tno", sendTno);
+	formData.append("tq_subject", sendTqSubject);
+	formData.append("tq_small_no", sendTqSmallNo);
+	formData.append("tq_question", sendTqQuestion);
+	formData.append("tq_answer", sendTqAnswer);
+	formData.append("example1", example1);
+	formData.append("example2", example2);
+	formData.append("example3", example3);
+	formData.append("example4", example4);
+	formData.append("file", $("#add-img")[0].files[0]);
+	
 	$.ajax({
 		url:"${pageContext.request.contextPath}/admin/insertQuestionExample",
 		type:"post",
-		data:{"tno":sendTno, "tq_subject":sendTqSubject, "tq_small_no":sendTqSmallNo,
-				"tq_question":sendTqQuestion, "tq_answer":sendTqAnswer,
-				"example1":example1,"example2":example2,"example3":example3,"example4":example4},
+		processData: false,
+	    contentType: false,
+		data:formData,
 		success:function(result){
 			getLastTnoTqnoAjax();
 			
@@ -534,6 +552,7 @@ function insertQuestionExampleAjax(){
 			$("#example01").val("");
 			$(".add-example-popup").find("input[type='radio']").prop("checked", false);
 			$("#q-question").val("");
+			$("#add-img").val("");
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");	
@@ -665,39 +684,7 @@ $(function(){
 	}else{
 		getTestNameListAjax();
 	}
-	
-	/* 보기 이미지 등록 */
-	/* $("#tq_image").change(function(){
-		var isImage = true;
-		var files = document.getElementById("tq_image").files;
-		
-		for(var i=0; i<files.length; i++){
-			if ( (files[i].type).indexOf("image") < 0 ) {
-				alert("이미지 파일을 등록해주세요!");
-				isImage = false;
-				break;
-			}
-		}
-
-		//이미지파일이 아니면 return
-		if( !isImage ){
-			$(this).val("");
-			$(".preview").html("");
-			return false;
-		}
-		
-		//이미지 태그 생성
-		for(var i=0; i<files.length; i++){
-			var file = files[i];
-			var reader = new FileReader();
-			reader.onload = function (e) {
-				var $img = $("<img>").attr("src", e.target.result);
-				$(".preview").append($img);
-	        }
-			reader.readAsDataURL(file);
-		}
-	}); */
 });
 
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/insert-exam.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/insert_test.js"></script>
