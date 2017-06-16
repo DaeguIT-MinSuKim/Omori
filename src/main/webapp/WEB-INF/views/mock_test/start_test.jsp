@@ -35,6 +35,7 @@
 .table td{
 	font-family: "돋움";
 }
+.table td img{max-width:500px; max-height:300px;}
 .table #testName{
 	padding-top:20px;
 	padding-bottom:20px;
@@ -43,7 +44,6 @@
 	font-size:20px;
 	color:#222;
 	border-bottom:2px solid #999;
-	
 }
 .table td.subject{
 	color:#3333cc;
@@ -63,10 +63,7 @@
 	font-weight: bold;
 	color:#303030;
 }
-.table tr.question td:FIRST-CHILD{
-	text-align: left;
-}
-
+.table tr.question td:FIRST-CHILD{text-align: left;}
 .table tr.question td{
 	padding-top:30px;
 	padding-bottom:10px;
@@ -239,6 +236,7 @@
 						</table>
 					</form>
 				</div>
+				<div class="clear"></div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
@@ -257,6 +255,13 @@
 </div>
 <script>
 	var tno = ${testName.tno};
+	var originalName = "${testName.tname}";
+	var substrName;
+	if(originalName.indexOf("정보처리기사") > -1){
+		substrName = "정보처리기사";
+	}else if(originalName.indexOf("컴퓨터활용능력 1급") > -1){
+		substrName = "컴퓨터활용능력 1급";
+	}
 	
 	$(function(){
 		/* 로딩이미지띄우기 */
@@ -269,7 +274,6 @@
 		});
 		
 		getQuestionAndExampleByTno();
-		clickPagingButton();
 		clickEachExampleButton();
 		
 		/* 답안제출버튼클릭했을 때 */
@@ -304,8 +308,6 @@
 				}, function(isConfirm){
 					if(isConfirm){
 						$("#formSendAnswer").submit();
-					}else{
-						
 					}
 				});
 			}else{
@@ -318,12 +320,9 @@
 				}, function(isConfirm){
 					if(isConfirm){
 						$("#formSendAnswer").submit();
-					}else{
-						
 					}
 				});
 			}
-			
 		});
 	});
 	
@@ -333,8 +332,16 @@
 			url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
 			type:"post",
 			success:function(result){
-				setTimer(result[0].testName.tname);
 				makeTags(result);
+				
+				swal({
+					html:true,
+					title:"지금 보시는 시험은 "+substrName+" 입니다",
+					text:"제한 시간은 총 <b>2시간 30분</b>이며,<br>한 과목당 제한 시간은 <b>30분</b>입니다<br>확인을 누르면 시험이 시작됩니다",
+					confirmButtonText: "확인"
+				}, function(isConfirm){
+					setTimer(result[0].testName.tname);
+				});
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다.");
@@ -519,14 +526,28 @@
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
-		$("td#paging").find("#allPage").html( (result.length / 10) );
+		var lastNum = 0;
+		if(result.length-1 < 10) lastNum = 1
+		else if(result.length-1 < 20) lastNum = 2
+		else if(result.length-1 < 30) lastNum = 3
+		else if(result.length-1 < 40) lastNum = 4
+		else if(result.length-1 < 50) lastNum = 5
+		else if(result.length-1 < 60) lastNum = 6
+		else if(result.length-1 < 70) lastNum = 7
+		else if(result.length-1 < 80) lastNum = 8
+		else if(result.length-1 < 90) lastNum = 9
+		else if(result.length-1 < 100) lastNum = 10
+		$("td#paging").find("#allPage").text(lastNum);
+		
+		clickPagingButton();
 	}
 	
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
 	function clickPagingButton(){
 		var index = 1;
+		var lastNum = Number($("td#paging").find("#allPage").text());
 		$("#next").click(function(){
-			if(index == 10){
+			if(index == lastNum){
 				return;
 			}
 			if($(".first-table").css("display") != "none"){

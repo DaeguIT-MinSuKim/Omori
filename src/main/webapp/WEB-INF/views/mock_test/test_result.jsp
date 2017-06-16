@@ -285,7 +285,6 @@
 		});
 		
 		markMockTest();
-		clickPagingButton();
 		
 		/* 성적 저장 버튼 클릭 */
 		$(document).on("click", "#btnSaveGrade", function(e){
@@ -304,7 +303,7 @@
 				closeOnConfirm:false
 			}, function(isConfirm){
 				if(isConfirm){
-					insertGradePost(grade, arrSubject, arrSubjectGrade);
+					insertGradeAllAjax(grade, arrSubject, arrSubjectGrade);
 					$("#btnSaveGrade").css("display", "none");
 					swal.close();
 				}
@@ -548,7 +547,20 @@
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
-		$("td#paging").find("#allPage").html( (result.length / 10) );
+		var lastNum = 0;
+		if(result.length-1 < 10) lastNum = 1
+		else if(result.length-1 < 20) lastNum = 2
+		else if(result.length-1 < 30) lastNum = 3
+		else if(result.length-1 < 40) lastNum = 4
+		else if(result.length-1 < 50) lastNum = 5
+		else if(result.length-1 < 60) lastNum = 6
+		else if(result.length-1 < 70) lastNum = 7
+		else if(result.length-1 < 80) lastNum = 8
+		else if(result.length-1 < 90) lastNum = 9
+		else if(result.length-1 < 100) lastNum = 10
+		$("td#paging").find("#allPage").text(lastNum);
+		
+		clickPagingButton();
 	}
 	
 	/* makeMarkResult : 받아온 점수를 태그로 만들기 */
@@ -605,8 +617,9 @@
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
 	function clickPagingButton(){
 		var index = 1;
+		var lastNum = Number($("td#paging").find("#allPage").text());
 		$("#next").click(function(){
-			if(index == 10){
+			if(index == lastNum){
 				return;
 			}
 			if($(".first-table").css("display") != "none"){
@@ -766,9 +779,9 @@
 	}
 	
 	/* 성적저장 ajax */
-	function insertGradePost(grade, arrSubject, arrSubjectGrade){
+	function insertGradeAllAjax(grade, arrSubject, arrSubjectGrade){
 		$.ajax({
-			url:"${pageContext.request.contextPath}/grade/insertGradePost",
+			url:"${pageContext.request.contextPath}/grade/insertGradeAll",
 			type:"post",
 			data:{tno : tno, grade : grade, arrSubject : arrSubject, arrSubjectGrade : arrSubjectGrade},
 			succes:function(result){

@@ -23,4 +23,14 @@ public class ImageServiceImpl implements ImageService{
 		dao.insertImage(vo);
 	}
 
+	@Override
+	public void updateImage(int tq_no, String imgsource) throws Exception {
+		dao.updateImage(tq_no, imgsource);
+	}
+
+	@Override
+	public void deleteImage(int tq_no) throws Exception {
+		dao.deleteImage(tq_no);
+	}
+
 }

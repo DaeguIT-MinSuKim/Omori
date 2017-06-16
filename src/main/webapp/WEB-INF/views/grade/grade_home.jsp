@@ -200,6 +200,7 @@
 			
 			getDateList(tnoForDate);
 		});
+		
 		/* 가져온 날짜 선택(파이차트) */
 		$(document).on("change", "#selectDate", function(){
 			var sendDate = $(this).val();
@@ -425,7 +426,9 @@
 		var maxSize = result.length > 7 ? 7 : result.length;
 		var grade = new Array();
 		var date = new Array();
-		var label = result[0].g_subject;
+		var label = "";
+		if(result.length > 0) label = result[0].g_subject;
+		else label = result.g_subject;
 		
 		for(var i=0; i<maxSize; i++){
 			var obj = result[i];

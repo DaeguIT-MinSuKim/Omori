@@ -48,4 +48,9 @@ public class NoteDaoImpl implements NoteDao{
 	public void deleteNote(int note_no) throws Exception {
 		session.delete(namespace+".deleteNote", note_no);
 	}
+
+	@Override
+	public List<Integer> selectAllNoteDistinctTno(String uid) throws Exception {
+		return session.selectList(namespace + ".selectAllNoteDistinctTno", uid);
+	}
 }

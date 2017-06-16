@@ -310,7 +310,6 @@ insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
 
-
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
@@ -334,7 +333,7 @@ select * from testname;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
-LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testquestion2.txt" INTO TABLE testquestion 
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testquestion2.txt" INTO TABLE testquestion 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
 values(1, '데이터베이스', 1, 1, '문제1', '1', '10');
@@ -347,7 +346,7 @@ select count(*) from testquestion where tno = 1 and tq_subject = '데이터베�
 -- 모의 시험
 select * from testquestion where tno = 2 order by tq_small_no;
 -- 과목별 시험
-select * from testquestion where tno = 1 and tq_subject_no = 1 order by tq_small_no;
+select * from testquestion where tno = 1 and tq_subject = '데이터베이스' order by tq_small_no;
 -- 한문제씩 풀기
 select * from testquestion where tno = 1 and tq_small_no = 1;
 -- 마지막번호가져오기
@@ -361,12 +360,16 @@ alter table testquestion auto_increment = 1;
 insert into image values(1, 'image1');
 -- 문제 1번 이미지
 select * from image where tq_no = 1 order by tq_no;
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\image1.txt" INTO TABLE image 
+FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
+update image set tq_no = 2 where tq_no = 0; 
 select * from image;
+
 delete from image;
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample.txt" INTO TABLE testexample 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
-LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testexample2.txt" INTO TABLE testexample 
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\testexample2.txt" INTO TABLE testexample 
 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 insert into testexample(tq_no, te_small_no, te_content) values(1, 1, '문제1번의 예시1');
 insert into testexample(tq_no, te_small_no, te_content) values(1, 2, '문제1번의 예시2');
@@ -375,14 +378,11 @@ insert into testexample(tq_no, te_small_no, te_content) values(1, 4, '문제1번
 -- 문제 1번의 객관식 보기
 select * from testexample where tq_no = 101 order by te_small_no;
 -- 문제 1번의 보기와 답
-select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_answer where e.tq_no = 1 and q.tq_no = 1;
--- 수정
-update testexample set set tq_no = 9, te_small_no = 4, te_content = '제약조건' where te_no = 436;
-
+select e.* from testexample e inner join testquestion q on e.te_small_no = q.tq_answer
+where e.tq_no = 1 and q.tq_no = 1;
 delete from testexample;
 alter table testexample auto_increment = 1;
 select * from testexample;
-select * from testexample where tq_no = 1 and te_small_no = 1;
 
 insert into selected_answer(uid, tq_no, sa_answer, sa_date) values('test1', 1, 1, now());
 -- 문제 1번에 대해 제일 최근 test1유저가 선택한 답
@@ -390,6 +390,8 @@ select * from selected_answer where tq_no = 1 and uid='test1' order by sa_date d
 -- 문제 1번에 대해 2017-05-31일 test2유저가 선택한 답과 정답이 일치하는지 확인
 select s.* from selected_answer s inner join testquestion q on s.sa_answer = q.tq_answer
 where s.tq_no = 1 and q.tq_no = 1 and s.uid = 'test2' and s.sa_date = '2017-05-31';
+-- 문제 1번에 선택했던 답 모두 가져옴
+select * from selected_answer where tq_no = 1 and uid='test1' order by sa_date desc;
 delete from selected_answer;
 alter table selected_answer auto_increment = 1;
 
@@ -413,9 +415,9 @@ select * from grade where uid = 'test1' order by g_date desc, g_no desc limit 1;
 -- 'test1'이 시험본 tno만 가져옴
 select distinct tno from grade where uid = 'test1' order by tno;
 -- 'test1'이 시험본 tno의 날짜를 가져옴
-select distinct g_date from grade where uid = 'test1' and tno = 2 order by g_date desc;
+select distinct g_date from grade where uid = 'test1' and tno = 1 order by g_date desc;
 -- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
-select * from grade where uid = 'test1'and g_date = '2017-06-11 2:6';
+select * from grade where uid = 'test1'and g_date = '2017-06-15 22:18';
 -- 'test1'이 한 기출문제의 성적을 가져옴
 select * from grade where uid='test1' and tno = 2 group by g_save_no;
 -- 시험을 저장할 때 한 시험에 부여되는 번호
@@ -425,14 +427,15 @@ select * from grade where uid = 'test1' and tno = 2 and g_subject = '데이터�
 
 delete from grade;
 alter table grade auto_increment = 1;
-select * from grade;
 
 
 insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());
+-- test1유저가 오답풀이를 가지고 있는 tno만 가져오기
+select distinct tno from note where uid='test1' order by tno;
 -- test1유저가 tno가 1인 문제에 오답풀이를 달은 모든 리스트
 select * from note where uid='test1' and tno = 1 order by tq_no;
 -- test1유저가 tno가 1이고 tq_no가 1인 문제에 오답풀이단 것을 가져옴 
-select * from note where uid='test1' and tno=1 and tq_no = 1 order by note_date desc limit 1;
+select * from note where uid='test1' and tno = 1 and tq_no = 1 order by note_date desc limit 1;
 -- 수정
 update note set note_content = '11', note_memo = '11' where note_no = 1;
 -- 삭제

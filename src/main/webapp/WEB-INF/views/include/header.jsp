@@ -25,7 +25,7 @@ $(function(){
 	<div class="width1400">
 		<div class="title-box">
 			<span id="title-top">국가자격증 기출문제</span><br />
-			<span id="title"><a href="">오모리닷컴</a></span><br />
+			<span id="title"><a href="${pageContext.request.contextPath}/grade/">오모리닷컴</a></span><br />
 			<span id="title-bottom"><span>오</span>답풀이, <span>모</span>의고사, <span>리</span>플레이(반복학습)</span>
 		</div>
 	</div>
@@ -51,16 +51,16 @@ $(function(){
 		<div class="width1400">
 			<ul>
 				<li><a href="${pageContext.request.contextPath}/mock_test/" class="click-event">모의고사</a></li>
-				<li><a href="${pageContext.request.contextPath}/subject_test/subject_test" class="click-event">과목별 시험</a></li>
-				<li><a href="" class="click-event">한 문제씩 풀기</a></li>
-				<li><a href="" class="click-event">오답노트</a></li>
+				<li><a href="${pageContext.request.contextPath}/subject_test/" class="click-event">과목별 시험</a></li>
+				<li><a href="${pageContext.request.contextPath}/one_test/" class="click-event">한 문제씩 풀기</a></li>
+				<li><a href="${pageContext.request.contextPath}/note/" class="click-event">오답노트</a></li>
 				<li><a href="${pageContext.request.contextPath}/grade/" class="click-event">성적 통계</a></li>
 				<c:if test="${!empty login }">
 					<c:if test="${login.isadmin == true}">
 						<li>
 							<a href="" class="click-event" id="admin-menu-btn">관리자 메뉴</a>
 							<div class="admin-sub-menu">
-								<a href="${pageContext.request.contextPath}/admin/test_managing">기출문제 등록</a>
+								<a href="${pageContext.request.contextPath}/admin/insert_test">기출문제 등록</a>
 								<a href="${pageContext.request.contextPath}/mock_test/">기출문제 수정</a>
 							</div>
 						</li>

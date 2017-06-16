@@ -60,13 +60,13 @@ public class AdminController {
 	@Autowired
 	private ImageService imageService;
 
-	@RequestMapping(value = "/test_managing", method = RequestMethod.GET)
+	@RequestMapping(value = "/insert_test", method = RequestMethod.GET)
 	public String testManagingGET(Model model) throws Exception {
 		List<TestNameVO> list = nameService.selectAllTestName();
 		
 		model.addAttribute("nameList", list);
 
-		return "admin/test_managing";
+		return "admin/insert_test";
 	}//test_managing
 	
 	@ResponseBody
@@ -91,12 +91,22 @@ public class AdminController {
 	@ResponseBody
 	@RequestMapping(value = "/insertQuestionExample", method = RequestMethod.POST)
 	public ResponseEntity<String> insertQuestionExample(int tno, String tq_subject, int tq_small_no, String tq_question, int tq_answer, 
-			String example1, String example2, String example3, String example4) throws Exception {
+			String example1, String example2, String example3, String example4,
+			MultipartFile file, HttpServletRequest req) throws Exception {
 		ResponseEntity<String> entity = null;
 		
 		String[] te_content = new String[]{example1, example2, example3, example4};
 		
+		String root_path = req.getSession().getServletContext().getRealPath("/");
+		String innerUploadPath = "resources/upload";
+
+		File dir = new File(root_path + "/" + innerUploadPath);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
 		try {
+			//문제등록
 			TestQuestionVO vo = new TestQuestionVO();
 			
 			TestNameVO testName = new TestNameVO();
@@ -111,6 +121,7 @@ public class AdminController {
 			questionService.insertTestQuestion(vo);
 			TestQuestionVO question = questionService.selectOneTestQuestion(tno, tq_small_no);
 
+			//보기등록
 			for(int i=0; i<te_content.length; i++){
 				System.out.println(te_content[i]);
 				TestExampleVO example = new TestExampleVO();
@@ -118,6 +129,20 @@ public class AdminController {
 				example.setTe_small_no(i+1);
 				example.setTe_content(te_content[i].trim());
 				exampleService.insertTestExample(example);
+			}
+			
+			//이미지 등록
+			if(file.getSize() > 0){
+				UUID uid = UUID.randomUUID();
+				String savedName = uid.toString() + "_" + file.getOriginalFilename(); // 랜덤이름_원본이름
+
+				File target = new File(root_path + "/" + innerUploadPath, savedName);
+				FileCopyUtils.copy(file.getBytes(), target);
+
+				ImageVO imgVO = new ImageVO();
+				imgVO.setQuestion(question);
+				imgVO.setImgsource(savedName);
+				imageService.insertImage(imgVO);
 			}
 			
 			entity = new ResponseEntity<>("success", HttpStatus.OK);
@@ -129,6 +154,143 @@ public class AdminController {
 		return entity;
 	}//insertQuestionExample
 	
+	@ResponseBody
+	@RequestMapping(value = "/updateQueAndEx", method = RequestMethod.POST)
+	public ResponseEntity<String> updateQueAndEx(int tqno, String subject, int answer, String question,
+												int teno1, int teno2, int teno3, int teno4,
+												String ex1, String ex2, String ex3, String ex4, String preDelImg,
+												MultipartFile file, HttpServletRequest req) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		String root_path = req.getSession().getServletContext().getRealPath("/");
+		String innerUploadPath = "resources/upload";
+		
+		try {
+			TestQuestionVO que =  questionService.selectOneTestQuestionByTqno(tqno);
+			que.setTq_subject(subject);
+			que.setTq_answer(answer);
+			que.setTq_question(question);
+			questionService.updateTestQuestion(que);
+			
+			TestExampleVO exVO1 = exampleService.selectOneTestExampleByTeNo(teno1);
+			exVO1.setTe_content(ex1);
+			exampleService.updateTestExample(exVO1);
+			
+			TestExampleVO exVO2 = exampleService.selectOneTestExampleByTeNo(teno2);
+			exVO2.setTe_content(ex2);
+			exampleService.updateTestExample(exVO2);
+			
+			TestExampleVO exVO3 = exampleService.selectOneTestExampleByTeNo(teno3);
+			exVO3.setTe_content(ex3);
+			exampleService.updateTestExample(exVO3);
+			
+			TestExampleVO exVO4 = exampleService.selectOneTestExampleByTeNo(teno4);
+			exVO4.setTe_content(ex4);
+			exampleService.updateTestExample(exVO4);
+			
+			if( !preDelImg.equals("null") ){
+				imageService.deleteImage(tqno);
+			}
+			
+			if(file != null && file.getSize() > 0){
+				UUID uid = UUID.randomUUID();
+				String savedName = uid.toString() + "_" + file.getOriginalFilename(); // 랜덤이름_원본이름
+
+				File target = new File(root_path + "/" + innerUploadPath, savedName);
+				FileCopyUtils.copy(file.getBytes(), target);
+				
+				if(imageService.selectImageByTqNo(tqno).size() < 1){
+					ImageVO image = new ImageVO();
+					image.setQuestion(que);
+					image.setImgsource(savedName);
+					imageService.insertImage(image);
+				}else{
+					imageService.updateImage(tqno, savedName);
+				}
+			}
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//updateQueAndEx
+	
+	@ResponseBody
+	@RequestMapping(value = "/getImage", method = RequestMethod.POST)
+	public ResponseEntity<List<ImageVO>> getImage(int tqno) throws Exception {
+		ResponseEntity<List<ImageVO>> entity = null;
+		
+		try {
+			List<ImageVO> imgList = imageService.selectImageByTqNo(tqno);
+			
+			entity = new ResponseEntity<>(imgList, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getImage
+	
+	/*@RequestMapping(value = "/insert_result", method = RequestMethod.POST)
+	public String insertResultPOST(int tno, TestQuestionVO questionVO, String[] te_small_no, String[] te_content,
+			List<MultipartFile> files, HttpServletRequest request, Model model) throws Exception {
+		logger.info("insertExam POST................");
+
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		questionVO.setTestName(testName);
+		questionService.insertTestQuestion(questionVO);
+
+		TestQuestionVO newQuestionVO = questionService.selectOneTestQuestion(tno, questionVO.getTq_small_no());
+
+		String root_path = request.getSession().getServletContext().getRealPath("/");
+		String innerUploadPath = "resources/upload";
+
+		File dir = new File(root_path + "/" + innerUploadPath);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+
+		ArrayList<String> fileNames = new ArrayList<>();
+		for (MultipartFile file : files) {
+			UUID uid = UUID.randomUUID();
+			String savedName = uid.toString() + "_" + file.getOriginalFilename(); // 랜덤이름_원본이름
+
+			File target = new File(root_path + "/" + innerUploadPath, savedName);
+			FileCopyUtils.copy(file.getBytes(), target);
+
+			fileNames.add(innerUploadPath + "/" + savedName);
+
+			 insert image 
+			ImageVO imgVO = new ImageVO();
+			imgVO.setQuestion(newQuestionVO);
+			imgVO.setImgsource(savedName);
+			imageService.insertImage(imgVO);
+		}
+
+		for (int i = 0; i < te_small_no.length; i++) {
+			TestExampleVO vo = new TestExampleVO();
+			vo.setQuestion(newQuestionVO);
+			vo.setTe_small_no(Integer.parseInt(te_small_no[i]));
+			vo.setTe_content(te_content[i]);
+
+			exampleService.insertTestExample(vo);
+		}
+
+		int tq_no = newQuestionVO.getTq_no();
+		List<ImageVO> imgList = imageService.selectImageByTqNo(tq_no);
+		List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
+
+		model.addAttribute("TestQuestionVO", newQuestionVO);
+		model.addAttribute("exampleList", exampleList);
+		model.addAttribute("imgList", imgList);
+
+		return "admin/insert_result";
+	}// insertExamPOST
+*/	
 	@ResponseBody
 	@RequestMapping(value = "/updateTestName", method = RequestMethod.POST)
 	public ResponseEntity<String> updateTestName(int tno, String tname, String tdate) throws Exception {
@@ -227,61 +389,7 @@ public class AdminController {
 		return entity;
 	}//getTestNameList
 
-	@RequestMapping(value = "/insert_result", method = RequestMethod.POST)
-	public String insertResultPOST(int tno, TestQuestionVO questionVO, String[] te_small_no, String[] te_content,
-			List<MultipartFile> files, HttpServletRequest request, Model model) throws Exception {
-		logger.info("insertExam POST................");
-
-		TestNameVO testName = nameService.selectOneTestName(tno);
-		questionVO.setTestName(testName);
-		questionService.insertTestQuestion(questionVO);
-
-		TestQuestionVO newQuestionVO = questionService.selectOneTestQuestion(tno, questionVO.getTq_small_no());
-
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String innerUploadPath = "resources/upload";
-
-		File dir = new File(root_path + "/" + innerUploadPath);
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-
-		ArrayList<String> fileNames = new ArrayList<>();
-		for (MultipartFile file : files) {
-			UUID uid = UUID.randomUUID();
-			String savedName = uid.toString() + "_" + file.getOriginalFilename(); // 랜덤이름_원본이름
-
-			File target = new File(root_path + "/" + innerUploadPath, savedName);
-			FileCopyUtils.copy(file.getBytes(), target);
-
-			fileNames.add(innerUploadPath + "/" + savedName);
-
-			/* insert image */
-			ImageVO imgVO = new ImageVO();
-			imgVO.setQuestion(newQuestionVO);
-			imgVO.setImgsource(savedName);
-			imageService.insertImage(imgVO);
-		}
-
-		for (int i = 0; i < te_small_no.length; i++) {
-			TestExampleVO vo = new TestExampleVO();
-			vo.setQuestion(newQuestionVO);
-			vo.setTe_small_no(Integer.parseInt(te_small_no[i]));
-			vo.setTe_content(te_content[i]);
-
-			exampleService.insertTestExample(vo);
-		}
-
-		int tq_no = newQuestionVO.getTq_no();
-		List<ImageVO> imgList = imageService.selectImageByTqNo(tq_no);
-		List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-
-		model.addAttribute("TestQuestionVO", newQuestionVO);
-		model.addAttribute("exampleList", exampleList);
-		model.addAttribute("imgList", imgList);
-
-		return "admin/insert_result";
-	}// insertExamPOST
+	
 
 	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
 	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
@@ -302,43 +410,7 @@ public class AdminController {
 		return "admin/update_test";
 	}// update_test
 	
-	@ResponseBody
-	@RequestMapping(value = "/updateQueAndEx", method = RequestMethod.POST)
-	public ResponseEntity<String> updateQueAndEx(int tqno, String subject, int answer, String question,
-												int teno1, int teno2, int teno3, int teno4,
-												String ex1, String ex2, String ex3, String ex4) throws Exception {
-		ResponseEntity<String> entity = null;
-		
-		try {
-			TestQuestionVO que =  questionService.selectOneTestQuestionByTqno(tqno);
-			que.setTq_subject(subject);
-			que.setTq_answer(answer);
-			que.setTq_question(question);
-			questionService.insertTestQuestion(que);
-			
-			TestExampleVO exVO1 = exampleService.selectOneTestExampleByTeNo(teno1);
-			exVO1.setTe_content(ex1);
-			exampleService.insertTestExample(exVO1);
-			
-			TestExampleVO exVO2 = exampleService.selectOneTestExampleByTeNo(teno2);
-			exVO2.setTe_content(ex2);
-			exampleService.insertTestExample(exVO2);
-			
-			TestExampleVO exVO3 = exampleService.selectOneTestExampleByTeNo(teno2);
-			exVO3.setTe_content(ex3);
-			exampleService.insertTestExample(exVO3);
-			
-			TestExampleVO exVO4 = exampleService.selectOneTestExampleByTeNo(teno2);
-			exVO4.setTe_content(ex4);
-			exampleService.insertTestExample(exVO4);
-			
-			entity = new ResponseEntity<>("success", HttpStatus.OK);
-		} catch (Exception e) {
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		return entity;
-	}//updateQueAndEx
+	
 	
 
 	@RequestMapping(value = "/update_form/{tno}/{tq_no}", method = RequestMethod.POST)
@@ -368,7 +440,8 @@ public class AdminController {
 	 * -----------*/
 	@ResponseBody
 	@RequestMapping(value = "/uploadExcelFile", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadExcelFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, HttpServletRequest req) throws IOException, InvalidFormatException{
+	public ResponseEntity<String> uploadExcelFile(MultipartFile nameFile, MultipartFile questionFile, MultipartFile exampleFile, 
+													HttpServletRequest req) throws IOException, InvalidFormatException{
 		ResponseEntity<String> entity = null;
 		
 		try {
@@ -456,44 +529,8 @@ public class AdminController {
 				try {
 					addToDB(cells, row, fileName);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				/*for (int columnindex = 0; columnindex <= cells; columnindex++) {
-					XSSFCell cell = row.getCell(columnindex); //각 셀 읽기
-					String value = "";
-					
-					if (cell == null) {// 셀이 빈값일경우를 위한 널체크
-						continue;
-					} else { // 타입별로 내용 읽기
-						switch (cell.getCellType()) {
-						case XSSFCell.CELL_TYPE_FORMULA:
-							value = cell.getCellFormula();
-							break;
-						case XSSFCell.CELL_TYPE_NUMERIC:
-							if(DateUtil.isCellDateFormatted(cell)){
-								Date date = cell.getDateCellValue();
-								value = new SimpleDateFormat("yyyy-MM-dd").format(date);
-							}else{
-								value = (int) cell.getNumericCellValue() + "";
-							}
-							value = (int) cell.getNumericCellValue() + "";
-							break;
-						case XSSFCell.CELL_TYPE_STRING:
-							value = cell.getStringCellValue() + "";
-							break;
-						case XSSFCell.CELL_TYPE_BLANK:
-							value = cell.getBooleanCellValue() + "";
-							break;
-						case XSSFCell.CELL_TYPE_ERROR:
-							value = cell.getErrorCellValue() + "";
-							break;
-						}
-					}
-					System.out.println("각 셀 내용 :" + value);
-				}*///end of child for
 			}
 		}//end of parent for
 		

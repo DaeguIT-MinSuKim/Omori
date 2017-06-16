@@ -46,4 +46,10 @@
 		delete from note
 		where note_no = #{note_no}
 	</delete>
+	
+	<select id="selectAllNoteDistinctTno" resultType="int">
+		select distinct tno from note 
+		where uid=#{uid}
+		order by tno
+	</select>
 </mapper>

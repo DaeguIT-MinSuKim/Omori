@@ -48,6 +48,7 @@ public class GradeController {
 			model.addAttribute("testName", testNameList.get(0));
 
 			List<String> dateList = gradeService.selectGradeDate(user.getUid(), testNameList.get(0).getTno());
+			
 			model.addAttribute("dateList", dateList);
 		}
 		
@@ -55,8 +56,8 @@ public class GradeController {
 	}//gradeGET
 	
 	@ResponseBody
-	@RequestMapping(value="/insertGradePost", method=RequestMethod.POST)
-	public ResponseEntity<String> insertGradePost(HttpServletRequest req, int tno, int grade, String arrSubject, String arrSubjectGrade) throws Exception{
+	@RequestMapping(value="/insertGradeAll", method=RequestMethod.POST)
+	public ResponseEntity<String> insertGradeAll(HttpServletRequest req, int tno, int grade, String arrSubject, String arrSubjectGrade) throws Exception{
 		ResponseEntity<String> entity = null;
 		
 		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
@@ -100,6 +101,45 @@ public class GradeController {
 	}//insertGradePost
 	
 	@ResponseBody
+	@RequestMapping(value="/insertGradeOnlySubject", method=RequestMethod.POST)
+	public ResponseEntity<String> insertGradeOnlySubject(HttpServletRequest req, int tno, int grade, String subject, String subjectGrade) throws Exception{
+		ResponseEntity<String> entity = null;
+		
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		
+		List<GradeVO> gradeList = new ArrayList<>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd H:m");
+		String date = sdf.format(new Date());
+		
+		int g_save_no = gradeService.countSaveNo();
+		int subjGrade = Integer.parseInt(subjectGrade);
+			
+		GradeVO vo = new GradeVO();
+		vo.setUser(user);
+		vo.setTestName(testName);
+		vo.setG_save_no(g_save_no);
+		vo.setGrade(grade);
+		vo.setG_subject(subject);
+		vo.setG_subject_grade(subjGrade);
+		vo.setG_date(date);
+			
+		gradeList.add(vo);
+		
+		try {
+			gradeService.insertGrade(gradeList);
+			
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//insertGradeOnlySubject
+	
+	@ResponseBody
 	@RequestMapping(value="/getGradeGroupByTno", method=RequestMethod.POST)
 	public ResponseEntity<List<GradeVO>> getGradeGroupByTno(HttpServletRequest req, int tno){
 		ResponseEntity<List<GradeVO>> entity = null;
@@ -123,13 +163,26 @@ public class GradeController {
 	
 	@ResponseBody
 	@RequestMapping(value="/getDateList", method=RequestMethod.POST)
-	public ResponseEntity<List<String>> getDateList(HttpServletRequest req, int tno){
+	public ResponseEntity<List<String>> getDateList(HttpServletRequest req, int tno) throws Exception{
 		ResponseEntity<List<String>> entity = null;
 		
 		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		TestNameVO testName = nameService.selectOneTestName(tno);
 		
 		try {
-			List<String> dateList = gradeService.selectGradeDate(user.getUid(), tno);
+			List<String> dateList = new ArrayList<>();
+			List<String> tempList = gradeService.selectGradeDate(user.getUid(), tno);
+			
+			if(testName.getTname().contains("정보처리기사")){
+				System.out.println("정보처리산업기사");
+				for (String date : tempList) {
+					List<GradeVO> gradeList = gradeService.selectListGradeByDate(user.getUid(), tno, date);
+					
+					if(gradeList.size() > 1){
+						dateList.add(date);
+					}
+				}
+			}
 			
 			entity = new ResponseEntity<>(dateList, HttpStatus.OK);
 		} catch (Exception e) {
