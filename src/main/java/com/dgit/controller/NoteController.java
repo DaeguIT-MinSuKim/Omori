@@ -52,7 +52,6 @@ public class NoteController {
 		if(testNameList.size() > 0){
 			model.addAttribute("testNameList", testNameList);
 			model.addAttribute("firstTestName", testNameList.get(0));
-			model.addAttribute("questionList", questionService.selectQuestionAndAnswerWithNotePercent(1, user.getUid()));
 		}
 		
 		return "note/note_home";

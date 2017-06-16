@@ -71,50 +71,7 @@
 					</c:if>
 				</div>
 				<div class="show-note-box">
-					<c:forEach var="obj" items="${questionList}">
-						<div class="each-question">
-							<div class="subject-box">
-								<p>${obj.tq_subject }</p>
-							</div>
-							<div class="question-box" tqanswer="${obj.tq_answer}">
-								<p><span>${obj.tq_small_no}. </span><span>${obj.tq_question}</span></p>
-							</div>
-							<div class="image-box">
-								<c:forEach var="image" items="${obj.imageList}">
-									<p><img src="${pageContext.request.contextPath}/resources/upload/${image.imgsource}" alt="" /></p>
-								</c:forEach>
-							</div>
-							<div class="example-box">
-								<c:forEach var="example" items="${obj.exampleList}">
-									<p><a href=""><span>${example.te_small_no}. </span>${example.te_content}</a></p>
-								</c:forEach>
-							</div>
-							<div class="answer-box">
-								<p>정답 : <span>${obj.tq_answer}</span></p>
-								<p>내가 선택한 답 : ${obj.answer.sa_answer}</p>
-								<p>내 정답률 : ${obj.tq_per}</p>
-							</div>
-							<div class="note-box" noteno="${obj.note.note_no}" tqno="${obj.tq_no}">
-								<div class="note-box-inner">
-									<p><label for="">풀이</label><textarea cols="50" rows="5" class="note_content" placeholder="여기에 오답 풀이 내용을 입력하세요">${obj.note.note_content}</textarea></p>
-									<p><label for="">메모</label><textarea cols="50" rows="5" class="note_memo" placeholder="여기에 메모를 입력하세요">${obj.note.note_memo}</textarea></p>
-									<div class="note-button-box">
-										<span class='add'>
-											<button class="addNoteBtn">등록</button>
-										</span>
-										<span class="up-and-del">
-											<button class="updateNoteBtn">수정</button>
-											<button class='delNoteBtn'>삭제</button>
-										</span>
-										<span class="com-and-can">
-											<button class='updateCompleteBtn'>확인</button>
-											<button class='updateCancelBtn'>취소</button>
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</c:forEach>
+					
 				</div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
@@ -139,13 +96,13 @@ var firstTname = "${firstTestName.tname}";
 
 $(document).on("ready", function(){
 	//Ajax 로딩 이미지
-	$(window).ajaxStart(function(){
+	/* $(window).ajaxStart(function(){
 		$(".loading-box").css("display", "block");
 		$(".show-note-box").css("display","none");
 	}).ajaxComplete(function(){
 		$(".loading-box").css("display", "none");
 		$(".show-note-box").css("display","block");
-	});
+	}); */
 	
 	//오답문제 리스트 불러오기
 	getQuestionAnswerNoteAjax(firstTno);
@@ -167,6 +124,65 @@ function getQuestionAnswerNoteAjax(tno){
 			alert("에러가 발생하였습니다");
 		}
 	});
+}
+
+function makeTag(result){
+	for(var i=0; i<result.length; i++){
+		var obj = result[i];
+		var $topDiv = $("<div class='each-question>");
+		
+		//과목
+		var $divSubject = $("<div class='subject-box'>")
+		$divSubject.html("<p>"+obj.tq_subject+"</p>");
+		$topDiv.append($divSubject);
+		
+		//문제
+		var $divQuestion = $("<div class='question-box' tqanswer='"+obj.tq_answer+"'>");
+		$divQuestion.html("<p><span>"+obj.tq_small_no+". </span><span>"+obj.tq_question+"</span></p>");
+		$topDiv.append($divQuestion);
+		
+		//이미지
+		var $divImage = $("<div class='image-box>");
+		for(var j=0; j<obj.imageList.length; j++){
+			var image = imageList[j];
+			$divImage.append("<p><img src='${pageContext.request.contextPath}/resources/upload/"+image.imgsource+"'></p>");
+		}
+		$topDiv.append($divImage);
+		
+		//보기
+		var $divExample = $("<div class='example-box'>");
+		for(var j=0; j<obj.exampleList.length; j++){
+			var example = obj.exampleList[j];
+			$divExample.append("<p><span>"+example.te_small_no+". </span>"+example.te_content+"</p>");	
+		}
+		$topDiv.append($divExample);
+		
+		//정답, 내가 선택한 답, 정답률
+		var $divAnswer = $("<div class='answer-box'>");
+		$divAnswer.append("<p><span>정답 : </span><span>"+obj.tq_answer+"</span></p>");
+		var myAnswer = "X";
+		if(obj.answer != null){
+			myAnswer = obj.answer.sa_answer;
+		}
+		$divAnswer.append("<p><span>내가 선택한 답 : </span><span>"+myAnswer+"</span></p>");
+		$divAnswer.append("<p><span>정답률 : </span><span>"+obj.tq_per+"</span></p>");
+		$topDiv.append($divAnswer);
+		
+		//오답노트
+		var $divTopNote = $("<div class='note-box' noteno='"+obj.note.note_no+"' tqno='"+obj.tq_no+"'>");
+		var $divInnerNote = $("<div class='note-box-inner>");
+		$divInnerNote.append("<p><label>풀이</label><textarea class='note_content' placeholder='여기에 오답 풀이 내용을 입력하세요'>"+obj.note.note_content+"</textarea></p>");
+		$divInnerNote.append("<p><label>메모</label><textarea class='note_memo' placeholder='여기에 메모를 입력하세요'>"+obj.note.note_memo+"</textarea></p>");
+		var $divButton = $("<div class='note-button-box'>");
+		$divButton.append("<span class='add'><button class='addNoteBtn'>등록</button></span>");
+		$divButton.append("<span class='up-and-del'><button class='updateNoteBtn'>수정</button><button class='delNoteBtn'>삭제</button></span>");
+		$divButton.append("<span class='com-and-can'><button class='updateCompleteBtn'>확인</button><button class='updateCancelBtn'>취소</button></span>");
+		$divInnerNote.append($divButton);
+		$divTopNote.append($divInnerNote);
+		$topDiv.append($divTopNote);
+		
+		$(".show-note-box").append($topDiv);
+	}
 }
 </script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/note.js"></script>
