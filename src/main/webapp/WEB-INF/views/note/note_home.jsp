@@ -14,8 +14,8 @@
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.each-question{display:block; background:#ff0000;width:31%; float:left; margin-left:20px;}
-
+.each-question{display: inline-block; background:#ff0000; width:31%; margin-left:20px; vertical-align: top;}
+    
 /* ------------
 	로딩 이미지
 -------------*/
@@ -70,9 +70,7 @@
 						</c:forEach>
 					</c:if>
 				</div>
-				<div class="show-note-box">
-					
-				</div>
+				<div class="show-note-box"></div>
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
@@ -96,13 +94,13 @@ var firstTname = "${firstTestName.tname}";
 
 $(document).on("ready", function(){
 	//Ajax 로딩 이미지
-	/* $(window).ajaxStart(function(){
+	$(window).ajaxStart(function(){
 		$(".loading-box").css("display", "block");
-		$(".show-note-box").css("display","none");
+		/* $(".show-note-box").css("display","none"); */
 	}).ajaxComplete(function(){
 		$(".loading-box").css("display", "none");
 		$(".show-note-box").css("display","block");
-	}); */
+	});
 	
 	//오답문제 리스트 불러오기
 	getQuestionAnswerNoteAjax(firstTno);
@@ -119,6 +117,13 @@ function getQuestionAnswerNoteAjax(tno){
 		success:function(result){
 			console.log(result);
 			makeTag(result);
+			
+			//오답노트가 존재하는 것만 보여지기 때문에 수정, 삭제버튼만 나타나게 하고
+			//textarea는 disabled시킴
+			$(".note-box").find("textarea").attr("disabled", "disabled");
+			$(".note-box").find(".up-and-del").show();
+			$(".note-box").find(".add").hide();
+			$(".note-box").find(".com-and-can").hide();
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");
@@ -126,10 +131,13 @@ function getQuestionAnswerNoteAjax(tno){
 	});
 }
 
+/*--------------- 
+	태그로 만들기
+---------------*/
 function makeTag(result){
 	for(var i=0; i<result.length; i++){
 		var obj = result[i];
-		var $topDiv = $("<div class='each-question>");
+		var $topDiv = $("<div class='each-question' tno='"+obj.testName.tno+"'>");
 		
 		//과목
 		var $divSubject = $("<div class='subject-box'>")
@@ -142,16 +150,16 @@ function makeTag(result){
 		$topDiv.append($divQuestion);
 		
 		//이미지
-		var $divImage = $("<div class='image-box>");
-		for(var j=0; j<obj.imageList.length; j++){
-			var image = imageList[j];
+		var $divImage = $("<div class='image-box'>");
+		for(var j = 0; j < obj.imageList.length; j++){
+			var image = obj.imageList[j];
 			$divImage.append("<p><img src='${pageContext.request.contextPath}/resources/upload/"+image.imgsource+"'></p>");
 		}
 		$topDiv.append($divImage);
-		
+
 		//보기
 		var $divExample = $("<div class='example-box'>");
-		for(var j=0; j<obj.exampleList.length; j++){
+		for(var j = 0; j < obj.exampleList.length; j++){
 			var example = obj.exampleList[j];
 			$divExample.append("<p><span>"+example.te_small_no+". </span>"+example.te_content+"</p>");	
 		}
@@ -164,15 +172,15 @@ function makeTag(result){
 		if(obj.answer != null){
 			myAnswer = obj.answer.sa_answer;
 		}
-		$divAnswer.append("<p><span>내가 선택한 답 : </span><span>"+myAnswer+"</span></p>");
-		$divAnswer.append("<p><span>정답률 : </span><span>"+obj.tq_per+"</span></p>");
+		$divAnswer.append("<p><span>내가 최근에 선택한 답 : </span><span>"+myAnswer+"</span></p>");
+		$divAnswer.append("<p><span>내 정답률 : </span><span>"+obj.tq_per+"</span></p>");
 		$topDiv.append($divAnswer);
 		
 		//오답노트
 		var $divTopNote = $("<div class='note-box' noteno='"+obj.note.note_no+"' tqno='"+obj.tq_no+"'>");
-		var $divInnerNote = $("<div class='note-box-inner>");
-		$divInnerNote.append("<p><label>풀이</label><textarea class='note_content' placeholder='여기에 오답 풀이 내용을 입력하세요'>"+obj.note.note_content+"</textarea></p>");
-		$divInnerNote.append("<p><label>메모</label><textarea class='note_memo' placeholder='여기에 메모를 입력하세요'>"+obj.note.note_memo+"</textarea></p>");
+		var $divInnerNote = $("<div class='note-box-inner'>");
+		$divInnerNote.append("<p><label>풀이</label><textarea class='note_content'>"+obj.note.note_content+"</textarea></p>");
+		$divInnerNote.append("<p><label>메모</label><textarea class='note_memo'>"+obj.note.note_memo+"</textarea></p>");
 		var $divButton = $("<div class='note-button-box'>");
 		$divButton.append("<span class='add'><button class='addNoteBtn'>등록</button></span>");
 		$divButton.append("<span class='up-and-del'><button class='updateNoteBtn'>수정</button><button class='delNoteBtn'>삭제</button></span>");
@@ -183,6 +191,64 @@ function makeTag(result){
 		
 		$(".show-note-box").append($topDiv);
 	}
+}
+
+/*------------------- 
+	오답노트수정 ajax
+-------------------*/
+function updateNotePost(tno, tqno, content, memo){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/note/updateNotePost",
+		type:"post",
+		data:{"tno":tno, "tq_no":tqno, "note_content":content, "note_memo":memo},
+		success:function(result){
+			swal({
+				title:"수정되었습니다",
+				confirmButtonText: "확인"
+			});
+			
+			$(".note-box").each(function(i, obj) {
+				if($(obj).attr("tqno") == tqno){
+					$(obj).find("textarea").attr("disabled", "disabled");
+					$(obj).find(".up-and-del").show();
+					$(obj).find(".com-and-can").hide();
+				}
+			});
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다.");
+		}
+	});
+}
+
+/*------------------- 
+	오답노트삭제 Ajax
+-------------------*/
+function deleteNotePost(tno, tqno){
+	$.ajax({
+		url:"${pageContext.request.contextPath}/note/deleteNotePost",
+		type:"post",
+		data:{"tno":tno, "tq_no":tqno},
+		success:function(result){
+			swal({
+				title:"삭제되었습니다",
+				confirmButtonText: "확인"
+			});
+			
+			$(".note-box").each(function(i, obj) {
+				if($(obj).attr("tqno") == tqno){
+					$(obj).parents(".each-question").fadeOut("slow");
+					/* $(obj).find("textarea").val("");
+					$(obj).find("textarea").removeAttr("disabled");
+					$(obj).find(".add").show();
+					$(obj).find(".up-and-del").hide(); */
+				}
+			});
+		},
+		error:function(e){
+			alert("에러가 발생하였습니다.");
+		}
+	});
 }
 </script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/note.js"></script>

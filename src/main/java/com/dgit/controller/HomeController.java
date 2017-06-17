@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,17 +36,32 @@ public class HomeController {
 		return "exceltest";
 	}
 	
+	@ResponseBody
 	@RequestMapping(value = "/android")
-	public void androidTest() {
-		logger.info("꺄륵***********************************************");
+	public ResponseEntity<String> androidTest() {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			entity = new ResponseEntity<>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
 	}
 	
-	@RequestMapping("/android2")
-	public void androidTestWithRequest(HttpServletRequest request) {
-		logger.info("두번째 android 2");
-//		System.out.println(request.getParameter("test"));
-		System.out.println(request.getParameter("title"));
-		System.out.println(request.getParameter("memo"));
+	@ResponseBody
+	@RequestMapping(value = "/android2", method=RequestMethod.POST)
+	public ResponseEntity<String> androidTestWithRequest(HttpServletRequest request) {
+		ResponseEntity<String> entity = null;
+		
+		try {
+			entity = new ResponseEntity<>("success" + request.getParameter("zone"), HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
 	}
 	
 	@RequestMapping("/android3")

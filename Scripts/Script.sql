@@ -303,12 +303,14 @@ use omori;
 create index idx_tqno on selected_answer(tq_no);
 create index idx_uid on selected_answer(uid);
 -- ----------------------------------------------------------------------------------------
+use omori;
 
 insert into user(uid, upw, uemail, ujoindate, isadmin) values('test1', 'test1', 'test1@naver.com',now(), false);
 insert into user(uid, upw, uemail, ujoindate, isadmin) values('test2', 'test2', 'test2@naver.com',now(), false);
 insert into user values('admin', 'admin', 'admin@naver.com',now(), true);
 select uid, upw, uemail, ujoindate, isadmin from user where uid = 'test2';
 select * from user;
+select * from user where uid = 'test2';
 
 LOAD DATA LOCAL INFILE "E:\\workspace\\workspace_spring\\Omori_2\\DataFiles\\testname.txt" INTO TABLE testname 
 FIELDS TERMINATED BY '\t';
