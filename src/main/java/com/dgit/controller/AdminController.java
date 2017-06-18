@@ -140,7 +140,7 @@ public class AdminController {
 				FileCopyUtils.copy(file.getBytes(), target);
 
 				ImageVO imgVO = new ImageVO();
-				imgVO.setQuestion(question);
+				imgVO.setTq_no(question.getTq_no());
 				imgVO.setImgsource(savedName);
 				imageService.insertImage(imgVO);
 			}
@@ -201,7 +201,7 @@ public class AdminController {
 				
 				if(imageService.selectImageByTqNo(tqno).size() < 1){
 					ImageVO image = new ImageVO();
-					image.setQuestion(que);
+					image.setTq_no(que.getTq_no());
 					image.setImgsource(savedName);
 					imageService.insertImage(image);
 				}else{

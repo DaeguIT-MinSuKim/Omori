@@ -166,7 +166,7 @@ public class TestServiceTest {
 	public void insertImage() throws Exception{
 		TestQuestionVO question = questionService.selectOneTestQuestion(1, 1);
 		ImageVO vo = new ImageVO();
-		vo.setQuestion(question);
+		vo.setTq_no(question.getTq_no());
 		vo.setImgsource("이미지2");
 		
 		imageService.insertImage(vo);

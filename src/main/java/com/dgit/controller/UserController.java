@@ -91,7 +91,7 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value="/androidJoin", method=RequestMethod.POST)
 	public ResponseEntity<String> androidJoinPost(HttpServletRequest req) throws Exception{
-		System.out.println("androidJoin POST.................");
+		System.out.println("★★★★★★★★★★androidJoin POST★★★★★★★★★★");
 		
 		ResponseEntity<String> entity = null;
 		
@@ -124,7 +124,7 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value="/androidLogin", method=RequestMethod.POST)
 	public ResponseEntity<String> androidLoginPOST(HttpServletRequest req) throws Exception{
-		System.out.println("androidLogin POST.................");
+		System.out.println("★★★★★★★★★★androidLogin POST★★★★★★★★★★");
 		
 		ResponseEntity<String> entity = null;
 		
