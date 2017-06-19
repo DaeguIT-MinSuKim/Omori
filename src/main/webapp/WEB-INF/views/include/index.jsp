@@ -19,64 +19,32 @@
 /* .................... */
 /* home 				*/
 /* .................... */
-.main{
-	width:100%;
-}
+.main{width:100%;}
+.title-box {margin:10% auto; width:40%;}
+.title-box .image-box{float:left; margin-right:20px;}
+.title-box .text-box{padding-top:32px; padding-bottom:60px;}
+.title-box .text-box #title-top{font-size:33px; display: block; font-family: "나눔스퀘어EB"; color:#6e4a37;}
+.title-box .text-box .title-animation span.title{font-size:77px; font-family: "나눔스퀘어EB"; color:#d74526;}
+.title-box .text-box #title-bottom{font-size:18px; font-family: "나눔스퀘어EB"; color:#6e4a37;}
+.title-box .login-box a{color:#cd9d61; font-family: "나눔스퀘어B"; font-size:20px; display: inline-block; margin-right:20px;}
 
-.login-box{
-	width:600px;
-	margin:10% auto 0;
-	text-align: right;
+/*-----------------
+	타이틀 애니메이션
+-----------------*/
+.title-animation{width: 100%;margin: auto; perspective: 800px;}
+.title-animation span {display: inline-block; transform-origin: 50% 70%;}
+.title-animation span:nth-child(1) {animation: flipUp 2s cubic-bezier(0.68, -0.55, 0.26, 1.55) .2s both; }
+.title-animation span:nth-child(2) {animation: flipUp 2s cubic-bezier(0.68, -0.55, 0.26, 1.55).4s both;}
+.title-animation span:nth-child(3) {animation: flipUp 2s cubic-bezier(0.68, -0.55, 0.26, 1.55).6s both;}
+.title-animation span:nth-child(4) {animation: flipUp 2s cubic-bezier(0.68, -0.55, 0.26, 1.55) .8s both;}
+.title-animation span:nth-child(5) {animation: flipUp 2s cubic-bezier(0.68, -0.55, 0.26, 1.55) 1s both;}
+@keyframes flipUp {
+  from {transform: rotateX(90deg);}
+  to {transform: rotateX(0deg);}
 }
-.login-box a{
-	display:inline-block;
-	color:#eee;
-	font-family: "나눔스퀘어R";
-	font-size: 26px;
-	margin:15px 0 15px 20px;
-	padding:5px 0;
-}
-
-.nonmember{
-	color:#eee;
-	width:600px;
-	margin:20px auto 0;
-	text-align:right;
-}
-
-.title-box{
-	width:600px;
-	display:block;
-	background:rgba(0,0,0,0.4);
-	text-align: center;
-	margin:0 auto ;
-	padding:20px 0;
-}
-.title-box #title{
-	color:#eee;
-	font-family: "나눔스퀘어B";
-	font-size: 72px;
-	text-shadow:2px 2px 0px gray;
-	display:inline-block;
-	padding:7px 0;
-}
-.title-box #title-bottom, #title-top {
-	font-family: "나눔스퀘어R";
-	color:#c4e2ee;
-	font-size:20px;
-	display:inline-block;
-}
-#title-top{
-	padding-top:10px;
-}
-#title-bottom{
-	padding-bottom:10px;
-}
-
-#title-bottom span{
-	color:#eee;
-	font-size:22px;
-	font-weight: bold;
+@media screen and (min-width: 916px) {
+  span {font-size: 6.2em;}
+  span:nth-child(5) {display: inline-block;margin: 0;}
 }
 </style>
 <script>
@@ -101,17 +69,25 @@
 </head>
 <body>
 <div class="main">
-	<div class="login-box">
-		<a href="" id="btnLogin">로그인</a>
-		<a href="" id="btnJoin">회원가입</a>
-	</div>
 	<div class="title-box">
-		<span id="title-top">국가자격증 기출문제</span><br />
-		<span id="title">오모리닷컴</span><br />
-		<span id="title-bottom"><span>오</span>답풀이, <span>모</span>의고사, <span>리</span>플레이(반복학습)</span>
-	</div>
-	<div class="nonmember">
-		<a href="${pageContext.request.contextPath}/mock_test/mock_test">비회원 로그인</a>
+		<div class='image-box'>
+			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="" />
+		</div>
+		<div class="text-box">
+			<span id="title-top">자격증 기출문제가<br />출출할 땐</span>
+			<div class="title-animation">
+				<span class="title">오</span>
+				<span class="title">모</span>
+				<span class="title">리</span>
+				<span class="title">닷</span>
+				<span class="title">컴</span>
+			</div>
+			<span id="title-bottom">오답풀이, 모의고사, 리플레이(반복학습)를 한번에!</span>
+		</div>
+		<div class="login-box">
+			<a href="" id="btnLogin">로그인</a>
+			<a href="" id="btnJoin">회원가입</a>
+		</div>
 	</div>
 </div>
 

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
 .section h1, .section label{
-	color:#eee;
+	color:#6e4a37;
 }
 .sweet-alert{
 	width:400px !important;
@@ -18,11 +18,11 @@
 	width:300px;
 	height:50px;
 }
-.how-to{background:rgba(0,0,0,0.5);padding:10px 20px;}
+.how-to{padding:10px 20px;}
 .how-to ul{float:right;width:680px;}
-.how-to ul li{margin-bottom:14px;color:#99cccc;}
-.how-to ul li span{display:block;margin-left:20px;color:#cc9999;}
-.how-to ul li span.more-emphasis{color:ff6666 !important;}
+.how-to ul li{margin-bottom:14px;color:#4a927d;}
+.how-to ul li span{display:block;margin-left:20px;color:#ea6149;}
+.how-to ul li span.more-emphasis{color:#de3232  !important;}
 .how-to ul li.down-li a{font-weight:bold; font-family: sans-serif;}
 .how-to ul li.down-li a:HOVER{text-decoration: underline;}
 .how-to img {float:left;margin-right:12px;width:510px;}
@@ -442,12 +442,12 @@ function getLastTnoTqnoAjax(){
 			lastTno = result[0];
 			lastTqno = result[1];
 			
-			$("#setLastTnoText").html("※ 지금까지 등록된 자격증번호는 "+ (lastTno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 "+ lastTno +"(으)로 시작해주십시오<br>"
+			$("#setLastTnoText").html("※ 지금까지 등록된 자격증번호는 <b>"+ (lastTno-1) +"</b>입니다<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 자격증번호는 <b>"+ lastTno +"</b>(으)로 시작해주십시오<br>"
 										+"&nbsp;&nbsp;&nbsp;&nbsp;그렇지 않으면 덮어 씌워서 등록이 됩니다");
 			
-			$("#setLastTqnoText").html("※ 지금까지 등록된 문제고유번호는 "+ (lastTqno-1) +"입니다<br>"
-										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 "+ lastTqno +"(으)로 시작해주십시오<br>"
+			$("#setLastTqnoText").html("※ 지금까지 등록된 문제고유번호는 <b>"+ (lastTqno-1) +"</b>입니다<br>"
+										+"&nbsp;&nbsp;&nbsp;&nbsp;엑셀로 작성할 때 문제고유번호는 <b>"+ lastTqno +"</b>(으)로 시작해주십시오<br>"
 										+"&nbsp;&nbsp;&nbsp;&nbsp;그렇지 않으면 덮어 씌워서 등록이 됩니다");
 			
 		},
