@@ -14,45 +14,24 @@
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.each-question{display: inline-block; background:#ff0000; width:31%; margin-left:20px; vertical-align: top;}
-    
+.each-question{display: inline-block; border:1px solid black; width:31%; margin-left:20px; vertical-align: top;}
+.select-testname-box {text-align: center;}
+.select-testname-box a{display: inline-block;margin: 0px 10px;color:#178da9; padding:10px 0; font-size: 18px;}
+.select-testname-box a.selected-subject{border-bottom:2px solid #178da9; color: #000;}
 /* ------------
 	로딩 이미지
 -------------*/
 .add-question-popup .login-page .form .login-form{display:none;}
-
 .loading-box {display:none;}
-.loading-box .load-wrapp {float: left; width: 100%; text-align: center;}
-.loading-box .load-wrapp .loading-message{color:#303030;font-size:20px;margin-bottom:10px;}
-.loading-box .load-wrapp .load-3 .line {display: inline-block; width: 25px; height: 25px; margin:5px 4px 0; 
-										border-radius: 15px; background-color: #4b9cdb;}
-.loading-box .clear{clear:both;}
 
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>오답노트</h1>
 			<div class="inner-section">
-				<div class="testNameList">
+				<h1>오답노트</h1>
+				<div class="select-testname-box">
 					<c:if test="${empty testNameList}">
 						<script>
 							swal({
@@ -88,6 +67,7 @@
 	</section>
 </div>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/note.js"></script>
 <script>
 var firstTno = ${firstTestName.tno};
 var firstTname = "${firstTestName.tname}";
@@ -251,4 +231,3 @@ function deleteNotePost(tno, tqno){
 	});
 }
 </script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/note.js"></script>

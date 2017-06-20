@@ -4,31 +4,28 @@
 <!-- alert -->
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
-
 <!-- slick -->
-
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/slick/slick/slick.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/slick/slick/slick-theme.css">
 <style>
-.inner-section{background:#ebf4f9;min-height:0px;}
-.section h1{
-	color:#000;
-}
 .sweet-alert{
 	width:400px !important;
 	top:40% !important;
 	margin-left: -217px !important;
 }
 
-.test-name-box #testName{text-align: center;font-size: 20px;color: #000;}
+.test-name-box #testName{border-bottom: 2px dashed #ebd0a7;color: #d74526;padding-top: 20px;padding-bottom: 20px;text-align: center;
+    						font-weight: bold;font-size: 20px;font-family: "나눔스퀘어EB";}
 .select-subject-box .jeong-bo-gisa{text-align: center;}
-.select-subject-box .jeong-bo-gisa a{display: inline-block;margin: 0px 10px;width: 130px; color:#598cb5; padding:10px 0;}
-.select-subject-box .jeong-bo-gisa a.selected-subject{border-bottom:2px solid #598cb5; color: #000;}
+.select-subject-box .jeong-bo-gisa a{display: inline-block;margin: 0px 10px;width: 130px; color:#178da9; padding:10px 0; font-size: 18px;}
+.select-subject-box .jeong-bo-gisa a.selected-subject{border-bottom:2px solid #178da9; color: #000;}
 .each-question{color: #000;}
 
-/* 토글 버튼 */
+/*-----------
+	토글 버튼
+-----------*/
 figure{margin-top: 40px; margin-left: 20%; display:block;width:100%;}
-figure span{position:relative; top:-13px;}
+figure span{position:relative; top:-13px; color:#6e4a37;}
 #switchAnswer, 
 #switchNote {width:65px; padding:5px; border:4px solid #4a95d2; box-sizing:border-box; opacity:0.5;
 			-webkit-filter:grayscale(100%); -webkit-transition:all 03s; transition:all 0.3s;border-radius:540px;cursor:pointer;
@@ -52,65 +49,29 @@ figure span{position:relative; top:-13px;}
 
 .each-question{font-family: "돋움";}
 .question-box img{width:30px; position:absolute; margin-left:-10px; margin-top:-5px; visibility: hidden;}
-.question-box p{position:relative;}
-.each-question .example-box a{color:#333333;}
-.each-question .example-box a:HOVER{color:#cc0000;}
+.question-box p{position:relative; font-weight: bold; font-size:16px; font-family: "돋움";}
+.example-box a{color:#333333; font-size:14px; padding-left:22px; font-family: "돋움";}
+.example-box a:HOVER{color:#cc0000;}
+.answer-box {border-bottom: 2px dotted #fdf8e9;}
+.answer-box p{font-size: 14px;padding-left: 20px;color: #6e4a37;font-weight: bold;margin: 25px 0;}
+.answer-box p span{font-family: serif;}
+.note-box label{font-size:14px; color:#6e4a37;}
+.note-box textarea[disabled='disabled']{background: #f5f5f5; }
+.note-box textarea{outline:0; background: #fff; border: 0;margin: 0 0 15px; padding: 10px; box-sizing: border-box; 
+					font-size: 12px; display: block; color:#333; width:100%; height:100px;}
 
 a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 *:FOCUS{outline: none;}
 
-/*-------------
-	로딩 이미지
--------------*/
-.loading-box{display:none;}
-.load-wrapp {
-    float: left;
-    width: 100%;
-   	text-align: center;
-    margin-top:200px;
-}
-.loading-message{
-	color:#eee;
-	font-size:20px;
-	margin-bottom:10px;
-}
-.line {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin:5px 4px 0;
-    border-radius: 15px;
-    background-color: #4b9cdb;
-}
-.clear{
-	clear:both;
-}
-
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
-
-
+/*-------------- 
+	로딩 이미지 
+--------------*/
+.loading-box .load-wrapp{margin:50px !important;}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>한 문제씩 풀기</h1>
 			<div class="inner-section">
 				<div class="test-name-box">
 					<p id="testName">${testName.tname} <small>(${testName.tdate})</small></p>
@@ -124,7 +85,6 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 						<a href="">데이터통신</a>
 					</div>
 				</div>
-				
 				<div class="one-test-box">
 					<figure>
 						<span>정답</span>
@@ -143,7 +103,7 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 									<div>
 										<img src="${pageContext.request.contextPath}/resources/images/ic_mark_correct.png" class='correct' alt="" />
 										<img src="${pageContext.request.contextPath}/resources/images/ic_mark_incorrect.png" class='incorrect' alt="" />
-										<p><span>${obj.tq_small_no}. </span><span>${obj.tq_question} </span><button class="markBtn">채점</button></p>
+										<p><span>${obj.tq_small_no}. </span><span>${obj.tq_question} </span><button class="markBtn small-btn-style">채점</button></p>
 									</div>
 								</div>
 								<div class="image-box">
@@ -165,15 +125,15 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 										<p><label for="">메모</label><textarea cols="50" rows="5" class="note_memo" placeholder="여기에 메모를 입력하세요">${obj.note.note_memo}</textarea></p>
 										<div class="note-button-box">
 											<span class='add'>
-												<button class="addNoteBtn">등록</button>
+												<button class="addNoteBtn small-btn-style">등록</button>
 											</span>
 											<span class="up-and-del">
-												<button class="updateNoteBtn">수정</button>
-												<button class='delNoteBtn'>삭제</button>
+												<button class="updateNoteBtn small-btn-style">수정</button>
+												<button class='delNoteBtn small-btn-style'>삭제</button>
 											</span>
 											<span class="com-and-can">
-												<button class='updateCompleteBtn'>확인</button>
-												<button class='updateCancelBtn'>취소</button>
+												<button class='updateCompleteBtn small-btn-style'>확인</button>
+												<button class='updateCancelBtn small-btn-style'>취소</button>
 											</span>
 										</div>
 									</div>
@@ -185,12 +145,12 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 				<!-- ajax로딩 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
+						<!-- <div class="loading-message">기출문제 불러오는 중</div>
 						<div class="load-3">
 							<div class="line"></div>
 							<div class="line"></div>
 							<div class="line"></div>
-						</div>
+						</div> -->
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -200,7 +160,6 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 </div>
 <!-- slick -->
 <script src="${pageContext.request.contextPath}/resources/slick/slick/slick.js" type="text/javascript" charset="utf-8"></script>
-
 <script src="${pageContext.request.contextPath}/resources/js/one_test_start.js" type="text/javascript" charset="utf-8"></script>
 <script>
 var tno = ${testName.tno};

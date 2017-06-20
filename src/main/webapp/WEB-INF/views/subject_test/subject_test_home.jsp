@@ -5,24 +5,21 @@
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
-.section h1{
-	color:#eee;
-}
 .sweet-alert{
 	width:400px !important;
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.select-test-box{background: #ff00ff;}
-.select-subject-box{display: none;}
+.section .latest-test, .test-list-box{margin:40px 0; text-align: center;}
+.select-subject-box{display: none; text-align: center; margin:40px 0;}
+.select-subject-box #selAgain{margin-bottom:20px;}
 </style>
-
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>과목별 시험</h1>
 			<div class="inner-section">
+				<h1>과목별 시험</h1>
 				<div class="select-test-box">
 					<div class="latest-test">
 						<h3>최근에 푼 기출문제</h3>
@@ -31,19 +28,20 @@
 						</c:if>
 						<c:if test="${!empty testName }">
 							<p>
-								<a href='' tno="${testName.tno}">${testName.tname}</a>
+								<a href='' tno="${testName.tno}">${testName.tname} <small>(${testName.tdate})</small></a>
 							</p>
 						</c:if>
 					</div>
 					<div class="test-list-box">
 						<h3>기출문제 목록</h3>
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href='' tno="${obj.tno}">${obj.tname}</a></p>
+							<p><a href='' tno="${obj.tno}">${obj.tname} <small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</div>
 				</div>
 				<div class="select-subject-box">
 					<div class="jeong-bo-gisa">
+						<p><button id="selAgain" class='small-btn-style'>다른 기출문제 풀기</button></p>
 						<p><a href="">데이터베이스</a></p>
 						<p><a href="">전자계산기구조</a></p>
 						<p><a href="">운영체제</a></p>
@@ -58,6 +56,7 @@
 
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script>
+	/* 기출문제 선택 */
 	$(".select-test-box a").click(function(e){
 		e.preventDefault();
 		var tno = $(this).attr("tno");
@@ -68,7 +67,15 @@
 		
 		$(".select-subject-box a").each(function(i, obj) {
 			$(obj).attr("tno", tno);
-		})
+		});
+	});
+
+	
+	/* 다른 기출문제 풀기 버튼 선택 */
+	$(".select-subject-box #selAgain").click(function() {
+		$(".select-subject-box").slideUp("slow", function(){
+			$(".select-test-box").slideDown("slow");
+		});
 	});
 	
 	$(".select-subject-box a").click(function(e){
