@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.JsonParser.NumberType;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @Controller
@@ -100,10 +103,11 @@ public class AndroidController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/mockTestResultBySubject", method = RequestMethod.POST)
-	public ResponseEntity<List<TestQuestionVO>> mockTestResultBySubject(HttpServletRequest req){
+	public ResponseEntity<List<TestQuestionVO>> mockTestResultBySubject(HttpServletRequest req) throws JsonParseException, JsonMappingException, IOException{
 		ResponseEntity<List<TestQuestionVO>> entity = null;
 		
 		String bomi = "bomi";
+		HashMap<String , Object> map = new ObjectMapper().readValue(bomi, HashMap.class);
 		
 		/*String uid = req.getParameter("user");
 		String string = req.getParameter("tqNoList");
