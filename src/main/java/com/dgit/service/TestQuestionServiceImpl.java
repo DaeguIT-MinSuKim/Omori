@@ -133,7 +133,7 @@ public class TestQuestionServiceImpl implements TestQuestionService {
 
 	@Override
 	public List<TestQuestionVO> selectQuestionAndAnswerBySubjectWithNote(int tno, String uid, String subject) throws Exception {
-		List<TestQuestionVO> questionList = dao.selectAllTestQuestionForMock(tno);
+		List<TestQuestionVO> questionList = dao.selectAllTestQuestionForSubject(tno, subject);
 		TestNameVO testName = nameDao.selectOneTestName(tno);
 		
 		for(int i = 0; i < questionList.size(); i++){

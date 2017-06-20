@@ -41,6 +41,8 @@ function clickPagingButton(){
 	});
 }
 
+
+
 /*-------------------------
 	받아온 점수를 태그로 만들기
 -------------------------*/
@@ -60,7 +62,7 @@ function makeMarkResult(result){
 	//과목별 맞은 개수
 	var $td_markResult = $(".table").find("td#markResult");
 	var $p_nowGrade = $("<p>");
-	$p_nowGrade.html("<span class='markSubjectName'>"+obj.tq_subject+"<span class='markNowGrade'>"+obj.nowgrade+" / "+obj.ng_count);
+	$p_nowGrade.html("<span class='markSubjectName'>"+obj.tq_subject+"</span><span class='markNowGrade'>"+obj.nowgrade+" / "+obj.ng_count+"</span>");
 	$td_markResult.append($p_nowGrade);
 	
 	subject[0] = obj.tq_subject;
@@ -79,11 +81,11 @@ function makeMarkResult(result){
 		passCheck = "불합격";
 	}
 	var $p_result = $("<p id='lastResult'>");
-	$p_result.html("총점 : " + sum + " / " + minGrade + " <span>"+passCheck+"</span>");
+	$p_result.html("총점 : " + sum + " / " + minGrade + " <span id='result'>"+passCheck+"</span>");
 	$td_markResult.append($p_result);
 	
 	//성적 저장 버튼
-	var $p_saveGrade = $("<p class='save-grade-box'>").html("<button id='btnSaveGrade'>성적 저장하기");
+	var $p_saveGrade = $("<p class='save-grade-box'>").html("<button id='btnSaveGrade' class='same-button-style'>성적 저장하기</button>");
 	$p_saveGrade.attr("grade", count);
 	$p_saveGrade.attr("subject", subject);
 	$p_saveGrade.attr("subject_grade", subject_grade);

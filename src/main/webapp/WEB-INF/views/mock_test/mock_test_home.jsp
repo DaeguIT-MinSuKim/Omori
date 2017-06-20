@@ -5,22 +5,14 @@
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
-.section h1{
-	color:#eee;
-}
-.sweet-alert{
-	width:400px !important;
-	top:40% !important;
-	margin-left: -217px !important;
-}
-.width1400 h1{text-align: center;}
+.sweet-alert{width:400px !important;top:40% !important;margin-left: -217px !important;}
+.section .latest-test, .test-list-box{margin:40px 0; text-align: center;}
 </style>
 
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			
 			<c:if test="${login.isadmin}">
 				<h1>기출문제 수정</h1>
 			</c:if>
@@ -36,7 +28,7 @@
 						</c:if>
 						<c:if test="${!empty testName }">
 							<p>
-								<a href="${pageContext.request.contextPath}/mock_test/start_test/${testName.tno}">${testName.tname}</a>
+								<a href="${pageContext.request.contextPath}/mock_test/start_test/${testName.tno}">${testName.tname} <small>(${testName.tdate})</small></a>
 							</p>
 						</c:if>
 					</div>
@@ -45,12 +37,12 @@
 					<h3>기출문제 목록</h3>
 					<c:if test="${!login.isadmin}">
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href="${pageContext.request.contextPath}/mock_test/start_test/${obj.tno}">${obj.tname }</a></p>
+							<p><a href="${pageContext.request.contextPath}/mock_test/start_test/${obj.tno}">${obj.tname }<small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</c:if>
 					<c:if test="${login.isadmin}">
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href="${pageContext.request.contextPath}/admin/update_test/${obj.tno}">${obj.tname }</a></p>
+							<p><a href="${pageContext.request.contextPath}/admin/update_test/${obj.tno}">${obj.tname }<small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</c:if>
 				</div>

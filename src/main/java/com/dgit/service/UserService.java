@@ -6,4 +6,5 @@ import com.dgit.domain.UserVO;
 public interface UserService {
 	void insertUser(UserVO vo) throws Exception;
 	UserVO selectOneUser(LoginDTO dto) throws Exception;
+	UserVO selectOneUserByUid(String uid) throws Exception;
 }

@@ -5,23 +5,19 @@
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
-.section h1{
-	color:#eee;
-}
 .sweet-alert{
 	width:400px !important;
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.select-test-box{background: #ff00ff;}
+.section .latest-test, .test-list-box{margin:40px 0; text-align: center;}
 </style>
-
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>한 문제씩 풀기</h1>
 			<div class="inner-section">
+				<h1>한 문제씩 풀기</h1>
 				<div class="select-test-box">
 					<div class="latest-test">
 						<h3>최근에 푼 기출문제</h3>

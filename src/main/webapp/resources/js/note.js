@@ -3,6 +3,22 @@
  * var firstTno
  * var firstTname
  */
+$(document).on("ready", function() {
+	//시작하면 첫번째 기출문제 선택되어있음
+	$(".select-testname-box").find("a").first().addClass("selected-subject");
+});
+/*---------------
+	과목 버튼 클릭
+---------------*/
+$(".select-testname-box a").click(function(e) {
+	e.preventDefault();
+	$(".select-testname-box").find("a").removeClass("selected-subject");
+	$(this).addClass("selected-subject");
+	
+	var tno = $(this).attr("tno");
+	getQuestionAnswerNoteAjax(tno);
+});
+
 /*-------------------------------------
 	수정 버튼을 누르면 수정 확인, 취소 버튼 보임
 -------------------------------------*/
