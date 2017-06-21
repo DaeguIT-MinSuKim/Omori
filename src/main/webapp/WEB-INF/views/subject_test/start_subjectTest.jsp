@@ -196,7 +196,7 @@ function makeTags(result){
 				var $tr_image = $("<tr>");
 				$tr_image.append("<td></td>");
 				$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
-				$tr_image.attr("tqno", imageList[j].question.tq_no);
+				$tr_image.attr("tqno", imageList[j].tq_no);
 				
 				$table.append($tr_image);
 			}

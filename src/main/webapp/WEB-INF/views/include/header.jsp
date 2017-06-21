@@ -36,6 +36,13 @@ $(function(){
 				$(obj).parent("li").find("img").css("display", "inline");
 			}
 		});
+	}else if($(location).attr("href").indexOf("subject_test") > -1){
+		$("ul li img").css("display", "none");
+		$("ul li a").each(function(i, obj) {
+			if($(obj).attr("data-hover") == "모의고사"){
+				$(obj).parent("li").find("img").css("display", "inline");
+			}
+		});
 	}
 });
 </script>

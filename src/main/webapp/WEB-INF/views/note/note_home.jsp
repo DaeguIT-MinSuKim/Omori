@@ -75,8 +75,8 @@ var firstTname = "${firstTestName.tname}";
 $(document).on("ready", function(){
 	//Ajax 로딩 이미지
 	$(window).ajaxStart(function(){
+		$(".show-note-box").css("display","none");
 		$(".loading-box").css("display", "block");
-		/* $(".show-note-box").css("display","none"); */
 	}).ajaxComplete(function(){
 		$(".loading-box").css("display", "none");
 		$(".show-note-box").css("display","block");
@@ -115,6 +115,8 @@ function getQuestionAnswerNoteAjax(tno){
 	태그로 만들기
 ---------------*/
 function makeTag(result){
+	$(".show-note-box").html("");
+	
 	for(var i=0; i<result.length; i++){
 		var obj = result[i];
 		var $topDiv = $("<div class='each-question' tno='"+obj.testName.tno+"'>");

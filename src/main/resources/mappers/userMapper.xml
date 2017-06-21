@@ -6,12 +6,17 @@
 <mapper namespace="com.dgit.mapper.UserMapper">
 	<insert id="insertUser">
 		insert into user(uid, upw, uemail, ujoindate, isadmin) 
-		values(#{uid}, #{upw}, #{uemail}, now(), #{isadmin});
+		values(#{uid}, #{upw}, #{uemail}, now(), #{isadmin})
 	</insert>
 	
 	<select id="selectOneUser" resultType="UserVO">
 		select uid, upw, uemail, ujoindate, isadmin from user 
-		where uid = #{uid} and upw = #{upw};
+		where uid = #{uid} and upw = #{upw}
+	</select>
+	
+	<select id="selectOneUserByUid" resultType="UserVO">
+		select uid, upw, uemail, ujoindate, isadmin from user 
+		where uid = #{uid}
 	</select>
 	<!-- 
 	<select id="checkExistUser" resultType="int">

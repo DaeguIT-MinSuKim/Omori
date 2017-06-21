@@ -21,4 +21,9 @@ public class UserServiceImpl implements UserService{
 	public UserVO selectOneUser(LoginDTO dto) throws Exception {
 		return dao.selectOneUser(dto);
 	}
+
+	@Override
+	public UserVO selectOneUserByUid(String uid) throws Exception {
+		return dao.selectOneUserByUid(uid);
+	}
 }

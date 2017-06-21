@@ -27,4 +27,9 @@ public class UserDaoImpl implements UserDao{
 		return session.selectOne(namespace+".selectOneUser", dto);
 	}
 
+	@Override
+	public UserVO selectOneUserByUid(String uid) throws Exception {
+		return session.selectOne(namespace+".selectOneUserByUid", uid);
+	}
+
 }

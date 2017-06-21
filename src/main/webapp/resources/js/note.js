@@ -15,7 +15,8 @@ $(".select-testname-box a").click(function(e) {
 	$(".select-testname-box").find("a").removeClass("selected-subject");
 	$(this).addClass("selected-subject");
 	
-	//다른 노트들 가져와야함
+	var tno = $(this).attr("tno");
+	getQuestionAnswerNoteAjax(tno);
 });
 
 /*-------------------------------------
