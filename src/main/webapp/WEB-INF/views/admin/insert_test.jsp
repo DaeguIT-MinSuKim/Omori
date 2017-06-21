@@ -36,8 +36,9 @@ img.icon-edit{width:20px !important; float:none; cursor: pointer; position:relat
 			padding:0 5px; margin-left:5px; margin-bottom:-5px;}
 
 .testname-select-box{}
-.each-testname-box div{margin:10px 15px;}
-.each-testname-box div a{padding:5px 0;}
+.testname-select-box .btnAddTestName{font-size:20px; position: relative;}
+.each-testname-box div{margin:10px; display: inline-block;}
+.each-testname-box div a{padding:5px 0; color:#d74526;}
 
 /* ------------
 	popup창 
@@ -47,15 +48,19 @@ img.icon-edit{width:20px !important; float:none; cursor: pointer; position:relat
 .add-question-popup .login-page {width:600px;}
 .add-question-popup .login-page .form {max-width:600px;}
 .add-question-popup .login-page .form label {display: inline-block; width:120px;}
+.add-question-popup .login-page .tqsmallno-box{text-align: center;}
+.add-question-popup .login-page .tqsmallno-box a[tqsmallno='91']{margin-left:13px;}
+.add-question-popup .login-page #q-tname{color:#d74526}
 
-.add-example-popup .login-page {width:700px; margin-top:-50px;}
+.add-example-popup .login-page {width:700px; margin-top:-100px;}
 .add-example-popup .login-page .form {max-width:700px; }
 .add-example-popup .login-page .form div{clear:both;}
 .add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
 .add-example-popup .login-page .form div textarea{width:90%; float:right;}
 .add-example-popup .login-page .form input[type='file']{background: none;display: inline-block;width: 80%;}
+.add-example-popup .login-page .login-close{text-align: left;}
 .preview{padding:0 15px 15px;}
-.preview img{max-width:200px;max-height:200px;}
+.preview img{max-width:200px; max-height:130px;}
 .preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;margin-top: -10px;padding: 5px;
 			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black; width: 15px; height: 15px;
     		display: inline-block;font-weight: bold;text-align: center;}
@@ -189,7 +194,7 @@ a.selected-no{color:#cc0000 !important;}
 									<label for="">보기 : </label><input type="file" name='exampleFile' id='exampleFile'/>
 								</p>
 								<p>
-									<button id='btnUpload'>등록</button>
+									<button id='btnUpload' class="same-button-style">등록</button>
 								</p>
 							</form>
 						</div>
@@ -197,7 +202,7 @@ a.selected-no{color:#cc0000 !important;}
 						<h3>기출문제 낱개로 등록</h3>
 						<c:if test="${nameList.size() < 1}">
 							<div class="no-testname">
-								<p>등록된 자격증이 없습니다. 자격증을 등록 후 기출문제를 등록해주세요. >> <a href="" class="btnAddTestName">자격증등록</a></p>
+								<p>등록된 자격증이 없습니다. 자격증을 등록 후 기출문제를 등록해주세요. >> <a href="" class="btnAddTestName same-button-style">자격증등록</a></p>
 							</div>
 						</c:if>
 						<div class="testname-select-box">
@@ -277,7 +282,7 @@ a.selected-no{color:#cc0000 !important;}
 <div class="login-container add-example-popup">
 	<div class="login-page">
 		<div class="login-close">
-			<a href=""><img src="${pageContext.request.contextPath}/resources/images/ic-close-button.png" alt="" /></a>
+			<a href=""><img src="${pageContext.request.contextPath}/resources/images/ic-back-button.png" alt="" /></a>
 		</div>
 		<div class="form">
 			<form class="login-form">
@@ -313,7 +318,7 @@ a.selected-no{color:#cc0000 !important;}
 				<input type="text" id='editTdate'/>
 				<div class='button-box'>
 					<button id="btnUpTestName">수정</button>
-					<button id="btnDelTestName">삭제</button>
+					<button id="btnDelTestName" class='negative-btn-style'>삭제</button>
 				</div>
 			</form>
 		</div>

@@ -30,6 +30,7 @@
 	border:2px solid #999;
 	background:rgba(240,240,240,1);
 }
+.table .btnUpdatePopup{position: absolute;}
 .table td{
 	font-family: "돋움";
 }
@@ -159,7 +160,7 @@
 -------------*/
 .login-container .form {text-align: left;}
 
-.edit-que-ex-popup .login-page {width:700px; margin-top:-90px;}
+.edit-que-ex-popup .login-page {width:700px; margin-top:-130px;}
 .edit-que-ex-popup .login-page .form {max-width:700px;}
 .edit-que-ex-popup .login-page .form hr{margin-bottom:25px;}
 .edit-que-ex-popup .login-page .form label {display: inline-block; width:80px; float:left;}
@@ -178,31 +179,14 @@ span.selected-answer{color:#cc0000 !important; font-weight: bold;}
 .preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;padding: 5px; width: 15px; height: 15px;
 			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black;
     		display: inline-block;font-weight: bold;text-align: center;}
-/* 
-.add-question-popup .login-page {width:600px;}
-.add-question-popup .login-page .form {max-width:600px;}
-.add-question-popup .login-page .form label {display: inline-block; width:120px;}
 
-.add-example-popup .login-page {width:700px; margin-top:-50px;}
-.add-example-popup .login-page .form {max-width:700px; }
-.add-example-popup .login-page .form div{clear:both;}
-.add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
-.add-example-popup .login-page .form div textarea{width:90%; float:right;}
-
-.edit-testname-popup .login-page .form .button-box{text-align: center;}
-.edit-testname-popup .login-page .form .button-box button{width:49%;}
-
-.add-question-popup .login-page .tqsmallno-box a{color:#333; font-weight: bold; padding:4px; margin:2px 4px;}
-a.cant-sel-a{cursor: default; color:#ddd !important; font-weight: lighter !important;}
-a.selected-no{color:#cc0000 !important;}
- */
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>기출문제 수정</h1>
 			<div class="inner-section">
+				<h1>기출문제 수정</h1>
 				<div class="mocktest-box">
 					<table class='table'>
 						<tr>
@@ -218,9 +202,9 @@ a.selected-no{color:#cc0000 !important;}
 						</tr>
 						<tr>
 							<td colspan="2" id="paging">
-								<button id="prev">이전</button>
+								<button id="prev" class='same-button-style'>이전</button>
 								<span id="count"></span> / <span id="allPage"></span>
-								<button id="next">다음</button>
+								<button id="next" class='same-button-style'>다음</button>
 							</td>
 						</tr>
 					</table>
@@ -237,6 +221,7 @@ a.selected-no{color:#cc0000 !important;}
 					</div>
 					<div class="clear"></div>
 				</div>
+				<div class="clear"></div>
 			</div>
 		</div>
 	</section>
@@ -271,10 +256,11 @@ a.selected-no{color:#cc0000 !important;}
 				<div class='ex'><p>4. </p><textarea id="example04" cols="30" rows="3"></textarea></div>
 				<div class="button-box">
 					<button id="btnUpQueAndEx">수정</button>
-					<button id="btnDelQueAndEx">삭제</button>
+					<button id="btnDelQueAndEx" class='negative-btn-style'>삭제</button>
 				</div>
 			</form>
 		</div>
+		
 	</div>
 </div>
 <script src="${pageContext.request.contextPath}/resources/js/update_test.js"></script>
@@ -325,9 +311,13 @@ function updateQueAndExAjax(){
 		success:function(result){
 			swal({
 				title:"수정되었습니다",
-				confirmButtonText: "확인"
+				confirmButtonText: "확인",
+				closeOnConfirm: false
+			}, function(isConfirm){
+				updateTable();
+				swal.close();
 			});
-			updateTable();
+			
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");
@@ -486,7 +476,7 @@ function makeTags(result){
 		//문제
 		var $tr_question = $("<tr class='question'>");
 		$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-		$tr_question.append("<td><span class='que'>"+obj.tq_question+"</span><button class='btnUpdatePopup'>수정</button></td>");
+		$tr_question.append("<td><span class='que'>"+obj.tq_question+"</span><button class='btnUpdatePopup small-btn-style'>수정</button></td>");
 		$tr_question.attr("tqno", obj.tq_no);
 		$tr_question.attr("tno", obj.testName.tno);
 		$tr_question.attr("tqsubject", obj.tq_subject);

@@ -75,7 +75,7 @@
 	성적 그래프 
 -------------- */
 .graph-box-bar, .graph-box-pie, .graph-box-line{
-	background-color:rgba(0,0,0,0.2);
+	background-color:#fdfaf0;
 	width:70%;
 	margin:20px auto;
 	padding:20px;
@@ -169,7 +169,7 @@
 							+ "<option value='데이터통신'>데이터통신</option>";
 	
 	$(function(){
-		Chart.defaults.global.defaultFontColor = "#eee";
+		Chart.defaults.global.defaultFontColor = "#000";
 		
 		getGradeGroupByTno(tno);
 		getGradeListByDate(tno, g_date);

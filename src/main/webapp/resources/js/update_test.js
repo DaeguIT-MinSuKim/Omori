@@ -140,7 +140,8 @@ $("#btnUpQueAndEx").click(function(e){
 		title:"문제 "+tqsmallno+"번과 보기를 수정하시겠습니까?",
 		showCancelButton:true,
 		cancelButtonText: "취소",
-		confirmButtonText: "수정"
+		confirmButtonText: "수정",
+		closeOnConfirm: false
 	}, function(isConfirm){
 		if(isConfirm){
 			updateQueAndExAjax();

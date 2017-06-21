@@ -175,6 +175,7 @@ function makeTqSmallNoButton(){
 	var $div = $(".add-question-popup .login-form .tqsmallno-box");
 	$div.html("");
 	
+	var countCantSel = 0;
 	//문제중에 빈 문제가 있으면 선택가능함
 	for(var i=0; i<100; i++){
 		var text;
@@ -189,9 +190,28 @@ function makeTqSmallNoButton(){
 				$a.addClass("cant-sel-a");
 			}
 		}
+		//10개씩 나눔
 		if(i > 9 && i % 10 == 0){
 			$div.append("<br>");
 		}
 		$div.append($a);
+		
+		if($a.hasClass("cant-sel-a")){
+			countCantSel++;
+		}
 	}	
+	
+	//등록가능한 번호가 없으면 닫기
+	if(countCantSel == 100){
+		swal({
+			title:"등록 가능한 문제 번호가 없습니다!",
+			confirmButtonText: "확인",
+			closeOnConfirm: false
+		}, function(isConfirm){
+			if(isConfirm){
+				swal.close();
+				$(".login-container").fadeOut("fast");
+			}
+		});
+	}
 }

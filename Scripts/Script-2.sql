@@ -315,7 +315,7 @@ FIELDS TERMINATED BY '\t';
 insert into testname(tname, tdate) values('정보처리기사 2016년 1회', '2016-03-06');
 update testname set tno = 1 where tno = 7;
 -- 이름순가져오기
-select * from testname order by tname;
+select * from testname order by tname desc;
 -- 번호순가져오기
 select * from testname order by tno desc;
 -- 마지막 번호 가져오기

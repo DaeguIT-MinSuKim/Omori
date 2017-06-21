@@ -39,7 +39,21 @@ $(function(){
 	}else if($(location).attr("href").indexOf("subject_test") > -1){
 		$("ul li img").css("display", "none");
 		$("ul li a").each(function(i, obj) {
-			if($(obj).attr("data-hover") == "모의고사"){
+			if($(obj).attr("data-hover") == "과목별 시험"){
+				$(obj).parent("li").find("img").css("display", "inline");
+			}
+		});
+	}else if($(location).attr("href").indexOf("one_test") > -1){
+		$("ul li img").css("display", "none");
+		$("ul li a").each(function(i, obj) {
+			if($(obj).attr("data-hover") == "한 문제씩 풀기"){
+				$(obj).parent("li").find("img").css("display", "inline");
+			}
+		});
+	}else if($(location).attr("href").indexOf("note") > -1){
+		$("ul li img").css("display", "none");
+		$("ul li a").each(function(i, obj) {
+			if($(obj).attr("data-hover") == "오답노트"){
 				$(obj).parent("li").find("img").css("display", "inline");
 			}
 		});
@@ -93,7 +107,7 @@ $(function(){
 							<a href="" class="click-event" id="admin-menu-btn" data-hover="관리자 메뉴" >관리자 메뉴</a>
 							<div class="admin-sub-menu">
 								<a href="${pageContext.request.contextPath}/admin/insert_test">기출문제 등록</a>
-								<a href="${pageContext.request.contextPath}/mock_test/">기출문제 수정</a>
+								<a href="${pageContext.request.contextPath}/admin/update_test_home">기출문제 수정</a>
 							</div>
 						</li>
 					</c:if>

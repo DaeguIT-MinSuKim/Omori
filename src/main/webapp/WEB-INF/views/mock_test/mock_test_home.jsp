@@ -13,13 +13,8 @@
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<c:if test="${login.isadmin}">
-				<h1>기출문제 수정</h1>
-			</c:if>
 			<div class="inner-section">
-				<c:if test="${!login.isadmin}">
-					<h1>모의고사</h1>
-				</c:if>
+				<h1>모의고사</h1>
 				<c:if test="${!login.isadmin}">
 					<div class="latest-test">
 						<h3>최근에 푼 기출문제</h3>
@@ -37,12 +32,12 @@
 					<h3>기출문제 목록</h3>
 					<c:if test="${!login.isadmin}">
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href="${pageContext.request.contextPath}/mock_test/start_test/${obj.tno}">${obj.tname }<small>(${obj.tdate})</small></a></p>
+							<p><a href="${pageContext.request.contextPath}/mock_test/start_test/${obj.tno}">${obj.tname} <small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</c:if>
 					<c:if test="${login.isadmin}">
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href="${pageContext.request.contextPath}/admin/update_test/${obj.tno}">${obj.tname }<small>(${obj.tdate})</small></a></p>
+							<p><a href="${pageContext.request.contextPath}/admin/update_test/${obj.tno}">${obj.tname} <small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</c:if>
 				</div>
