@@ -114,47 +114,6 @@
 	display:none;
 }
 
-.load-wrapp {
-    float: left;
-    width: 100%;
-   	text-align: center;
-    margin-top:200px;
-}
-.loading-message{
-	color:#eee;
-	font-size:20px;
-	margin-bottom:10px;
-}
-.line {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin:5px 4px 0;
-    border-radius: 15px;
-    background-color: #4b9cdb;
-}
-.clear{
-	clear:both;
-}
-
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
-
 /* ------------
 	popup창 
 -------------*/
@@ -175,7 +134,7 @@
 										padding-left: 20px !important;margin-top: -5px !important;}
 span.selected-answer{color:#cc0000 !important; font-weight: bold;}
 
-.preview img{max-width:200px;max-height:200px; padding-left: 25px;margin-top: 15px;margin-bottom: 15px;}
+.preview img{max-width:200px;max-height:100px; padding-left: 25px;margin-top: 15px;margin-bottom: 15px;}
 .preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;padding: 5px; width: 15px; height: 15px;
 			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black;
     		display: inline-block;font-weight: bold;text-align: center;}
@@ -315,6 +274,8 @@ function updateQueAndExAjax(){
 				closeOnConfirm: false
 			}, function(isConfirm){
 				updateTable();
+				$("#add-img").val("");
+				$(".edit-que-ex-popup").find(".preview").html("");
 				swal.close();
 			});
 			
@@ -337,9 +298,7 @@ function getImageAjax(tqno){
 			if(result.length > 0){
 				$(".image").each(function(i, obj) {
 					if($(obj).attr("tqno") == tqno){
-						$(obj).html("");
-						$(obj).append("<td></td>");
-						$(obj).append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+result[0].imgsource+"'/></td>");
+						$(obj).html("<td></td><td><img src='${pageContext.request.contextPath}/resources/upload/"+result[0].imgsource+"'/></td>");
 					}
 				});
 			}else{
@@ -500,7 +459,7 @@ function makeTags(result){
 				var $tr_image = $("<tr class='image' tqno='"+obj.tq_no+"'>");
 				$tr_image.append("<td></td>");
 				$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
-				$tr_image.attr("tqno", imageList[j].question.tq_no);
+				$tr_image.attr("tqno", imageList[j].tq_no);
 				
 				$table.append($tr_image);
 			}

@@ -91,8 +91,8 @@
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>성적통계</h1>
 			<div class="inner-section">
+				<h1>성적통계</h1>
 				<c:if test="${empty testNameList}">
 					<script>
 						swal({
@@ -114,7 +114,7 @@
 						<h3 id='testName'>정보처리산업기사1회</h3>
 						<canvas id="canvasTest"></canvas>
 					</div>
-					<div class="graph-box-pie">
+					<%-- <div class="graph-box-pie">
 						<select name="" id="selectTestNameForDate">
 							<c:forEach var="obj" items="${testNameList }">
 								<option value="${obj.tno}">${obj.tname}</option>
@@ -126,7 +126,7 @@
 							</c:forEach>
 						</select>
 						<canvas id="pie"></canvas>
-					</div>
+					</div> --%>
 					<div class="graph-box-line">
 						<select name="" id="stringTestName">
 							<c:forEach var="obj" items="${testNameList }">
@@ -318,7 +318,7 @@
 			data:{tno:tno, g_date:g_date},
 			success:function(result){
 				console.log("getGradeByDate..............");
-				makePieChart(result);
+				/* makePieChart(result); */
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다");
@@ -328,7 +328,7 @@
 	/* -----------------------
 		makePieChart : 파이 차트
 	-------------------------- */
-	var myPie;
+	/* var myPie;
 	function makePieChart(result){
 		var data = new Array();
 		var subject = new Array();
@@ -370,7 +370,7 @@
 	    });
 
 		window.myPie = myPie;
-	}
+	} */
 	/* --------------------------------
 		getDateList : 저장된 리스트 가져오기 
 	----------------------------------- */
@@ -481,7 +481,7 @@
                     yAxes: [{
                         display: true,
                         ticks : {
-                            max : 100,    
+                            max : 20,    
                             min : 0,
                         },
                         gridLines:{

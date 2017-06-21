@@ -394,6 +394,11 @@ where s.tq_no = 1 and q.tq_no = 1 and s.uid = 'test2' and s.sa_date = '2017-05-3
 select * from selected_answer where tq_no = 1 and uid='test1' order by sa_date desc;
 delete from selected_answer;
 alter table selected_answer auto_increment = 1;
+select * from selected_answer;
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\selectedAnswer.txt" 
+	INTO TABLE selected_answer character set utf8
+	FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n'
+	set sa_date = now();
 
 insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '데이터베이스', 18, now());
 insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1, '전자계산기구조', 18, now());
@@ -403,10 +408,14 @@ insert into nowgrade(uid, tno, tq_subject, nowgrade, ng_date) values('test1', 1,
 
 -- 제일 최근에 본 시험의 점수
 select * from nowgrade where tno = 1 and tq_subject = '데이터베이스' and uid='test1' order by ng_date desc limit 1;
-select * from nowgrade;
 
+select * from nowgrade;
 delete from nowgrade;
 alter table nowgrade auto_increment = 1;
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\nowgrade.txt" 
+	INTO TABLE nowgrade character set utf8
+	FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n'
+	set ng_date = now();
 
 insert into grade(uid, tno, g_save_no, grade, g_subject, g_subject_grade, g_date) 
 values('test1', 1, 1, 75, '데이터베이스', 17, '2017-06-09');
@@ -415,9 +424,10 @@ select * from grade where uid = 'test1' order by g_date desc, g_no desc limit 1;
 -- 'test1'이 시험본 tno만 가져옴
 select distinct tno from grade where uid = 'test1' order by tno;
 -- 'test1'이 시험본 tno의 날짜를 가져옴
-select distinct g_date from grade where uid = 'test1' and tno = 1 order by g_date desc;
+select distinct g_date from grade where uid = 'test1' and tno = 13 order by g_date desc;
+
 -- 'test1'이 2017-06-09-15-22날 본 시험의 성적을 가져옴
-select * from grade where uid = 'test1'and g_date = '2017-06-15 22:18';
+select * from grade where uid = 'test1'and g_date = '2017-06-27 21:20';
 -- 'test1'이 한 기출문제의 성적을 가져옴
 select * from grade where uid='test1' and tno = 2 group by g_save_no;
 -- 시험을 저장할 때 한 시험에 부여되는 번호
@@ -427,6 +437,10 @@ select * from grade where uid = 'test1' and tno = 2 and g_subject = '데이터�
 
 delete from grade;
 alter table grade auto_increment = 1;
+select * from grade;
+LOAD DATA LOCAL INFILE "D:\\workspace\\workspace_spring\\Omori_Ver2\\DataFiles\\grade.txt" 
+	INTO TABLE grade character set utf8
+	FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
 
 
 insert into note(uid, tno, tq_no, note_content, note_memo, note_date) values('test1', 1, 1, '문제 1의 오답풀잉', '틀렸던 이유', now());

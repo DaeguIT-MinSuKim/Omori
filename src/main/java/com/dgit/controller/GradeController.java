@@ -173,18 +173,7 @@ public class GradeController {
 			List<String> dateList = new ArrayList<>();
 			List<String> tempList = gradeService.selectGradeDate(user.getUid(), tno);
 			
-			if(testName.getTname().contains("정보처리기사")){
-				System.out.println("정보처리산업기사");
-				for (String date : tempList) {
-					List<GradeVO> gradeList = gradeService.selectListGradeByDate(user.getUid(), tno, date);
-					
-					if(gradeList.size() > 1){
-						dateList.add(date);
-					}
-				}
-			}
-			
-			entity = new ResponseEntity<>(dateList, HttpStatus.OK);
+			entity = new ResponseEntity<>(tempList, HttpStatus.OK);
 		} catch (Exception e) {
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -201,7 +190,7 @@ public class GradeController {
 		
 		try {
 			TestNameVO testName = nameService.selectOneTestName(tno);
-			List<GradeVO> list = gradeService.selectListGradeByDate(user.getUid(), tno, g_date);
+			List<GradeVO> list = gradeService.selectListGradeByDate(user.getUid(), tno, g_date.trim());
 			for (GradeVO gradeVO : list) {
 				gradeVO.setTestName(testName);
 			}

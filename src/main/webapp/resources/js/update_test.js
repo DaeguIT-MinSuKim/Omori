@@ -47,6 +47,7 @@ $(document).on("click", ".btnUpdatePopup", function(){
 	var dbSrc = "";
 	$(".edit-que-ex-popup").find(".preview").html("");
 	$("#add-img").removeAttr("preImgDel");
+	$("#add-img").val("");
 	$(".image").each(function(i, obj) {
 		if($(obj).attr("tqno") == tqno){
 			if($(obj).find("img").length > 0){
@@ -78,8 +79,9 @@ $(document).on("click", ".btnUpdatePopup", function(){
 			reader.onload = function (e) {
 				var $img = $("<img>").attr("src", e.target.result);
 				var $a = $("<a>").html("X");
-				$(".preview").append($img);
-				$(".preview").append($a);
+				$(".preview").html("<img src='"+e.target.result+"'><a href=''>X</a>");
+				/*$(".preview").append($img);
+				$(".preview").append($a);*/
 	        }
 			reader.readAsDataURL(file);
 		}
@@ -153,4 +155,5 @@ $("#btnUpQueAndEx").click(function(e){
 $(".login-close").find("a").click(function(e){
 	e.preventDefault();
 	$(".login-container").fadeOut("fast");
+	$("#add-img").val("");
 });
