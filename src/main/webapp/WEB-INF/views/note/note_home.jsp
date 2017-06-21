@@ -14,10 +14,25 @@
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.each-question{display: inline-block; border:1px solid black; width:31%; margin-left:20px; vertical-align: top;}
-.select-testname-box {text-align: center;}
-.select-testname-box a{display: inline-block;margin: 0px 10px;color:#178da9; padding:10px 0; font-size: 18px;}
+.each-question{display: inline-block;width: 29%;margin: 13px;vertical-align: top;background: #fdf8e9;padding: 14px;border-radius: 5px; box-shadow: 1px 1px 1px 0.5px grey;}
+.select-testname-box {text-align: center; margin-bottom:30px;}
+.select-testname-box a{display: inline-block;margin: 0px 10px;color:#178da9; padding:10px 0; font-size: 14px;}
 .select-testname-box a.selected-subject{border-bottom:2px solid #178da9; color: #000;}
+.each-question .subject-box p{font-size:14px; color:#6e4a37;}
+.each-question .question-box p{font-weight: bold; font-family: "돋움"; color:#6e4a37;}
+.each-question .example-box{border-bottom: 1px dashed #6e4a37;}
+.each-question .example-box p{padding-left:17px; font-size:13px; font-family: "돋움";}
+.each-question .answer-box p{margin:5px 0; font-family: "돋움"; font-size:14px;}
+.each-question .answer-box p:FIRST-CHILD{margin-top:15px;}
+.each-question .answer-box p:LAST-CHILD{text-align: right;}
+.each-question .answer-box p:LAST-CHILD span{color:#d74526 !important; font-weight: bold;}
+
+
+.note-box label{font-size:14px; color:#6e4a37;}
+.note-box textarea[disabled='disabled']{background: #f5f5f5; }
+.note-box textarea{outline:0; background: #fff; border: 0;margin: 0 0 15px; padding: 10px; box-sizing: border-box; 
+					font-size: 12px; display: block; color:#333; width:100%; height:100px;}
+
 /* ------------
 	로딩 이미지
 -------------*/
@@ -155,7 +170,7 @@ function makeTag(result){
 			myAnswer = obj.answer.sa_answer;
 		}
 		$divAnswer.append("<p><span>내가 최근에 선택한 답 : </span><span>"+myAnswer+"</span></p>");
-		$divAnswer.append("<p><span>내 정답률 : </span><span>"+obj.tq_per+"</span></p>");
+		$divAnswer.append("<p><span>내 정답률 : </span><span>"+obj.tq_per+" %</span></p>");
 		$topDiv.append($divAnswer);
 		
 		//오답노트
@@ -164,9 +179,9 @@ function makeTag(result){
 		$divInnerNote.append("<p><label>풀이</label><textarea class='note_content'>"+obj.note.note_content+"</textarea></p>");
 		$divInnerNote.append("<p><label>메모</label><textarea class='note_memo'>"+obj.note.note_memo+"</textarea></p>");
 		var $divButton = $("<div class='note-button-box'>");
-		$divButton.append("<span class='add'><button class='addNoteBtn'>등록</button></span>");
-		$divButton.append("<span class='up-and-del'><button class='updateNoteBtn'>수정</button><button class='delNoteBtn'>삭제</button></span>");
-		$divButton.append("<span class='com-and-can'><button class='updateCompleteBtn'>확인</button><button class='updateCancelBtn'>취소</button></span>");
+		$divButton.append("<span class='add'><button class='addNoteBtn small-btn-style'>등록</button></span>");
+		$divButton.append("<span class='up-and-del'><button class='updateNoteBtn small-btn-style'>수정</button><button class='delNoteBtn small-btn-style'>삭제</button></span>");
+		$divButton.append("<span class='com-and-can'><button class='updateCompleteBtn small-btn-style'>확인</button><button class='updateCancelBtn small-btn-style'>취소</button></span>");
 		$divInnerNote.append($divButton);
 		$divTopNote.append($divInnerNote);
 		$topDiv.append($divTopNote);

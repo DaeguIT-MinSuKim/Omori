@@ -37,10 +37,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
 import com.dgit.domain.TestExampleVO;
 import com.dgit.domain.TestNameVO;
 import com.dgit.domain.TestQuestionVO;
+import com.dgit.domain.UserVO;
+import com.dgit.interceptor.LoginInterceptor;
 import com.dgit.service.ImageService;
 import com.dgit.service.TestExampleService;
 import com.dgit.service.TestNameService;
@@ -68,6 +71,16 @@ public class AdminController {
 
 		return "admin/insert_test";
 	}//test_managing
+	
+	@RequestMapping(value="/update_test_home", method=RequestMethod.GET)
+	public String mockTestHomeGET(HttpServletRequest req, Model model) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		List<TestNameVO> testNameList = nameService.selectAllTestName();
+		model.addAttribute("testNameList", testNameList);
+		
+		return "admin/update_test_home";
+	}//mockTestHomeGET
 	
 	@ResponseBody
 	@RequestMapping(value = "/insertTestName", method = RequestMethod.POST)
@@ -154,6 +167,25 @@ public class AdminController {
 		return entity;
 	}//insertQuestionExample
 	
+	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
+	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
+		TestNameVO testName = nameService.selectOneTestName(tno);
+		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
+
+		for (int i = 0; i < questionList.size(); i++) {
+			TestQuestionVO question = questionList.get(i);
+			int tq_no = question.getTq_no();
+			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
+			List<ImageVO> imageList = imageService.selectImageByTqNo(tq_no);
+
+			question.setExampleList(exampleList);
+			question.setImageList(imageList);
+		}
+
+		model.addAttribute("testName", testName);
+		return "admin/update_test";
+	}// update_test
+	
 	@ResponseBody
 	@RequestMapping(value = "/updateQueAndEx", method = RequestMethod.POST)
 	public ResponseEntity<String> updateQueAndEx(int tqno, String subject, int answer, String question,
@@ -235,62 +267,6 @@ public class AdminController {
 		return entity;
 	}//getImage
 	
-	/*@RequestMapping(value = "/insert_result", method = RequestMethod.POST)
-	public String insertResultPOST(int tno, TestQuestionVO questionVO, String[] te_small_no, String[] te_content,
-			List<MultipartFile> files, HttpServletRequest request, Model model) throws Exception {
-		logger.info("insertExam POST................");
-
-		TestNameVO testName = nameService.selectOneTestName(tno);
-		questionVO.setTestName(testName);
-		questionService.insertTestQuestion(questionVO);
-
-		TestQuestionVO newQuestionVO = questionService.selectOneTestQuestion(tno, questionVO.getTq_small_no());
-
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String innerUploadPath = "resources/upload";
-
-		File dir = new File(root_path + "/" + innerUploadPath);
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-
-		ArrayList<String> fileNames = new ArrayList<>();
-		for (MultipartFile file : files) {
-			UUID uid = UUID.randomUUID();
-			String savedName = uid.toString() + "_" + file.getOriginalFilename(); // 랜덤이름_원본이름
-
-			File target = new File(root_path + "/" + innerUploadPath, savedName);
-			FileCopyUtils.copy(file.getBytes(), target);
-
-			fileNames.add(innerUploadPath + "/" + savedName);
-
-			 insert image 
-			ImageVO imgVO = new ImageVO();
-			imgVO.setQuestion(newQuestionVO);
-			imgVO.setImgsource(savedName);
-			imageService.insertImage(imgVO);
-		}
-
-		for (int i = 0; i < te_small_no.length; i++) {
-			TestExampleVO vo = new TestExampleVO();
-			vo.setQuestion(newQuestionVO);
-			vo.setTe_small_no(Integer.parseInt(te_small_no[i]));
-			vo.setTe_content(te_content[i]);
-
-			exampleService.insertTestExample(vo);
-		}
-
-		int tq_no = newQuestionVO.getTq_no();
-		List<ImageVO> imgList = imageService.selectImageByTqNo(tq_no);
-		List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-
-		model.addAttribute("TestQuestionVO", newQuestionVO);
-		model.addAttribute("exampleList", exampleList);
-		model.addAttribute("imgList", imgList);
-
-		return "admin/insert_result";
-	}// insertExamPOST
-*/	
 	@ResponseBody
 	@RequestMapping(value = "/updateTestName", method = RequestMethod.POST)
 	public ResponseEntity<String> updateTestName(int tno, String tname, String tdate) throws Exception {
@@ -388,30 +364,6 @@ public class AdminController {
 		}
 		return entity;
 	}//getTestNameList
-
-	
-
-	@RequestMapping(value = "/update_test/{tno}", method = RequestMethod.GET)
-	public String update_test(@PathVariable("tno") int tno, Model model) throws Exception {
-		TestNameVO testName = nameService.selectOneTestName(tno);
-		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
-
-		for (int i = 0; i < questionList.size(); i++) {
-			TestQuestionVO question = questionList.get(i);
-			int tq_no = question.getTq_no();
-			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-			List<ImageVO> imageList = imageService.selectImageByTqNo(tq_no);
-
-			question.setExampleList(exampleList);
-			question.setImageList(imageList);
-		}
-
-		model.addAttribute("testName", testName);
-		return "admin/update_test";
-	}// update_test
-	
-	
-	
 
 	@RequestMapping(value = "/update_form/{tno}/{tq_no}", method = RequestMethod.POST)
 	public ResponseEntity<TestQuestionVO> update_form(@PathVariable("tno") int tno, @PathVariable("tq_no") int tq_no,
@@ -786,26 +738,6 @@ public class AdminController {
 			out.write(b, 0, numRead);
 		}
 		
-		/*
-		 * HSSFWorkbook workbook = new HSSFWorkbook(fis); int rowindex=0; int
-		 * columnindex=0; //시트 수 (첫번째에만 존재하므로 0을 준다) //만약 각 시트를 읽기위해서는 FOR문을 한번더
-		 * 돌려준다 HSSFSheet sheet=workbook.getSheetAt(0); //행의 수 int
-		 * rows=sheet.getPhysicalNumberOfRows();
-		 * for(rowindex=1;rowindex<rows;rowindex++){ //행을 읽는다 HSSFRow
-		 * row=sheet.getRow(rowindex); if(row !=null){ //셀의 수 int
-		 * cells=row.getPhysicalNumberOfCells();
-		 * for(columnindex=0;columnindex<=cells;columnindex++){ //셀값을 읽는다
-		 * HSSFCell cell=row.getCell(columnindex); String value=""; //셀이 빈값일경우를
-		 * 위한 널체크 if(cell==null){ continue; }else{ //타입별로 내용 읽기 switch
-		 * (cell.getCellType()){ case HSSFCell.CELL_TYPE_FORMULA:
-		 * value=cell.getCellFormula(); break; case HSSFCell.CELL_TYPE_NUMERIC:
-		 * value=cell.getNumericCellValue()+""; break; case
-		 * HSSFCell.CELL_TYPE_STRING: value=cell.getStringCellValue()+""; break;
-		 * case HSSFCell.CELL_TYPE_BLANK: value=cell.getBooleanCellValue()+"";
-		 * break; case HSSFCell.CELL_TYPE_ERROR:
-		 * value=cell.getErrorCellValue()+""; break; } } System.out.println(
-		 * "각 셀 내용 :"+value); } } }
-		 */
 		return "/exceltest";
 	}
 	

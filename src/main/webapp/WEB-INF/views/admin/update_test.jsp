@@ -30,6 +30,7 @@
 	border:2px solid #999;
 	background:rgba(240,240,240,1);
 }
+.table .btnUpdatePopup{position: absolute;}
 .table td{
 	font-family: "돋움";
 }
@@ -113,53 +114,12 @@
 	display:none;
 }
 
-.load-wrapp {
-    float: left;
-    width: 100%;
-   	text-align: center;
-    margin-top:200px;
-}
-.loading-message{
-	color:#eee;
-	font-size:20px;
-	margin-bottom:10px;
-}
-.line {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin:5px 4px 0;
-    border-radius: 15px;
-    background-color: #4b9cdb;
-}
-.clear{
-	clear:both;
-}
-
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
-
 /* ------------
 	popup창 
 -------------*/
 .login-container .form {text-align: left;}
 
-.edit-que-ex-popup .login-page {width:700px; margin-top:-90px;}
+.edit-que-ex-popup .login-page {width:700px; margin-top:-130px;}
 .edit-que-ex-popup .login-page .form {max-width:700px;}
 .edit-que-ex-popup .login-page .form hr{margin-bottom:25px;}
 .edit-que-ex-popup .login-page .form label {display: inline-block; width:80px; float:left;}
@@ -174,35 +134,18 @@
 										padding-left: 20px !important;margin-top: -5px !important;}
 span.selected-answer{color:#cc0000 !important; font-weight: bold;}
 
-.preview img{max-width:200px;max-height:200px; padding-left: 25px;margin-top: 15px;margin-bottom: 15px;}
+.preview img{max-width:200px;max-height:100px; padding-left: 25px;margin-top: 15px;margin-bottom: 15px;}
 .preview a{cursor: pointer; background: #4caf50;position: absolute;margin-left: -15px;padding: 5px; width: 15px; height: 15px;
 			border-radius: 50%;border: 2px solid #eee;box-shadow: 0.5px 0.5px 1px black;
     		display: inline-block;font-weight: bold;text-align: center;}
-/* 
-.add-question-popup .login-page {width:600px;}
-.add-question-popup .login-page .form {max-width:600px;}
-.add-question-popup .login-page .form label {display: inline-block; width:120px;}
 
-.add-example-popup .login-page {width:700px; margin-top:-50px;}
-.add-example-popup .login-page .form {max-width:700px; }
-.add-example-popup .login-page .form div{clear:both;}
-.add-example-popup .login-page .form div input[type='radio'] {width:15px; margin-top:10px;}
-.add-example-popup .login-page .form div textarea{width:90%; float:right;}
-
-.edit-testname-popup .login-page .form .button-box{text-align: center;}
-.edit-testname-popup .login-page .form .button-box button{width:49%;}
-
-.add-question-popup .login-page .tqsmallno-box a{color:#333; font-weight: bold; padding:4px; margin:2px 4px;}
-a.cant-sel-a{cursor: default; color:#ddd !important; font-weight: lighter !important;}
-a.selected-no{color:#cc0000 !important;}
- */
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>기출문제 수정</h1>
 			<div class="inner-section">
+				<h1>기출문제 수정</h1>
 				<div class="mocktest-box">
 					<table class='table'>
 						<tr>
@@ -218,9 +161,9 @@ a.selected-no{color:#cc0000 !important;}
 						</tr>
 						<tr>
 							<td colspan="2" id="paging">
-								<button id="prev">이전</button>
+								<button id="prev" class='same-button-style'>이전</button>
 								<span id="count"></span> / <span id="allPage"></span>
-								<button id="next">다음</button>
+								<button id="next" class='same-button-style'>다음</button>
 							</td>
 						</tr>
 					</table>
@@ -237,6 +180,7 @@ a.selected-no{color:#cc0000 !important;}
 					</div>
 					<div class="clear"></div>
 				</div>
+				<div class="clear"></div>
 			</div>
 		</div>
 	</section>
@@ -271,10 +215,11 @@ a.selected-no{color:#cc0000 !important;}
 				<div class='ex'><p>4. </p><textarea id="example04" cols="30" rows="3"></textarea></div>
 				<div class="button-box">
 					<button id="btnUpQueAndEx">수정</button>
-					<button id="btnDelQueAndEx">삭제</button>
+					<button id="btnDelQueAndEx" class='negative-btn-style'>삭제</button>
 				</div>
 			</form>
 		</div>
+		
 	</div>
 </div>
 <script src="${pageContext.request.contextPath}/resources/js/update_test.js"></script>
@@ -325,9 +270,15 @@ function updateQueAndExAjax(){
 		success:function(result){
 			swal({
 				title:"수정되었습니다",
-				confirmButtonText: "확인"
+				confirmButtonText: "확인",
+				closeOnConfirm: false
+			}, function(isConfirm){
+				updateTable();
+				$("#add-img").val("");
+				$(".edit-que-ex-popup").find(".preview").html("");
+				swal.close();
 			});
-			updateTable();
+			
 		},
 		error:function(e){
 			alert("에러가 발생하였습니다");
@@ -347,9 +298,7 @@ function getImageAjax(tqno){
 			if(result.length > 0){
 				$(".image").each(function(i, obj) {
 					if($(obj).attr("tqno") == tqno){
-						$(obj).html("");
-						$(obj).append("<td></td>");
-						$(obj).append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+result[0].imgsource+"'/></td>");
+						$(obj).html("<td></td><td><img src='${pageContext.request.contextPath}/resources/upload/"+result[0].imgsource+"'/></td>");
 					}
 				});
 			}else{
@@ -486,7 +435,7 @@ function makeTags(result){
 		//문제
 		var $tr_question = $("<tr class='question'>");
 		$tr_question.append("<td>"+obj.tq_small_no+". </td>");
-		$tr_question.append("<td><span class='que'>"+obj.tq_question+"</span><button class='btnUpdatePopup'>수정</button></td>");
+		$tr_question.append("<td><span class='que'>"+obj.tq_question+"</span><button class='btnUpdatePopup small-btn-style'>수정</button></td>");
 		$tr_question.attr("tqno", obj.tq_no);
 		$tr_question.attr("tno", obj.testName.tno);
 		$tr_question.attr("tqsubject", obj.tq_subject);
@@ -510,7 +459,7 @@ function makeTags(result){
 				var $tr_image = $("<tr class='image' tqno='"+obj.tq_no+"'>");
 				$tr_image.append("<td></td>");
 				$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
-				$tr_image.attr("tqno", imageList[j].question.tq_no);
+				$tr_image.attr("tqno", imageList[j].tq_no);
 				
 				$table.append($tr_image);
 			}

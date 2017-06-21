@@ -26,14 +26,14 @@
 						</c:if>
 						<c:if test="${!empty testName }">
 							<p>
-								<a href='' tno="${testName.tno}">${testName.tname}</a>
+								<a href='' tno="${testName.tno}">${testName.tname} <small>(${testName.tdate})</small></a>
 							</p>
 						</c:if>
 					</div>
 					<div class="test-list-box">
 						<h3>기출문제 목록</h3>
 						<c:forEach var="obj" items="${testNameList}">
-							<p><a href='' tno="${obj.tno}">${obj.tname}</a></p>
+							<p><a href='' tno="${obj.tno}">${obj.tname} <small>(${obj.tdate})</small></a></p>
 						</c:forEach>
 					</div>
 				</div>

@@ -6,7 +6,7 @@
 <mapper namespace="com.dgit.mapper.TestNameMapper">
 	<select id="selectAllTestName" resultType="TestNameVO">
 		select * from testname
-		order by tname
+		order by tname desc
 	</select>
 	
 	<select id="selectAllTestNameOrderByTnoDesc" resultType="TestNameVO">
