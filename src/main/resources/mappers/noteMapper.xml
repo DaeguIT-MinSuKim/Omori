@@ -50,6 +50,6 @@
 	<select id="selectAllNoteDistinctTno" resultType="int">
 		select distinct tno from note 
 		where uid=#{uid}
-		order by tno
+		order by tno desc
 	</select>
 </mapper>

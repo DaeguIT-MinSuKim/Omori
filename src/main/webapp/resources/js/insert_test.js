@@ -199,19 +199,5 @@ function makeTqSmallNoButton(){
 		if($a.hasClass("cant-sel-a")){
 			countCantSel++;
 		}
-	}	
-	
-	//등록가능한 번호가 없으면 닫기
-	if(countCantSel == 100){
-		swal({
-			title:"등록 가능한 문제 번호가 없습니다!",
-			confirmButtonText: "확인",
-			closeOnConfirm: false
-		}, function(isConfirm){
-			if(isConfirm){
-				swal.close();
-				$(".login-container").fadeOut("fast");
-			}
-		});
 	}
 }

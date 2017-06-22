@@ -115,6 +115,7 @@ public class AndroidController {
 				
 				question.setExampleList(exampleList);
 				question.setImageList(imageList);
+				System.out.println("★★★★★★★★★★"+question.getTq_no());
 			}
 			
 			System.out.println("★★★★★★★★★★mockTestStart★★★★★★★★★★");
