@@ -354,6 +354,7 @@ select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no from testquestion;
 -- 문제 번호들만 가져오기
 select tq_small_no from testquestion where tno = 1 order by tq_small_no;
 select * from testquestion;
+select * from testquestion where tno = 13 and tq_subject = '데이터베이스' order by tq_small_no;
 delete from testquestion;
 alter table testquestion auto_increment = 1;
 

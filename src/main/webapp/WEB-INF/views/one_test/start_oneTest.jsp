@@ -19,7 +19,7 @@
 .select-subject-box .jeong-bo-gisa{text-align: center;}
 .select-subject-box .jeong-bo-gisa a{display: inline-block;margin: 0px 10px;width: 130px; color:#178da9; padding:10px 0; font-size: 18px;}
 .select-subject-box .jeong-bo-gisa a.selected-subject{border-bottom:2px solid #178da9; color: #000;}
-.each-question{color: #000;}
+.each-question{color: #000; overflow-y: auto; margin:7px 0;}
 
 /*-----------
 	토글 버튼
@@ -58,7 +58,7 @@ figure span{position:relative; top:-13px; color:#6e4a37;}
 .note-box label{font-size:14px; color:#6e4a37;}
 .note-box textarea[disabled='disabled']{background: #f5f5f5; }
 .note-box textarea{outline:0; background: #fff; border: 0;margin: 0 0 15px; padding: 10px; box-sizing: border-box; 
-					font-size: 12px; display: block; color:#333; width:100%; height:100px;}
+					font-size: 12px; display: block; color:#333; width:97%; height:100px;}
 
 a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 *:FOCUS{outline: none;}

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -114,6 +115,7 @@ public class AndroidController {
 				
 				question.setExampleList(exampleList);
 				question.setImageList(imageList);
+				System.out.println("★★★★★★★★★★"+question.getTq_no());
 			}
 			
 			System.out.println("★★★★★★★★★★mockTestStart★★★★★★★★★★");
@@ -315,4 +317,83 @@ public class AndroidController {
 		
 		return entity;
 	}//insertGrade
+	
+	@ResponseBody
+	@RequestMapping(value = "/note/getNoteTestNameList", method = RequestMethod.POST)
+	public ResponseEntity<List<TestNameVO>> noteTestNameList(HttpServletRequest req) throws Exception{
+		ResponseEntity<List<TestNameVO>> entity = null;
+		
+		//params
+		String uid = req.getParameter("uid");
+		
+		UserVO user = userService.selectOneUserByUid(uid.trim());
+		
+		try {
+			List<TestNameVO> testNameList = new ArrayList<>();
+			List<Integer> tnoList = noteService.selectAllNoteDistinctTno(user.getUid());
+			
+			for (Integer i : tnoList) {
+				TestNameVO name = nameService.selectOneTestName(i);
+				testNameList.add(name);
+			}
+			
+			System.out.println("★★★★★/note/getNoteTestNameList★★★★★");
+			entity = new ResponseEntity<>(testNameList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getNoteTestNameList
+	
+	@ResponseBody
+	@RequestMapping(value="/note/getQuestionAndNote", method=RequestMethod.POST)
+	public ResponseEntity<List<TestQuestionVO>> getQuestionAnswerNote(HttpServletRequest req) throws Exception{
+		ResponseEntity<List<TestQuestionVO>> entity = null;
+		
+		//params
+		String uid = req.getParameter("uid");
+		int tno = Integer.parseInt(req.getParameter("tno"));
+		
+		UserVO user = userService.selectOneUserByUid(uid);
+		
+		try {
+			List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswerWithNotePercent(tno, user.getUid());
+			
+			System.out.println("★★★★★/note/getQuestionAnswerNote★★★★★");
+			entity = new ResponseEntity<>(questionWithAnswerList, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getQuestionAnswerNote
+	
+	@ResponseBody
+	@RequestMapping(value="/grade/getGradeGroupByTno", method=RequestMethod.POST)
+	public ResponseEntity<List<GradeVO>> getGradeGroupByTno(HttpServletRequest req) throws Exception{
+		ResponseEntity<List<GradeVO>> entity = null;
+		
+		//params
+		String uid = req.getParameter("uid");
+		int tno = Integer.parseInt(req.getParameter("tno"));
+		
+		UserVO user = userService.selectOneUserByUid(uid);
+		
+		try {
+			TestNameVO testName = nameService.selectOneTestName(tno);
+			List<GradeVO> gradeList = gradeService.selectAllGradeGroupByTno(user.getUid(), tno);
+			for (GradeVO gradeVO : gradeList) {
+				gradeVO.setTestName(testName);
+			}
+			
+			System.out.println("★★★★★/grade/getGradeGroupByTno★★★★★");
+			entity = new ResponseEntity<>(gradeList, HttpStatus.OK);
+		} catch (Exception e) {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}//getGradeGroupByTno
 }
