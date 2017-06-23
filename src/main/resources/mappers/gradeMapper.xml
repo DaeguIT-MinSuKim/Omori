@@ -30,7 +30,7 @@
 	<select id="selectTnoForGrade" resultType="int" >
 		select distinct tno from grade 
 		where uid = #{uid} 
-		order by tno
+		order by tno desc
 	</select>
 	
 	<select id="selectAllGradeGroupByTno" resultType="GradeVO" resultMap="GradeResult">
