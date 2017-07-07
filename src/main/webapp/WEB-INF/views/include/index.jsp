@@ -20,7 +20,7 @@
 /* home 				*/
 /* .................... */
 .main{width:100%;}
-.title-box {margin:10% auto; width:40%;}
+.title-box {margin:10% auto; width:800px;}
 .title-box .image-box{float:left; margin-right:20px;}
 .title-box .text-box{padding-top:32px; padding-bottom:60px;}
 .title-box .text-box #title-top{font-size:33px; display: block; font-family: "나눔스퀘어EB"; color:#6e4a37;}
