@@ -1,5 +1,8 @@
 package com.dgit.controller;
 
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -81,6 +84,67 @@ public class UserController {
 			entity = new ResponseEntity<>("success", HttpStatus.OK);
 		}catch(Exception e){
 			entity = new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/androidJoin", method=RequestMethod.POST)
+	public ResponseEntity<String> androidJoinPost(HttpServletRequest req) throws Exception{
+		System.out.println("★★★★★★★★★★androidJoin POST★★★★★★★★★★");
+		
+		ResponseEntity<String> entity = null;
+		
+		String uid = req.getParameter("id");
+		String upw = req.getParameter("pw");
+		String uemail = req.getParameter("email");
+		
+		try{
+			LoginDTO dto = new LoginDTO();
+			dto.setUid(uid);
+			dto.setUpw(upw);
+			
+			if(service.selectOneUser(dto) != null){
+				entity = new ResponseEntity<>("fail", HttpStatus.OK);
+			}else{
+				UserVO vo = new UserVO();
+				vo.setUid(uid);
+				vo.setUpw(upw);
+				vo.setUemail(uemail);
+				vo.setUjoindate(new Date());
+				service.insertUser(vo);
+				entity = new ResponseEntity<>("success", HttpStatus.OK);
+			}
+		}catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/androidLogin", method=RequestMethod.POST)
+	public ResponseEntity<String> androidLoginPOST(HttpServletRequest req) throws Exception{
+		System.out.println("★★★★★★★★★★androidLogin POST★★★★★★★★★★");
+		
+		ResponseEntity<String> entity = null;
+		
+		String uid = req.getParameter("id");
+		String upw = req.getParameter("pw");
+		
+		try{
+			LoginDTO dto = new LoginDTO();
+			dto.setUid(uid);
+			dto.setUpw(upw);
+			
+			UserVO user = service.selectOneUser(dto);
+			
+			if(user == null){
+				entity = new ResponseEntity<>("fail", HttpStatus.OK);
+			}else{
+				entity = new ResponseEntity<>(user.getUid(), HttpStatus.OK);
+			}
+		}catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return entity;
 	}

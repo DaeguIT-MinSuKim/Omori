@@ -30,4 +30,12 @@ public class SelectedAnswerDaoImpl implements SelectedAnswerDao{
 		session.insert(namespace + ".insertSelectedAnswer", vo);
 	}
 
+	@Override
+	public List<SelectedAnswerVO> selectAllAnswerByTqno(int tq_no, String uid) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("tq_no", tq_no);
+		map.put("uid", uid);
+		return session.selectList(namespace + ".selectAllAnswerByTqno", map);
+	}
+
 }

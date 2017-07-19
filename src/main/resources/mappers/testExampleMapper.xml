@@ -29,4 +29,27 @@
 		insert into testexample(tq_no, te_small_no, te_content) 
 		values(#{question.tq_no}, #{te_small_no}, #{te_content});
 	</insert>
+	
+	<select id="selectOneTestExampleNotTeNo" resultType="TestExampleVO" resultMap="TestExampleResult">
+		select * from testexample 
+		where tq_no = #{tq_no} 
+			and te_small_no = #{te_small_no}
+	</select>
+	
+	<delete id="deleteTestExampleByTqnoTesmallno">
+		delete from testExample
+		where tq_no = #{tq_no}
+			and te_small_no = #{te_small_no}
+	</delete>
+	
+	<select id="selectOneTestExampleByTeNo" resultType="TestExampleVO" resultMap="TestExampleResult">
+		select * from testexample
+		where te_no = #{te_no}
+	</select>
+	
+	<update id="updateTestExample">
+		update testexample 
+		set tq_no = #{question.tq_no}, te_small_no = #{te_small_no}, te_content = #{te_content}
+		where te_no = #{te_no}
+	</update>
 </mapper>

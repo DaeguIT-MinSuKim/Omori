@@ -23,4 +23,9 @@ public class SelectedAnswerServiceImpl implements SelectedAnswerService{
 		dao.insertSelectedAnswer(vo);
 	}
 
+	@Override
+	public List<SelectedAnswerVO> selectAllAnswerByTqno(int tq_no, String uid) throws Exception {
+		return dao.selectAllAnswerByTqno(tq_no, uid);
+	}
+
 }

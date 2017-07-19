@@ -6,7 +6,17 @@
 <mapper namespace="com.dgit.mapper.TestNameMapper">
 	<select id="selectAllTestName" resultType="TestNameVO">
 		select * from testname
-		order by tname
+		order by tname desc
+	</select>
+	
+	<select id="selectAllTestNameOrderByTnoDesc" resultType="TestNameVO">
+		select * from testname 
+		order by tno desc
+	</select>
+	
+	<select id="selectLastTno" resultType="int">
+		select if(max(tno) is null, 1, max(tno)+1) as tno 
+		from testname
 	</select>
 	
 	<select id="selectOneTestName" resultType="TestNameVO">
@@ -18,4 +28,20 @@
 		insert into testname(tname, tdate)
 		values(#{tname}, #{tdate})
 	</insert>
+	
+	<update id="updateTestName">
+		update testname 
+		set tname = #{tname}, 
+			tdate = #{tdate}
+		where tno = #{tno}
+	</update>
+	
+	<delete id="deleteTestName">
+		delete from testname 
+		where tno = #{tno}
+	</delete>
+	
+	<update id="initAutoIncrementName">
+		alter table testname auto_increment = #{num}; 
+	</update>
 </mapper>

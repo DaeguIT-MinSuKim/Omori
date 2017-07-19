@@ -23,14 +23,4 @@ public class TestNameVO {
 	public void setTdate(String tdate) {
 		this.tdate = tdate;
 	}
-	
-	public String[] getSubjectNames(){
-		String[] arrSub = new String[]{};
-		if (tname.contains("정보처리기사")) {
-			arrSub = new String[]{"데이터베이스", "전자계산기구조", "운영체제", "소프트웨어공학", "데이터통신"};
-		}else if(tname.contains("컴퓨터활용능력")){
-			
-		}
-		return arrSub;
-	}
 }

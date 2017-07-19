@@ -16,5 +16,17 @@
 				<property name="ssl.require" value="false"/>
 			</network-handler>
 		</connection>
+		<virtual-meta-data>
+			<container name="model">
+				<container name="omori">
+					<entity name="image">
+						<constraint name="PRIMARY" type="VIRTUAL KEY">
+							<attribute name="tq_no"/>
+							<attribute name="imgsource"/>
+						</constraint>
+					</entity>
+				</container>
+			</container>
+		</virtual-meta-data>
 	</data-source>
 </data-sources>

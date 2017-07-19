@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!-- graph -->
 <script src="chartist.min.js"></script>
 <script src="chartist-plugin-pointlabels.min.js"></script>
 <script src="chartist-plugin-tooltip.min.js"></script>
@@ -12,8 +13,9 @@
 <style>
 	.ct-chart{
 		border:1px solid black;
-		width:300px;
-		height:200px;
+	}
+	.ct-chart3{
+		width:50%;
 	}
 </style>
 <script>
@@ -39,12 +41,14 @@ $(function(){
 	var options = {
 		low:20,
 		high:100,
-		width : 300,
-		height : 200,
+		width : 500,
+		height : 400,
 		plugins: [
 			    Chartist.plugins.ctPointLabels({textAnchor: 'middle'}),
 			    Chartist.plugins.tooltip()
-			  ]
+			  ],
+		ticks: ['One', 'Two', 'Three'],
+		stretch: true
 	};
 
 	new Chartist.Line('.ct-chart', data, options);
@@ -54,32 +58,46 @@ $(function(){
 	var data2 = {
 			labels : [ '2016-1회', '2016-2회', '2016-3회', '2017-1회', '2017-2회' ],
 			series : [ [ 
-			             {meta : '2016-1회', value : 68}, 
-			             {meta : '2016-2회', value : 70}, 
+			             {meta : '2016-1회', value : 0}, 
+			             {meta : '2016-2회', value : 20}, 
 			             {meta : '2016-3회', value : 88}, 
 			             {meta : '2017-1회', value : 90}, 
 			             {meta : '2017-2회',value : 92} ]
 			]};
-
 	var options2 = {
+		low : 0,
 		high : 100,
-		low : 50,
 		width : 400,
-		height : 200,
-		axisX : {
+		height : 500,
+		/* axisX : {
 			labelInterpolationFnc : function(value, index) {
 				return index % 2 === 0 ? value : null;
 			}
-		},
+		}, */
 		plugins : [ Chartist.plugins.tooltip() ]
 	};
-
 	new Chartist.Bar('.ct-chart2', data2, options2);
+	
+	
+	var data3 = {
+			labels : [ 'XS', 'S', 'M', 'L', 'XL', 'XS', 'S', 'M', 'L', 'XL'],
+			series : [ 20, 60, 70, 80, 90, 20, 60, 70, 80, 90]};
+	var option3 = {
+		low : 0,
+		high : 100,
+		height:300,
+		onlyInteger: true,
+		distributeSeries: true,
+		plugins : [ Chartist.plugins.tooltip() ]
+	}
+	
+	new Chartist.Bar('.ct-chart3', data3, option3);
 });
 </script>
 </head>
 <body>
 <div class="ct-chart ct-perfect-fourth"></div>
 <div class="ct-chart2 ct-perfect-fourth"></div>
+<div class="ct-chart3 ct-perfect-fourth"></div>
 </body>
 </html>

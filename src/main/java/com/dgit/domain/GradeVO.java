@@ -6,12 +6,11 @@ public class GradeVO {
 	private int g_no;
 	private UserVO user;
 	private TestNameVO testName;
+	private int g_save_no;
 	private int grade;
-	private String g_low;
-	private int g_low_grade;
-	private String g_high;
-	private int g_high_grade;
-	private Date g_date;
+	private String g_subject;
+	private int g_subject_grade;
+	private String g_date;
 	
 	public int getG_no() {
 		return g_no;
@@ -31,41 +30,36 @@ public class GradeVO {
 	public void setTestName(TestNameVO testName) {
 		this.testName = testName;
 	}
+	public int getG_save_no() {
+		return g_save_no;
+	}
+	public void setG_save_no(int g_save_no) {
+		this.g_save_no = g_save_no;
+	}
 	public int getGrade() {
 		return grade;
 	}
 	public void setGrade(int grade) {
 		this.grade = grade;
 	}
-	public String getG_low() {
-		return g_low;
+	public String getG_subject() {
+		return g_subject;
 	}
-	public void setG_low(String g_low) {
-		this.g_low = g_low;
+	public void setG_subject(String g_subject) {
+		this.g_subject = g_subject;
 	}
-	public int getG_low_grade() {
-		return g_low_grade;
+	public int getG_subject_grade() {
+		return g_subject_grade;
 	}
-	public void setG_low_grade(int g_low_grade) {
-		this.g_low_grade = g_low_grade;
+	public void setG_subject_grade(int g_subject_grade) {
+		this.g_subject_grade = g_subject_grade;
 	}
-	public String getG_high() {
-		return g_high;
-	}
-	public void setG_high(String g_high) {
-		this.g_high = g_high;
-	}
-	public int getG_high_grade() {
-		return g_high_grade;
-	}
-	public void setG_high_grade(int g_high_grade) {
-		this.g_high_grade = g_high_grade;
-	}
-	public Date getG_date() {
+	public String getG_date() {
 		return g_date;
 	}
-	public void setG_date(Date g_date) {
+	public void setG_date(String g_date) {
 		this.g_date = g_date;
 	}
+	
 	
 }

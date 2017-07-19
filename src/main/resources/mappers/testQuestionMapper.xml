@@ -8,7 +8,6 @@
 		<id property="tq_no" column="tq_no" />
 		<result property="testName.tno" column="tno" />
 		<result property="tq_subject" column="tq_subject" />
-		<result property="tq_subject_no" column="tq_subject_no" />
 		<result property="tq_small_no" column="tq_small_no" />
 		<result property="tq_question" column="tq_question" />
 		<result property="tq_answer" column="tq_answer" />
@@ -22,9 +21,9 @@
 	</select>
 	
 	<select id="selectAllTestQuestionForSubject" resultType="TestQuestionVO" resultMap="TestQuestionResult">
-		select * from testquestion
-		where tno = #{testName.tno} 
-			and tq_subject_no = #{tq_subject_no}
+		select * from testquestion 
+		where tno = #{tno}
+			and tq_subject = #{tq_subject} 
 		order by tq_small_no
 	</select>
 		
@@ -50,9 +49,36 @@
 			 and tq_subject = #{tq_subject}
 	</select>
 	
+	<select id="selectLastTqno" resultType="int">
+		select if(max(tq_no) is null, 1, max(tq_no) + 1) as tq_no 
+		from testquestion
+	</select>
+	
 	
 	<insert id="insertTestQuestion">
-		insert into testquestion(tno, tq_subject, tq_subject_no, tq_small_no, tq_question, tq_answer, tq_per) 
-		values(#{testName.tno}, #{tq_subject}, #{tq_subject_no}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
+		insert into testquestion(tno, tq_subject, tq_small_no, tq_question, tq_answer, tq_per) 
+		values(#{testName.tno}, #{tq_subject}, #{tq_small_no}, #{tq_question}, #{tq_answer}, 0);
 	</insert>
+	
+	<select id="selectAllTqSmallNoByTno" resultType="int">
+		select tq_small_no 
+		from testquestion 
+		where tno = #{tno}
+		order by tq_small_no
+	</select>
+	
+	<update id="initAutoIncrementQue">
+		alter table testquestion auto_increment = #{num}; 
+	</update>
+	
+	<delete id="deleteTestQuestion">
+		delete from testquestion
+		where tq_no = #{tq_no}
+	</delete>
+	
+	<update id="updateTestQuestion">
+		update testquestion 
+		set tno = #{testName.tno}, tq_subject = #{tq_subject}, tq_small_no = #{tq_small_no}, tq_question = #{tq_question}, tq_answer = #{tq_answer}, tq_per = #{tq_per}
+		where tq_no = #{tq_no}
+	</update>
 </mapper>

@@ -1,14 +1,14 @@
 package com.dgit.domain;
 
 public class ImageVO {
-	private TestQuestionVO question;
+	private int tq_no;
 	private String imgsource;
 	
-	public TestQuestionVO getQuestion() {
-		return question;
+	public int getTq_no() {
+		return tq_no;
 	}
-	public void setQuestion(TestQuestionVO question) {
-		this.question = question;
+	public void setTq_no(int tq_no) {
+		this.tq_no = tq_no;
 	}
 	public String getImgsource() {
 		return imgsource;
@@ -16,4 +16,5 @@ public class ImageVO {
 	public void setImgsource(String imgsource) {
 		this.imgsource = imgsource;
 	}
+	
 }

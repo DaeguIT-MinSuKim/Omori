@@ -4,18 +4,25 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.dgit.mapper.ImageMapper">
-	<resultMap id="ImageResult" type="ImageVO" >
-		<result property="question.tq_no" column="tq_no" />
-		<result property="imgsource" column="imgsource" />
-	</resultMap>
 	
-	<select id="selectImageByTqNo" resultType="ImageVO" resultMap="ImageResult">
+	<select id="selectImageByTqNo" resultType="ImageVO">
 		select * from image
 		where tq_no = #{tq_no}
 		order by tq_no
 	</select>
 	
+	<update id="updateImage">
+		update image
+		set imgsource = #{imgsource}
+		where tq_no = #{tq_no}	
+	</update>
+	
 	<insert id="insertImage">
-		insert into image values(#{question.tq_no}, #{imgsource})
+		insert into image values(#{tq_no}, #{imgsource})
 	</insert>
+	
+	<delete id="deleteImage">
+		delete from image
+		where tq_no = #{tq_no}
+	</delete>
 </mapper>

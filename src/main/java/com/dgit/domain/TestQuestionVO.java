@@ -6,7 +6,6 @@ public class TestQuestionVO {
 	private int tq_no;
 	private TestNameVO testName;
 	private String tq_subject;
-	private int tq_subject_no;
 	private int tq_small_no;
 	private String tq_question;
 	private int tq_answer;
@@ -14,6 +13,7 @@ public class TestQuestionVO {
 	private List<TestExampleVO> exampleList;
 	private List<ImageVO> imageList;
 	private SelectedAnswerVO answer;
+	private NoteVO note;
 	
 	public int getTq_no() {
 		return tq_no;
@@ -32,12 +32,6 @@ public class TestQuestionVO {
 	}
 	public void setTq_subject(String tq_subject) {
 		this.tq_subject = tq_subject;
-	}
-	public int getTq_subject_no() {
-		return tq_subject_no;
-	}
-	public void setTq_subject_no(int tq_subject_no) {
-		this.tq_subject_no = tq_subject_no;
 	}
 	public int getTq_small_no() {
 		return tq_small_no;
@@ -81,6 +75,11 @@ public class TestQuestionVO {
 	public void setAnswer(SelectedAnswerVO answer) {
 		this.answer = answer;
 	}
-	
+	public NoteVO getNote() {
+		return note;
+	}
+	public void setNote(NoteVO note) {
+		this.note = note;
+	}
 	
 }

@@ -10,4 +10,5 @@ public interface NoteDao {
 	NoteVO selectOneNoteByTnoTqno(String uid, int tno, int tq_no) throws Exception;
 	void updateNote(NoteVO vo) throws Exception;
 	void deleteNote(int note_no) throws Exception;
+	List<Integer> selectAllNoteDistinctTno(String uid) throws Exception;
 }

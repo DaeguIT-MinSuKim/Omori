@@ -16,11 +16,19 @@
 		select * from selected_answer 
 		where tq_no = #{tq_no} 
 			and uid = #{uid}
-		order by sa_date desc limit 1;
+		order by sa_date desc limit 1
 	</select>
 	
 	<insert id="insertSelectedAnswer">
 		insert into selected_answer(uid, tq_no, sa_answer, sa_date) 
-		values(#{user.uid}, #{tq_no}, #{sa_answer}, #{sa_date});
+		values(#{user.uid}, #{tq_no}, #{sa_answer}, #{sa_date})
 	</insert>
+	
+	<select id="selectAllAnswerByTqno" resultType="SelectedAnswerVO" resultMap="AnswerResult">
+		select * from selected_answer 
+		where tq_no = #{tq_no} 
+			and uid = #{uid}
+		order by sa_date desc
+	</select>
+	
 </mapper>

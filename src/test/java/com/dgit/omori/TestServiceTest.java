@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.dgit.domain.GradeVO;
 import com.dgit.domain.ImageVO;
 import com.dgit.domain.NoteVO;
 import com.dgit.domain.NowGradeVO;
@@ -57,7 +58,9 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectOneTestName() throws Exception{
-		TestNameVO vo =  nameService.selectOneTestName(1);
+		if(nameService.selectOneTestName(7) != null){
+			System.out.println("not null");
+		}
 	}
 	
 //	@Test
@@ -66,6 +69,16 @@ public class TestServiceTest {
 		vo.setTname("정보처리기사 2016년 1회");
 		vo.setTdate("2016-03-06");
 		nameService.insertTestName(vo);
+	}
+	
+//	@Test
+	public void selectLastTno() throws Exception{
+		nameService.selectLastTno();
+	}
+	
+//	@Test
+	public void initAutoIncrementName() throws Exception{
+		nameService.initAutoIncrementName(2);
 	}
 	
 	/*......................*/
@@ -78,12 +91,7 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectAllTestQuestionForSubject() throws Exception{
-		TestNameVO name = new TestNameVO();
-		name.setTno(1);
-		TestQuestionVO vo = new TestQuestionVO();
-		vo.setTestName(name);
-		vo.setTq_subject_no(1);
-		questionService.selectAllTestQuestionForSubject(vo);
+		
 	}
 	
 //	@Test
@@ -103,7 +111,6 @@ public class TestServiceTest {
 		TestQuestionVO vo = new TestQuestionVO();
 		vo.setTestName(name);
 		vo.setTq_subject("데이터베이스");
-		vo.setTq_subject_no(1);
 		vo.setTq_small_no(1);
 		vo.setTq_question("이행적 함수 종속 관계를 의미하는 것은?");
 		vo.setTq_answer(1);
@@ -113,7 +120,7 @@ public class TestServiceTest {
 	
 //	@Test
 	public void selectQuestionAndAnswer() throws Exception{
-		List<TestQuestionVO> questionList = questionService.selectQuestionAndAnswer(1, "test1");
+		List<TestQuestionVO> questionList = questionService.selectQuestionAndAnswerWithNote(1, "test1");
 		System.out.println(questionList.get(0).getAnswer().getSa_answer() + "을 선택했다");
 	}
 	
@@ -159,7 +166,7 @@ public class TestServiceTest {
 	public void insertImage() throws Exception{
 		TestQuestionVO question = questionService.selectOneTestQuestion(1, 1);
 		ImageVO vo = new ImageVO();
-		vo.setQuestion(question);
+		vo.setTq_no(question.getTq_no());
 		vo.setImgsource("이미지2");
 		
 		imageService.insertImage(vo);
@@ -170,8 +177,39 @@ public class TestServiceTest {
 	/*......................*/
 //	@Test
 	public void selectAllGradeLatest() throws Exception{
-		gradeService.selectAllGradeLatest("test1");
+//		gradeService.selectAllGradeLatest("test1");
 	}
+	
+//	@Test
+	public void inserGrade() throws Exception{
+		GradeVO vo = new GradeVO();
+		
+		UserVO user = new UserVO();
+		user.setUid("test1");
+		vo.setUser(user);
+		
+		TestNameVO testName = new TestNameVO();
+		testName.setTno(1);
+		vo.setTestName(testName);
+		
+		vo.setGrade(70);
+		vo.setG_subject("데이터베이스");
+		vo.setG_subject_grade(17);
+		vo.setG_date("2017-06-09");
+		
+//		gradeService.insertGrade(vo);
+	}
+
+//	@Test
+	public void selectOneGradeByDate() throws Exception{
+		gradeService.selectListGradeByDate("test1", 2, "2017-06-11 2:6");
+	}
+	
+//	@Test
+	public void selectListGradeBySubject() throws Exception{
+		gradeService.selectListGradeBySubject("test1", 1, "데이터베이스");
+	}
+	
 	
 	/*......................*/
 	/*SelectedAnswer		*/
@@ -233,12 +271,6 @@ public class TestServiceTest {
 		user.setUid("test1");
 		vo.setUser(user);
 		
-		TestNameVO testName = nameService.selectOneTestName(1);
-		vo.setTestName(testName);
-		
-		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
-		vo.setQuestion(question);
-		
 		vo.setNote_content("문제 1번의 오답풀이 내용");
 		vo.setNote_memo("내가 왜 이걸 틀렸을까");
 		vo.setNote_date(new Date());
@@ -258,12 +290,6 @@ public class TestServiceTest {
 		UserVO user = new UserVO();
 		user.setUid("test1");
 		vo.setUser(user);
-		
-		TestNameVO testName = nameService.selectOneTestName(1);
-		vo.setTestName(testName);
-		
-		TestQuestionVO question = questionService.selectOneTestQuestionByTqno(1);
-		vo.setQuestion(question);
 		
 		noteService.selectOneNoteByTnoTqno("test1", 1, 1);
 	}

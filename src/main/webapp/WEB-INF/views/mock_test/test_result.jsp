@@ -5,224 +5,59 @@
 <script src="${pageContext.request.contextPath}/resources/alert/dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/alert/dist/sweetalert.css">
 <style>
-.section h1{
-	color:#eee;
-}
 .sweet-alert{
 	width:400px !important;
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.mocktest-box{
-	width:84%;
-	float:left;
-}
-.omr-box{
-	width:15%;
-	float:right;
-}
-/* ............ */
-/* table 		*/
-/* ............ */
-.added-table{
-	display:none;
-}
-.table{
-	width:100%;
-	border:2px solid #999;
-	background:rgba(240,240,240,1);
-}
-.table td{
-	font-family: "돋움";
-}
-.table td#testName{
-	padding-top:20px;
-	padding-bottom:20px;
-	text-align: center;
-	font-weight:bold;
-	font-size:20px;
-	color:#222;
-	border-bottom:2px solid #999;
-}
-.table td#markResult{
-	padding-top:20px;
-	padding-bottom:20px;
-	border-bottom:2px solid #999;
-}
-.table td.subject{
-	color:#3333cc;
-	font-weight: bold;
-	font-size:18px;
-	text-align: center;
-	padding-top:30px;
-}
-.table #paging{
-	padding-top:20px;
-	padding-bottom:20px;
-	text-align: left;
-	border-top:2px solid #999;
-}
-.table tr.question{
-	vertical-align: top;
-	font-weight: bold;
-	color:#303030;
-}
-.table tr.question td{
-	padding-top:30px;
-	padding-bottom:10px;
-	font-size:14px;
-}
-.table tr.question td:FIRST-CHILD{
-	text-align: left;
-}
-.table tr.question td:FIRST-CHILD span{
-	position:relative;
-	z-index:1;
-}
-.table tr.question img.markimg{
-	position:absolute;
-	width:30px;
-	margin-left:-8px;
-	margin-top:-8px;
-}
+.mocktest-box{width:84%;float:left;}
+.omr-box{width:15%;float:right;}
 
-.table tr.example td{
-	padding:5px 5px;
-}
-.table tr.example a{
-	line-height:22px;
-	color:#333;
-	font-size:12px;
-}
-.table tr.example span.te_small_no{
-	border: 1px solid #cc0000;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    padding:2px 6px;
-}
+/*-----------
+	table
+-----------*/
+.table .table-left {padding-left:12px;padding-right:6px;border-right:2px solid #999;}
+.table td#markResult{padding-top:20px;padding-bottom:20px;border-bottom:2px dashed #ebd0a7;}
+.table td#markResult p{text-align: center; font-family: "나눔바른고딕"; margin:10px;}
+.table td#markResult p .markSubjectName{display: inline-block; width:150px;}
+.table td#markResult p#lastResult{font-size:18px;}
+.table td#markResult p#lastResult #result{display: inline-block; color:#d74526; font-size:20px; margin-left:10px;}
+.table tr.question td:FIRST-CHILD span{position:relative; z-index:1;}
+.table tr.question img.markimg{position:absolute;width:30px;margin-left:-8px;margin-top:-8px;}
 
-.table-left, .table-right{
-	width:500px;
-	vertical-align: top;
-	padding-bottom:30px;
-}
-.table-left {
-	padding-left:12px;
-	padding-right:6px;
-	border-right:2px solid #999;
-}
-.table-right{
-	padding-right:12px;
-	padding-left:6px;
-}
+/*------------- 
+	로딩 이미지 
+-------------*/
+.table, .omr-box{display:none;}
+.loading-box{display:none;}
 
-/* 보기 클릭 */
-.answer-selected{
-	color:#CC0000 !important;
-	font-weight:bold;
-}
-.changeColor{
-	color:#ff0000 !important;
-}
+/*----------- 
+	오답풀이 
+-----------*/
+.note-box .bottom-button .up-and-del, .com-and-can{display:none; margin-top:10px;}
+.note-box {border-top: 2px dotted #f7e9d5; display:none;}
+.note-box label{font-size:12px; color:#6e4a37; font-weight: bold;}
+.note-box textarea[disabled='disabled']{background: #f5f5f5; }
+.note-box textarea{outline:0; background: #fff; border: 0;margin: 0 0 15px; padding: 10px; box-sizing: border-box; 
+					font-size: 12px; display: block; color:#333; width:100%; height:100px;}
+.notebtn-box .btnCreateNote{border-radius: 5px;padding: 5px 13px;background: none;color: #6e4a37;border: 1px solid #6e4a37;}
+.notebtn-box .btnCreateNote:HOVER {background: #fbf9f2; font-weight: bold; border-color: rgba(0,0,0,0);}
 
-/* .omr-box */
-.omr-box .table{
-	width:100%;
-	border-collapse: collapse;
-}
-.omr-box .table td{
-	width:25px;
-	text-align:center;
-	font-size:14px;
-	padding:3px 5px;
-	border:1px solid #999;
-}
-.omr-box .table td a{
-	color:#333;
-}
-.omr-box .table tr.num td{
-	color:#303030;
-	font-weight: bold;
-}
-.omr-box .table tr.answer td{
-	font-size:12px;
-	height:25px;
-	color:#cc0000;
-}
-.omr-box #time-zone, #btnSendAnswer{
-	color:#303030;
-	font-size:20px;
-	font-weight:bold;
-	padding:20px 0;
-}
-.omr-box #time-zone{
-	color:#ff3333;
-}
-
-/* 로딩 이미지 */
-.table, .omr-box{
-	display:none;
-}
-
-.loading-box{
-	display:none;
-}
-
-.load-wrapp {
-    float: left;
-    width: 100%;
-   	text-align: center;
-    margin-top:200px;
-}
-.loading-message{
-	color:#eee;
-	font-size:20px;
-	margin-bottom:10px;
-}
-.line {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    margin:5px 4px 0;
-    border-radius: 15px;
-    background-color: #4b9cdb;
-}
-.clear{
-	clear:both;
-}
-
-.load-1 .line:nth-last-child(1) {animation: loadingA 1.5s 1s infinite;}
-.load-1 .line:nth-last-child(2) {animation: loadingA 1.5s .5s infinite;}
-.load-1 .line:nth-last-child(3) {animation: loadingA 1.5s 0s infinite;}
-
-.load-2 .line:nth-last-child(1) {animation: loadingB 1.5s 1s infinite;}
-.load-2 .line:nth-last-child(2) {animation: loadingB 1.5s .5s infinite;}
-.load-2 .line:nth-last-child(3) {animation: loadingB 1.5s 0s infinite;}
-
-.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-@keyframes loadingC {
-    0 {transform: translate(0,0);}
-    50% {transform: translate(0, 20px);}
-    100% {transform: translate(0,0);}
-}
 </style>
 <div class="wrapper">
 	<%@ include file="../include/header.jsp" %>
 	<section class="section">
 		<div class="width1400">
-			<h1>채점결과</h1>
 			<div class="inner-section">
+				<h1>시험 결과</h1>
 				<div class="mocktest-box">
 					<table class='table'>
 						<tr>
 							<td colspan="2" id="testName">${testName.tname} <small>(${testName.tdate})</small></td>
 						</tr>
 						<tr>
-							<td colspan="2" id="markResult"></td>
+							<td colspan="2" id="markResult">
+							</td>
 						</tr>
 						<tr class="first-table">
 							<td class="table-left">
@@ -234,9 +69,9 @@
 						</tr>
 						<tr>
 							<td colspan="2" id="paging">
-								<button id="prev">이전</button>
+								<button id="prev" class="same-button-style">이전</button>
 								<span id="count"></span> / <span id="allPage"></span>
-								<button id="next">다음</button>
+								<button id="next" class="same-button-style">다음</button>
 							</td>
 						</tr>
 					</table>
@@ -252,7 +87,7 @@
 				<!-- ajax로딩 될 때 뜨는 이미지 -->
 				<div class="loading-box">
 					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
+						<div class="loading-message">시험 결과 가져오는 중</div>
 						<div class="load-3">
 							<div class="line"></div>
 							<div class="line"></div>
@@ -261,6 +96,7 @@
 					</div>
 					<div class="clear"></div>
 				</div>
+				<div class="clear"></div>
 			</div>
 		</div>
 	</section>
@@ -280,30 +116,55 @@
 		});
 		
 		markMockTest();
-		clickPagingButton();
 		
 		/* 성적 저장 버튼 클릭 */
 		$(document).on("click", "#btnSaveGrade", function(e){
 			e.preventDefault();
 			
+			var grade = $(this).parent(".save-grade-box").attr("grade");
+			var arrSubject = $(this).parent(".save-grade-box").attr("subject");
+			var arrSubjectGrade = $(this).parent(".save-grade-box").attr("subject_grade");
+			
 			swal({
-				title:"성적 통계를 위해 저장할까요?",
+				title:"지금 본 모의고사의 성적을 저장할까요?",
+				text:"회원님의 성적 통계에 반영됩니다.",
 				showCancelButton:true,
 				cancelButtonText: "아니오",
 				confirmButtonText: "네",
 				closeOnConfirm:false
 			}, function(isConfirm){
 				if(isConfirm){
-					/* $p_saveGrade.attr("grade", count);
-					$p_saveGrade.attr("lowSubject", lowSubject);
-					$p_saveGrade.attr("highSubject", highSubject);
-					$p_saveGrade.attr("lowGrade", lowGrade);
-					$p_saveGrade.attr("highGrade", highGrade); */
-				}else{
-					
+					insertGradeAllAjax(grade, arrSubject, arrSubjectGrade);
+					$("#btnSaveGrade").slideUp("slow");
+					swal.close();
 				}
 			});
 		});
+		
+		/* 오답풀이 하는 창 열기 버튼 클릭*/
+		$(document).on("click", ".notebtn-box td button", function() {
+			var $thisButton = $(this);
+			var tqno = $(this).attr("tqno");
+			
+			
+			$(".note").each(function(i, obj) {
+				if($(obj).attr("tqno") == tqno){
+					if($thisButton.text() == "오답풀이 창 열기"){
+						$(obj).find(".note-box").slideDown("slow");
+					}else{
+						$(obj).find(".note-box").slideUp("slow");
+					}
+				}
+			});
+
+			if($(this).text() == "오답풀이 창 열기"){
+				$(this).text("오답풀이 창 닫기");
+			}else{
+				$(this).text("오답풀이 창 열기");
+			}
+		});
+		
+		clickNoteButtons();
 	});
 	
 	/* markMockTest : 채점을 하기위해 받아오는 TestQuestionList */
@@ -390,7 +251,6 @@
 			$tr_question.attr("tqno", obj.tq_no);
 			$tr_question.attr("tno", obj.testName.tno);
 			$tr_question.attr("tqsubject", obj.tq_subject);
-			$tr_question.attr("tqsubjectno", obj.tq_subject_no);
 			$tr_question.attr("tqsmallno", obj.tq_small_no);
 			$tr_question.attr("tqper", obj.tq_per);
 			$tr_question.attr("tqanswer", obj.tq_answer);
@@ -404,7 +264,7 @@
 					var $tr_image = $("<tr>");
 					$tr_image.append("<td></td>");
 					$tr_image.append("<td><img src='${pageContext.request.contextPath}/resources/upload/"+imageList[j].imgsource+"'/></td>");
-					$tr_image.attr("tqno", imageList[j].question.tq_no);
+					$tr_image.attr("tqno", imageList[j].tq_no);
 					
 					$table.append($tr_image);
 				}
@@ -445,12 +305,52 @@
 			$table.append($tr_selAnswer);
 			
 			//오답풀이
-			var $tr_note = $("<tr class='note'>");
+			var $tr_note = $("<tr class='notebtn-box'>");
 			$tr_note.append("<td>");
-			$tr_note.append("<td><button class='btnCreateNote'>오답풀이");
-			$tr_note.attr("tno", obj.testName.tno);
-			$tr_note.attr("tqno", obj.tq_no);
+			$tr_note.append("<td><button class='btnCreateNote' tqno='"+obj.tq_no+"'>오답풀이 창 열기");
 			$table.append($tr_note);
+			
+			//오답풀이 하는 창
+			var $tr_existNote = $("<tr class='note'>");
+			$tr_existNote.attr("tno", obj.testName.tno);
+			$tr_existNote.attr("tqno", obj.tq_no);
+			$tr_existNote.append("<td>");
+			
+			var $div_en = $("<div class='note-box'>");
+			
+			var $p1 = $("<p>");
+				$p1.append($("<label>").html("오답 풀이 내용"));
+					var $textarea1 = $("<textarea name='note_content' class='note_content'>");
+				$p1.append($textarea1);
+			$div_en.append($p1);
+			
+			var $p2 = $("<p>");
+				$p2.append($("<label>").html("오답 풀이 메모"));
+					var $textarea2 = $("<textarea name='note_memo' class='note_memo'>");
+				$p2.append($textarea2);
+			$div_en.append($p2);
+			
+			var $p3 = $("<p class='bottom-button'>");
+				var $span1 = $("<span class='add'>").html("<button class='addNoteBtn small-btn-style'>등록</button>");
+				$p3.append($span1);
+				var $span2 = $("<span class='up-and-del'>").html("<button class='updateNoteBtn small-btn-style'>수정</button><button class='delNoteBtn small-btn-style'>삭제</button>");
+				$p3.append($span2);
+				var $span3 = $("<span class='com-and-can'>").html("<button class='updateCompleteBtn small-btn-style'>확인</button><button class='updateCancelBtn small-btn-style'>취소</button>");
+				$p3.append($span3);
+			$div_en.append($p3);
+			
+			$tr_existNote.append($("<td>").html($div_en));
+			$table.append($tr_existNote);
+			
+			if(obj.note != null){
+				$textarea1.html(obj.note.note_content);
+				$textarea2.html(obj.note.note_memo);
+				$textarea1.attr("disabled","disabled");
+				$textarea2.attr("disabled","disabled");
+				$span1.css("display", "none");
+				$span2.css("display", "inline-block");
+				$span3.css("display", "none");
+			}
 			
 			//omr
 			var $table_omr = $(".omr-box .table");
@@ -501,7 +401,20 @@
 		
 		//페이징
 		$("td#paging").find("#count").html("1");
-		$("td#paging").find("#allPage").html( (result.length / 10) );
+		var lastNum = 0;
+		if(result.length-1 < 10) lastNum = 1
+		else if(result.length-1 < 20) lastNum = 2
+		else if(result.length-1 < 30) lastNum = 3
+		else if(result.length-1 < 40) lastNum = 4
+		else if(result.length-1 < 50) lastNum = 5
+		else if(result.length-1 < 60) lastNum = 6
+		else if(result.length-1 < 70) lastNum = 7
+		else if(result.length-1 < 80) lastNum = 8
+		else if(result.length-1 < 90) lastNum = 9
+		else if(result.length-1 < 100) lastNum = 10
+		$("td#paging").find("#allPage").text(lastNum);
+		
+		clickPagingButton();
 	}
 	
 	/* makeMarkResult : 받아온 점수를 태그로 만들기 */
@@ -509,10 +422,8 @@
 		var maxCount = 0; //전채 개수
 		var count = 0; //맞은 개수
 		var sum = 0; //총점
-		var lowSubject = ""; //낮은 점수 과목
-		var highSubject = ""; //높은 점수 과목 
-		var lowGrade = result[0].nowgrade; //낮은 점수 과목의 점수
-		var highGrade = result[0].nowgrade; //높은 점수 과목의 점수
+		var subject = new Array();
+		var subject_grade = new Array();
 		
 		for(var i = 0; i < result.length; i++){
 			var obj = result[i];
@@ -524,19 +435,12 @@
 			//과목별 맞은 개수
 			var $td_markResult = $(".table").find("td#markResult");
 			var $p_nowGrade = $("<p>");
-			$p_nowGrade.html("<span class='markSubjectName'>"+obj.tq_subject+"<span class='markNowGrade'>"+obj.nowgrade+" / "+obj.ng_count);
+			$p_nowGrade.html("<span class='markSubjectName'>"+obj.tq_subject+"</span><span class='markNowGrade'>"+obj.nowgrade+" / "+obj.ng_count+"</span>");
 			$td_markResult.append($p_nowGrade);
 			
-			if(i > 0){
-				if(lowGrade > obj.nowgrade){
-					lowGrade = obj.nowgrade;
-					lowSubject = obj.tq_subject;
-				}
-				if(highGrade < obj.nowgrade){
-					highGrade = obj.nowgrade;
-					highSubject = obj.tq_subject;
-				}
-			}
+			subject[i] = obj.tq_subject;
+			subject_grade[i] = obj.nowgrade;
+			
 		}//end of for
 		
 		var $td_markResult = $(".table").find("td#markResult");
@@ -552,16 +456,14 @@
 			passCheck = "불합격";
 		}
 		var $p_result = $("<p id='lastResult'>");
-		$p_result.html("총점 : " + sum + " / " + minGrade + " (맞은 개수 : "+ count +" / "+ maxCount +") <span>"+passCheck+"</span>");
+		$p_result.html("총점 : " + sum + " / " + minGrade + " (맞은 개수 : "+ count +" / "+ maxCount +") <span id='result'>"+passCheck+"</span>");
 		$td_markResult.append($p_result);
 		
 		//성적 저장 버튼
-		var $p_saveGrade = $("<p class='save-grade-box'>").html("<button id='btnSaveGrade'>성적 저장하기");
+		var $p_saveGrade = $("<p class='save-grade-box'>").html("<button id='btnSaveGrade' class='same-button-style'>성적 저장하기</button>");
 		$p_saveGrade.attr("grade", count);
-		$p_saveGrade.attr("lowSubject", lowSubject);
-		$p_saveGrade.attr("highSubject", highSubject);
-		$p_saveGrade.attr("lowGrade", lowGrade);
-		$p_saveGrade.attr("highGrade", highGrade);
+		$p_saveGrade.attr("subject", subject);
+		$p_saveGrade.attr("subject_grade", subject_grade);
 		
 		$td_markResult.append($p_saveGrade);
 	}
@@ -569,8 +471,9 @@
 	/* clickPagingButton : 이전, 다음버튼 클릭했을 때 */
 	function clickPagingButton(){
 		var index = 1;
+		var lastNum = Number($("td#paging").find("#allPage").text());
 		$("#next").click(function(){
-			if(index == 10){
+			if(index == lastNum){
 				return;
 			}
 			if($(".first-table").css("display") != "none"){
@@ -599,6 +502,147 @@
 				$(".first-table").css("display", "table-row");
 			}else{
 				$(".added-table").eq(index-2).css("display", "table-row");
+			}
+		});
+	}
+	
+	/* 오답풀이의 등록, 수정, 삭제 버튼 */
+	function clickNoteButtons(){
+		//등록
+		$(document).on("click", ".note-box .addNoteBtn", function(){
+			var tqno = $(this).parents(".note").attr("tqno");
+			var note_content = $(this).parents('.note-box').find("textarea.note_content").val();
+			var note_memo = $(this).parents('.note-box').find("textarea.note_memo").val();
+			
+			insertNotePost(tqno, note_content, note_memo);
+		});
+		
+		//수정
+		$(document).on("click", ".note-box .up-and-del .updateNoteBtn", function(){
+			$(this).parents(".note-box").find(".add").css("display", "none");
+			$(this).parents(".note-box").find(".up-and-del").css("display", "none");
+			$(this).parents(".note-box").find(".com-and-can").css("display", "inline-block");
+			$(this).parents('.note-box').find("textarea.note_content").removeAttr("disabled");
+			$(this).parents('.note-box').find("textarea.note_memo").removeAttr("disabled");
+		});
+		
+		//삭제
+		$(document).on("click", ".note-box .up-and-del .delNoteBtn", function(){
+			var tqno = $(this).parents(".note").attr("tqno");
+			
+			swal({
+				title:"오답풀이의 내용을 정말 삭제하시겠습니까?",
+				showCancelButton:true,
+				cancelButtonText: "아니오",
+				confirmButtonText: "네",
+			}, function(isConfirm){
+				if(isConfirm){
+					deleteNotePost(tqno);	
+				}
+			});
+		});
+		
+		//수정취소
+		$(document).on("click", ".note-box .com-and-can .updateCancelBtn", function(){
+			$(this).parents(".note-box").find(".add").css("display", "none");
+			$(this).parents(".note-box").find(".up-and-del").css("display", "inline-block");
+			$(this).parents(".note-box").find(".com-and-can").css("display", "none");
+			$(this).parents('.note-box').find("textarea.note_content").attr("disabled", "disabled");
+			$(this).parents('.note-box').find("textarea.note_memo").attr("disabled", "disabled");
+		});
+		
+		//수정확인
+		$(document).on("click", ".note-box .com-and-can .updateCompleteBtn", function(){
+			var tqno = $(this).parents(".note").attr("tqno");
+			var note_content = $(this).parents('.note-box').find("textarea.note_content").val();
+			var note_memo = $(this).parents('.note-box').find("textarea.note_memo").val();
+			
+			updateNotePost(tqno, note_content, note_memo);
+		});
+	}
+	
+	/* 오답노트추가 ajax */
+	function insertNotePost(tqno, note_content, note_memo){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/note/insertNotePost",
+			type:"post",
+			data:{tno:tno, tq_no:tqno, note_content:note_content, note_memo:note_memo},
+			success:function(result){
+				$("tr.note").each(function(i, obj){
+					if($(obj).attr("tqno") == tqno){
+						$(obj).find(".note-box .bottom-button .add").css("display", "none");
+						$(obj).find(".note-box .bottom-button .up-and-del").css("display", "inline-block");
+						$(obj).find(".note-box .bottom-button .com-and-can").css("display", "none");
+						$(obj).find(".note-box").find("textarea.note_content").attr("disabled", "disabled");
+						$(obj).find(".note-box").find("textarea.note_memo").attr("disabled", "disabled");
+					}
+				});
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다.");
+			}
+		});
+	}
+	
+	/* 오답노트수정 ajax */
+	function updateNotePost(tqno, note_content, note_memo){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/note/updateNotePost",
+			type:"post",
+			data:{tno:tno, tq_no:tqno, note_content:note_content, note_memo:note_memo},
+			success:function(result){
+				$("tr.note").each(function(i, obj){
+					if($(obj).attr("tqno") == tqno){
+						$(obj).find(".note-box .bottom-button .add").css("display", "none");
+						$(obj).find(".note-box .bottom-button .up-and-del").css("display", "inline-block");
+						$(obj).find(".note-box .bottom-button .com-and-can").css("display", "none");
+						$(obj).find(".note-box").find("textarea.note_content").attr("disabled", "disabled");
+						$(obj).find(".note-box").find("textarea.note_memo").attr("disabled", "disabled");
+					}
+				});
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다.");
+			}
+		});
+	}
+	
+	/* 오답노트삭제 ajax */
+	function deleteNotePost(tqno){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/note/deleteNotePost",
+			type:"post",
+			data:{tno:tno, tq_no:tqno},
+			success:function(result){
+				$("tr.note").each(function(i, obj){
+					if($(obj).attr("tqno") == tqno){
+						$(obj).find(".note-box .bottom-button .add").css("display", "inline-block");
+						$(obj).find(".note-box .bottom-button .up-and-del").css("display", "none");
+						$(obj).find(".note-box .bottom-button .com-and-can").css("display", "none");
+						$(obj).find(".note-box").find("textarea.note_content").val("");
+						$(obj).find(".note-box").find("textarea.note_memo").val("");
+						$(obj).find(".note-box").find("textarea.note_content").removeAttr("disabled");
+						$(obj).find(".note-box").find("textarea.note_memo").removeAttr("disabled");
+					}
+				});
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다.");
+			}
+		});
+	}
+	
+	/* 성적저장 ajax */
+	function insertGradeAllAjax(grade, arrSubject, arrSubjectGrade){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/grade/insertGradeAll",
+			type:"post",
+			data:{tno : tno, grade : grade, arrSubject : arrSubject, arrSubjectGrade : arrSubjectGrade},
+			succes:function(result){
+				console.log(result);
+			},
+			error:function(e){
+				alert("에러가 발생하였습니다.");
 			}
 		});
 	}

@@ -1,10 +1,10 @@
 package com.dgit.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,29 +59,24 @@ public class MockTestController {
 	
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String mockTestHomeGET(){
-		logger.info("mockTestHome GET......................");
+	public String mockTestHomeGET(HttpServletRequest req, Model model) throws Exception{
+		UserVO user = (UserVO) req.getSession().getAttribute(LoginInterceptor.LOGIN);
+		
+		GradeVO grade = gradeService.selectOneGradeLatest(user.getUid());
+		if(grade != null){
+			TestNameVO testName = nameService.selectOneTestName(grade.getTestName().getTno());
+			model.addAttribute("testName", testName);
+		}
+		
+		List<TestNameVO> testNameList = nameService.selectAllTestName();
+		model.addAttribute("testNameList", testNameList);
 		
 		return "mock_test/mock_test_home";
 	}//mockTestHomeGET
 	
 	@RequestMapping(value="/start_test/{tno}", method=RequestMethod.GET)
 	public String startTestGet(@PathVariable("tno") int tno, Model model) throws Exception{
-		logger.info("startTest GET......................");
-		
 		TestNameVO testName = nameService.selectOneTestName(tno);
-		List<TestQuestionVO> questionList = questionService.selectAllTestQuestionForMock(tno);
-		
-		for(int i=0; i<questionList.size(); i++){
-			TestQuestionVO question = questionList.get(i);
-			int tq_no = question.getTq_no();
-			List<TestExampleVO> exampleList = exampleService.selectAllTestExampleByTqNo(tq_no);
-			List<ImageVO> imageList = imageServie.selectImageByTqNo(tq_no);
-			
-			question.setExampleList(exampleList);
-			question.setImageList(imageList);
-		}
-		
 		model.addAttribute("testName", testName);
 		return "mock_test/start_test";
 	}//startTestGet
@@ -114,12 +109,12 @@ public class MockTestController {
 		
 		ResponseEntity<TestNameVO> entity = null;
 		
-		List<GradeVO> gradeList = gradeService.selectAllGradeLatest(user.getUid());
+		GradeVO grade = gradeService.selectOneGradeLatest(user.getUid());
 		
 		try {
 			TestNameVO testName = null;
-			if (gradeList.size() > 0) {
-				int tno = gradeList.get(0).getTestName().getTno();
+			if (grade != null) {
+				int tno = grade.getTestName().getTno();
 				testName = nameService.selectOneTestName(tno);
 			}
 			
@@ -169,7 +164,7 @@ public class MockTestController {
 		
 		ResponseEntity<List<TestQuestionVO>> entity = null;
 		
-		List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswer(tno, user.getUid());
+		List<TestQuestionVO> questionWithAnswerList = questionService.selectQuestionAndAnswerWithNote(tno, user.getUid());
 		nowService.insertNowGrade(questionWithAnswerList, user);
 		
 		try {

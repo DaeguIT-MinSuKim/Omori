@@ -8,17 +8,62 @@
 		<id property="g_no" column="g_no" />
 		<result property="user.uid" column="uid" />
 		<result property="testName.tno" column="tno" />
+		<result property="g_save_no" column="g_save_no" />
 		<result property="grade" column="grade" />
-		<result property="g_low" column="g_low" />
-		<result property="g_low_grade" column="g_low_grade" />
-		<result property="g_high" column="g_high" />
-		<result property="g_high_grade" column="g_high_grade" />
+		<result property="g_subject" column="g_subject" />
+		<result property="g_subject_grade" column="g_subject_grade" />
 		<result property="g_date" column="g_date" />
 	</resultMap>
 
-	<select id="selectAllGradeLatest" resultType="GradeVO" resultMap="GradeResult">
+	<select id="selectOneGradeLatest" resultType="GradeVO" resultMap="GradeResult">
 		select * from grade 
 		where uid = #{uid} 
+		order by g_date desc, g_no desc limit 1
+	</select>
+	
+	<!-- 하나의 시험 성적을 저장할 때 부여되는 번호 -->
+	<select id="countSaveNo" resultType="int">
+		select if(max(g_save_no) is null, 1, max(g_save_no)+1 ) as no 
+		from grade
+	</select>
+	
+	<select id="selectTnoForGrade" resultType="int" >
+		select distinct tno from grade 
+		where uid = #{uid} 
+		order by tno desc
+	</select>
+	
+	<select id="selectAllGradeGroupByTno" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid}
+			and tno = #{tno}
+		group by g_save_no
+	</select>
+	
+	<select id="selectGradeDate" resultType="String">
+		select distinct g_date from grade 
+		where uid = #{uid} 
+			and tno = #{tno}
 		order by g_date desc
 	</select>
+	
+	<select id="selectListGradeByDate" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid} 
+			and tno = #{tno} 
+			and g_date = #{g_date}
+	</select>
+	
+	<select id="selectListGradeBySubject" resultType="GradeVO" resultMap="GradeResult">
+		select * from grade 
+		where uid = #{uid} 
+			and tno = #{tno} 
+			and g_subject = #{g_subject}
+		order by g_date desc
+	</select>
+	
+	<insert id="insertGrade">
+		insert into grade(uid, tno, g_save_no, grade, g_subject, g_subject_grade, g_date) 
+		values(#{user.uid}, #{testName.tno}, #{g_save_no}, #{grade}, #{g_subject}, #{g_subject_grade}, #{g_date})
+	</insert>
 </mapper>

@@ -37,4 +37,9 @@ public class NoteServiceImpl implements NoteService{
 	public void deleteNote(int note_no) throws Exception {
 		dao.deleteNote(note_no);
 	}
+
+	@Override
+	public List<Integer> selectAllNoteDistinctTno(String uid) throws Exception {
+		return dao.selectAllNoteDistinctTno(uid);
+	}
 }
