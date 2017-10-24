@@ -103,122 +103,124 @@ a.selected-no{color:#cc0000 !important;}
     100% {transform: translate(0,0);}
 }
 </style>
-<div class="wrapper">
-	<%@ include file="../include/header.jsp" %>
-	<section class="section">
-		<div class="width1400">
-			<h1>기출문제 등록</h1>
-			<div class="inner-section">
-				<div class="testname-box">
-					<div class="how-to">
-						<h3>기출문제 한꺼번에 등록하는 방법</h3>
-						<div class="how-to-name">
-							<img src="${pageContext.request.contextPath}/resources/images/ex_name.png" alt="" />
-							<ul>
-								<li class='down-li'>
-									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
-									<a href="${pageContext.request.contextPath}/admin/downloadExcel/name">testname.xlsx</a>
-								</li>
-								<li>
-									1. 자격증번호<br />
-									<span>※ 각 자격증의 고유번호이기 때문에 모두 상이해야합니다</span>
-									<span id='setLastTnoText' class='more-emphasis'></span>
-								</li>
-								<li>
-									2. 자격증명 : 자격증명 - 시행년도 - 회차 순으로 입력해주세요 <br />
-									<span>※ 기출문제 목록을 가져올 때 이름순으로 가져오게 됩니다</span>
-								</li>
-								<li>
-									3. 시험날짜 : 시험 시행 날짜
-								</li>
-							</ul>
-						</div>
-						<div class="clear-how"></div>
-						<div class="how-to-question">
-							<img src="${pageContext.request.contextPath}/resources/images/ex_question.PNG" alt="" />
-							<ul>
-								<li class='down-li'>
-									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
-									<a href="${pageContext.request.contextPath}/admin/downloadExcel/question">testquestion.xlsx</a>
-								</li>
-								<li>
-									1. 문제고유번호<br />
-									<span>
-										※ 각 문제의 고유번호이기 때문에 모두 상이해야합니다<br />
-										&nbsp;&nbsp;&nbsp;&nbsp;ex) 기출문제의 문제를 등록할 때 고유번호의 마지막 번호가 100이었다면 다음 기출문제의 문제의<br /> 
-										&nbsp;&nbsp;&nbsp;&nbsp;고유번호는 101이 됩니다
-									</span>
-									<span id='setLastTqnoText' class='more-emphasis'></span>
-								</li>
-								<li>
-									2. 자격증번호 : 등록하고자 하는 기출문제에 대응하는 기출문제번호를 입력해주세요
-								</li>
-								<li>
-									3. 과목명 : 기출문제의 과목명
-								</li>
-								<li>
-									4. 문제번호 : 각 문제번호<br />
-									<span>
-										※ 문제고유번호와 다릅니다<br />
-										&nbsp;&nbsp;&nbsp;&nbsp;기출문제 내 각 문제의 번호입니다
-									</span>
-								</li>
-							</ul>
-						</div>
-						<div class="clear-how"></div>
-						<div class="how-to-example">
-							<img src="${pageContext.request.contextPath}/resources/images/ex_example.png" alt="" />
-							<ul>
-								<li class='down-li'>
-									<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
-									<a href="${pageContext.request.contextPath}/admin/downloadExcel/example">testexample.xlsx</a>
-								</li>
-								<li>
-									1. 문제고유번호 : 각 문제에 대응하는 문제고유번호
-								</li>
-								<li>
-									2. 보기번호 : 각 문제의 보기 번호
-								</li>
-							</ul>
-						</div>
-						<div class="clear-how">
-							<span>※ 각 문제에 해당하는 이미지는 기출문제 수정 메뉴에서 수정 / 등록하시면 됩니다</span>
-							<form action="" method="post" enctype="multipart/form-data" id="uploadForm">
-								<p>
-									<label for="">기출문제 : </label><input type="file" name='nameFile' id='nameFile'/>
-								</p>
-								<p>
-									<label for="">문제 : </label><input type="file" name='questionFile' id='questionFile'/>
-								</p>
-								<p>
-									<label for="">보기 : </label><input type="file" name='exampleFile' id='exampleFile'/>
-								</p>
-								<p>
-									<button id='btnUpload' class="same-button-style">등록</button>
-								</p>
-							</form>
-						</div>
-						<hr />
-						<h3>기출문제 낱개로 등록</h3>
-						<c:if test="${nameList.size() < 1}">
-							<div class="no-testname">
-								<p>등록된 자격증이 없습니다. 자격증을 등록 후 기출문제를 등록해주세요. >> <a href="" class="btnAddTestName same-button-style">자격증등록</a></p>
+<body>
+	<div class="wrapper">
+		<%@ include file="../include/header.jsp" %>
+		<section class="section">
+			<div class="width1400">
+				<h1>기출문제 등록</h1>
+				<div class="inner-section">
+					<div class="testname-box">
+						<div class="how-to">
+							<h3>기출문제 한꺼번에 등록하는 방법</h3>
+							<div class="how-to-name">
+								<img src="${pageContext.request.contextPath}/resources/images/ex_name.png" alt="" />
+								<ul>
+									<li class='down-li'>
+										<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+										<a href="${pageContext.request.contextPath}/admin/downloadExcel/name">testname.xlsx</a>
+									</li>
+									<li>
+										1. 자격증번호<br />
+										<span>※ 각 자격증의 고유번호이기 때문에 모두 상이해야합니다</span>
+										<span id='setLastTnoText' class='more-emphasis'></span>
+									</li>
+									<li>
+										2. 자격증명 : 자격증명 - 시행년도 - 회차 순으로 입력해주세요 <br />
+										<span>※ 기출문제 목록을 가져올 때 이름순으로 가져오게 됩니다</span>
+									</li>
+									<li>
+										3. 시험날짜 : 시험 시행 날짜
+									</li>
+								</ul>
 							</div>
-						</c:if>
-						<div class="testname-select-box">
-							<p>자격증을 선택하면 기출문제 등록창이 나타납니다. >> <a href="" class="btnAddTestName">자격증 더 등록하기</a></p>
-							<div class='each-testname-box'>
-								<%-- <a href="" tno="${obj.tno}">${obj.tname}</a> --%>
+							<div class="clear-how"></div>
+							<div class="how-to-question">
+								<img src="${pageContext.request.contextPath}/resources/images/ex_question.PNG" alt="" />
+								<ul>
+									<li class='down-li'>
+										<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+										<a href="${pageContext.request.contextPath}/admin/downloadExcel/question">testquestion.xlsx</a>
+									</li>
+									<li>
+										1. 문제고유번호<br />
+										<span>
+											※ 각 문제의 고유번호이기 때문에 모두 상이해야합니다<br />
+											&nbsp;&nbsp;&nbsp;&nbsp;ex) 기출문제의 문제를 등록할 때 고유번호의 마지막 번호가 100이었다면 다음 기출문제의 문제의<br /> 
+											&nbsp;&nbsp;&nbsp;&nbsp;고유번호는 101이 됩니다
+										</span>
+										<span id='setLastTqnoText' class='more-emphasis'></span>
+									</li>
+									<li>
+										2. 자격증번호 : 등록하고자 하는 기출문제에 대응하는 기출문제번호를 입력해주세요
+									</li>
+									<li>
+										3. 과목명 : 기출문제의 과목명
+									</li>
+									<li>
+										4. 문제번호 : 각 문제번호<br />
+										<span>
+											※ 문제고유번호와 다릅니다<br />
+											&nbsp;&nbsp;&nbsp;&nbsp;기출문제 내 각 문제의 번호입니다
+										</span>
+									</li>
+								</ul>
 							</div>
-						</div>
-						<div class="testname-list-box">
+							<div class="clear-how"></div>
+							<div class="how-to-example">
+								<img src="${pageContext.request.contextPath}/resources/images/ex_example.png" alt="" />
+								<ul>
+									<li class='down-li'>
+										<img src='${pageContext.request.contextPath}/resources/images/ic-download.png' class='icon-down'>
+										<a href="${pageContext.request.contextPath}/admin/downloadExcel/example">testexample.xlsx</a>
+									</li>
+									<li>
+										1. 문제고유번호 : 각 문제에 대응하는 문제고유번호
+									</li>
+									<li>
+										2. 보기번호 : 각 문제의 보기 번호
+									</li>
+								</ul>
+							</div>
+							<div class="clear-how">
+								<span>※ 각 문제에 해당하는 이미지는 기출문제 수정 메뉴에서 수정 / 등록하시면 됩니다</span>
+								<form action="" method="post" enctype="multipart/form-data" id="uploadForm">
+									<p>
+										<label for="">기출문제 : </label><input type="file" name='nameFile' id='nameFile'/>
+									</p>
+									<p>
+										<label for="">문제 : </label><input type="file" name='questionFile' id='questionFile'/>
+									</p>
+									<p>
+										<label for="">보기 : </label><input type="file" name='exampleFile' id='exampleFile'/>
+									</p>
+									<p>
+										<button id='btnUpload' class="same-button-style">등록</button>
+									</p>
+								</form>
+							</div>
+							<hr />
+							<h3>기출문제 낱개로 등록</h3>
+							<c:if test="${nameList.size() < 1}">
+								<div class="no-testname">
+									<p>등록된 자격증이 없습니다. 자격증을 등록 후 기출문제를 등록해주세요. >> <a href="" class="btnAddTestName same-button-style">자격증등록</a></p>
+								</div>
+							</c:if>
+							<div class="testname-select-box">
+								<p>자격증을 선택하면 기출문제 등록창이 나타납니다. >> <a href="" class="btnAddTestName">자격증 더 등록하기</a></p>
+								<div class='each-testname-box'>
+									<%-- <a href="" tno="${obj.tno}">${obj.tname}</a> --%>
+								</div>
+							</div>
+							<div class="testname-list-box">
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-</div>
+		</section>
+	</div>
+</body>
 
 <!-- 자격증 등록 팝업 -->
 <div class="login-container add-testname-popup">
@@ -364,6 +366,9 @@ function insertTestNameAjax(){
 						confirmButtonText: "확인"
 					});
 					$(".login-container").fadeOut("fast");
+					
+					//body 오버플로우 보이기
+					$("body").css("overflow", "auto");
 					
 					getTestNameListAjax();
 					

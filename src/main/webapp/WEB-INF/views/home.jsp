@@ -18,7 +18,8 @@
 			$(".login-container").css("display", "block");
 			
 			swal({
-				title:"존재하지 않는 아이디입니다"
+				title:"아이디나 비밀번호를<br>확인해주세요",
+				html:true
 			});
 		});
 	</script>

@@ -135,7 +135,7 @@
     margin: 0;
     list-style: none;
 
-    text-align: center;
+    /* text-align: center; */
 }
 .slick-dots li
 {

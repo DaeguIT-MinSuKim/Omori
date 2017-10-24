@@ -35,6 +35,11 @@
 		var pw = $(".register-form").find("input#upw").val();
 		var email = $(".register-form").find("input#uemail").val();
 		
+		if(id == "" || pw == "" || email == ""){
+			swal("모든 항목을 채워주세요!");
+			return false;
+		}
+		
 		$.ajax({
 			url:"${pageContext.request.contextPath}/user/join",
 			type:"post",

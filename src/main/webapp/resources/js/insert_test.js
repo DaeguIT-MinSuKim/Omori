@@ -13,12 +13,16 @@ $(function(){
 			return;
 		}
 		$(".login-container").fadeOut("fast");
+		
+		//body 오버플로우 보이기
+		$("body").css("overflow", "auto");
 	});
 	
 	/* 자격증등록 버튼을 클릭하면 팝업창 띄우도록*/
 	$(".btnAddTestName").click(function(e){
 		e.preventDefault();
 		$(".add-testname-popup").find("#addTno").val(lastTno);
+		$(".edit-que-ex-popup").scrollTop(0);
 		$(".add-testname-popup").fadeIn("fast");
 	});
 	
@@ -151,6 +155,9 @@ $(function(){
 		
 		var no = $(this).attr("tno");
 		getTqSmallNoListAjax(no);
+		
+		//body 오버플로우 숨기기
+		$("body").css("overflow", "hidden");
 	});
 
 	/*문제 번호 클릭하면 색깔이 변함*/

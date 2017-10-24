@@ -20,13 +20,13 @@
 /* home 				*/
 /* .................... */
 .main{width:100%;}
-.title-box {margin:10% auto; width:800px;}
-.title-box .image-box{float:left; margin-right:20px;}
-.title-box .text-box{padding-top:32px; padding-bottom:60px;}
-.title-box .text-box #title-top{font-size:33px; display: block; font-family: "나눔스퀘어EB"; color:#6e4a37;}
-.title-box .text-box .title-animation span.title{font-size:77px; font-family: "나눔스퀘어EB"; color:#d74526;}
-.title-box .text-box #title-bottom{font-size:18px; font-family: "나눔스퀘어EB"; color:#6e4a37;}
-.title-box .login-box a{color:#cd9d61; font-family: "나눔스퀘어B"; font-size:20px; display: inline-block; margin-right:20px;}
+.title-box {margin:10% auto;}
+.title-box #title-table{margin:0 auto;}
+.title-box #title-table .image-box{text-align: right; width:37%;}
+.title-box #title-table #title-top{font-size:2.1em; display: block; font-family: "나눔스퀘어EB"; color:#6e4a37;}
+.title-box #title-table .title-animation span.title{font-size:4.81em; font-family: "나눔스퀘어EB"; color:#d74526;}
+.title-box #title-table #title-bottom{font-size:1.125em; font-family: "나눔스퀘어EB"; color:#6e4a37;}
+.title-box #title-table .login-box a{color:#cd9d61; font-family: "나눔스퀘어B"; font-size:20px; display: inline-block; margin-right:20px;}
 
 /*-----------------
 	타이틀 애니메이션
@@ -70,7 +70,39 @@
 <body>
 <div class="main">
 	<div class="title-box">
-		<div class='image-box'>
+		<table id="title-table">
+			<tr>
+				<td class="image-box" rowspan="4">
+					<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="" />
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+					<span id="title-top">자격증 기출문제가<br />출출할 땐</span>
+					<div class="title-animation">
+						<span class="title">오</span>
+						<span class="title">모</span>
+						<span class="title">리</span>
+						<span class="title">닷</span>
+						<span class="title">컴</span>
+					</div>
+					<span id="title-bottom">오답풀이, 모의고사, 리플레이(반복학습)를 한번에!</span>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+					<div class="login-box">
+						<a href="" id="btnLogin">로그인</a>
+						<a href="" id="btnJoin">회원가입</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<%-- <div class='image-box'>
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="" />
 		</div>
 		<div class="text-box">
@@ -87,7 +119,7 @@
 		<div class="login-box">
 			<a href="" id="btnLogin">로그인</a>
 			<a href="" id="btnJoin">회원가입</a>
-		</div>
+		</div> --%>
 	</div>
 </div>
 

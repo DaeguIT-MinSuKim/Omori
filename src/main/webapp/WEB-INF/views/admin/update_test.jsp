@@ -119,7 +119,7 @@
 -------------*/
 .login-container .form {text-align: left;}
 
-.edit-que-ex-popup .login-page {width:700px; margin-top:-130px;}
+.edit-que-ex-popup .login-page {width:700px; margin-top:0px;}
 .edit-que-ex-popup .login-page .form {max-width:700px;}
 .edit-que-ex-popup .login-page .form hr{margin-bottom:25px;}
 .edit-que-ex-popup .login-page .form label {display: inline-block; width:80px; float:left;}
@@ -140,51 +140,53 @@ span.selected-answer{color:#cc0000 !important; font-weight: bold;}
     		display: inline-block;font-weight: bold;text-align: center;}
 
 </style>
-<div class="wrapper">
-	<%@ include file="../include/header.jsp" %>
-	<section class="section">
-		<div class="width1400">
-			<div class="inner-section">
-				<h1>기출문제 수정</h1>
-				<div class="mocktest-box">
-					<table class='table'>
-						<tr>
-							<td colspan="2" id="testName">${testName.tname} <small>(${testName.tdate})</small></td>
-						</tr>
-						<tr class="first-table">
-							<td class="table-left">
-								<table></table>
-							</td>
-							<td class="table-right">
-								<table></table>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" id="paging">
-								<button id="prev" class='same-button-style'>이전</button>
-								<span id="count"></span> / <span id="allPage"></span>
-								<button id="next" class='same-button-style'>다음</button>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!-- ajax로딩 될 때 뜨는 이미지 -->
-				<div class="loading-box">
-					<div class="load-wrapp">
-						<div class="loading-message">기출문제 불러오는 중</div>
-						<div class="load-3">
-							<div class="line"></div>
-							<div class="line"></div>
-							<div class="line"></div>
+<body>
+	<div class="wrapper">
+		<%@ include file="../include/header.jsp" %>
+		<section class="section">
+			<div class="width1400">
+				<div class="inner-section">
+					<h1>기출문제 수정</h1>
+					<div class="mocktest-box">
+						<table class='table'>
+							<tr>
+								<td colspan="2" id="testName">${testName.tname} <small>(${testName.tdate})</small></td>
+							</tr>
+							<tr class="first-table">
+								<td class="table-left">
+									<table></table>
+								</td>
+								<td class="table-right">
+									<table></table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" id="paging">
+									<button id="prev" class='same-button-style'>이전</button>
+									<span id="count"></span> / <span id="allPage"></span>
+									<button id="next" class='same-button-style'>다음</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- ajax로딩 될 때 뜨는 이미지 -->
+					<div class="loading-box">
+						<div class="load-wrapp">
+							<div class="loading-message">기출문제 불러오는 중</div>
+							<div class="load-3">
+								<div class="line"></div>
+								<div class="line"></div>
+								<div class="line"></div>
+							</div>
 						</div>
+						<div class="clear"></div>
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="clear"></div>
 			</div>
-		</div>
-	</section>
-</div>
+		</section>
+	</div>
+</body>
 
 <!-- 기출문제 수정 팝업 -->
 <div class="login-container edit-que-ex-popup">
@@ -277,6 +279,9 @@ function updateQueAndExAjax(){
 				$("#add-img").val("");
 				$(".edit-que-ex-popup").find(".preview").html("");
 				swal.close();
+				
+				//body 오버플로우 보이기
+				$("body").css("overflow", "auto");
 			});
 			
 		},
@@ -358,8 +363,6 @@ function updateTable(){
 
 	$(".login-container").fadeOut("fast");
 }
-
-
 
 var tno = ${testName.tno};
 	

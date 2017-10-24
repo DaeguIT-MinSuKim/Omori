@@ -12,7 +12,7 @@ textarea{resize: none; color:#000;}
 hr{border:2px dashed #fdf8e9;}
 
 .wrapper{width:100%;}
-.width1400{width:1400px;margin:0 auto;}
+.width1400{width:100%;margin:0 auto;}
 
 button{cursor: pointer; outline:0;}
 button:disabled{cursor:default;}

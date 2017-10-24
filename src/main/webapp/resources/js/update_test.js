@@ -131,7 +131,11 @@ $(document).on("click", ".btnUpdatePopup", function(){
 	$(".edit-que-ex-popup").find("#example04").attr("teno", tenoList[3]);
 	
 	//팝업 띄우기
+	$(".edit-que-ex-popup").scrollTop(0);
 	$(".edit-que-ex-popup").fadeIn("fast");
+	
+	//body 오버플로우 숨기기
+	$("body").css("overflow", "hidden");
 });
 
 /*수정 팝업창에서 수정버튼클릭*/
@@ -156,4 +160,7 @@ $(".login-close").find("a").click(function(e){
 	e.preventDefault();
 	$(".login-container").fadeOut("fast");
 	$("#add-img").val("");
+	
+	//body 오버플로우 보이기
+	$("body").css("overflow", "auto");
 });

@@ -474,3 +474,4 @@ select distinct t+1 from test order by t desc limit 1;
 select count(*) from test;
 select distinct if(count(t) = 0, 1, t+1 ) as c from test order by t desc limit 1;
 
+

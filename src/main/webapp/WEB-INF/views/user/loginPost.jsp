@@ -12,7 +12,7 @@
 <body>
 <script>
 swal({ //plugin
-	title:"아이디가 존재하지 않습니다!",
+	title:"아이디나 비밀번호를 확인하여주십시오",
 	type:"error"
 }, function(){
 	self.location = "${pageContext.request.contextPath}/user/login";	
