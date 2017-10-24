@@ -14,7 +14,7 @@
 	top:40% !important;
 	margin-left: -217px !important;
 }
-.each-question{display: inline-block;width: 29%;margin: 13px;vertical-align: top;background: #fdf8e9;padding: 14px;border-radius: 5px; box-shadow: 1px 1px 1px 0.5px grey;}
+.each-question{display: inline-block;width: 29%;margin: 12px;vertical-align: top;background: #fdf8e9;padding: 14px;border-radius: 5px; box-shadow: 1px 1px 1px 0.5px grey;}
 .select-testname-box {text-align: center; margin-bottom:30px;}
 .select-testname-box a{display: inline-block;margin: 0px 10px;color:#178da9; padding:10px 0; font-size: 14px;}
 .select-testname-box a.selected-subject{border-bottom:2px solid #178da9; color: #000;}

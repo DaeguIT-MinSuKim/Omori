@@ -24,7 +24,7 @@
 /*-----------
 	토글 버튼
 -----------*/
-figure{margin-top: 40px; margin-left: 20%; display:block;width:100%;}
+figure{margin-top: 40px; margin-left: 20%; display:block;}
 figure span{position:relative; top:-13px; color:#6e4a37;}
 #switchAnswer, 
 #switchNote {width:65px; padding:5px; border:4px solid #4a95d2; box-sizing:border-box; opacity:0.5;
@@ -73,6 +73,20 @@ a.answer-selected{color:#CC0000 !important;font-weight:bold;}
 	<section class="section">
 		<div class="width1400">
 			<div class="inner-section">
+				<c:if test="${questionList.size() < 1}">
+					<script>
+						swal({
+							html:true,
+							title:"죄송합니다 시험 문제가 준비 중입니다",
+							confirmButtonText: "확인",
+							closeOnConfirm: false
+						}, function(isConfirm){
+							if(isConfirm){
+								location.replace("${pageContext.request.contextPath}/one_test/");
+							}
+						});
+					</script>
+				</c:if>
 				<div class="test-name-box">
 					<p id="testName">${testName.tname} <small>(${testName.tdate})</small></p>
 				</div>

@@ -25,7 +25,7 @@
 .how-to ul li span.more-emphasis{color:#de3232  !important;}
 .how-to ul li.down-li a{font-weight:bold; font-family: sans-serif;}
 .how-to ul li.down-li a:HOVER{text-decoration: underline;}
-.how-to img {float:left;margin-right:12px;width:510px;}
+.how-to img {float:left;margin-right:12px;width:450px;}
 
 .clear-how{clear:both;width:100%;padding:20px 0 0;}
 .clear-how span{font-size:18px;color:#ff6666;display:block;}

@@ -161,20 +161,33 @@
 			url:"${pageContext.request.contextPath}/mock_test/getQuestionAndExampleByTno/"+tno,
 			type:"post",
 			success:function(result){
-				makeTags(result);
-				
-				swal({
-					html:true,
-					title:"지금 보시는 시험은 "+substrName+" 입니다",
-					text:"제한 시간은 총 <b>2시간 30분</b>이며,<br>한 과목당 제한 시간은 <b>30분</b>입니다<br>확인을 누르면 시험이 시작됩니다",
-					confirmButtonText: "확인",
-					closeOnConfirm: false
-				}, function(isConfirm){
-					if(isConfirm){
-						setTimer(result[0].testName.tname);
-						swal.close();
-					}
-				});
+				if(result.length < 1){
+					swal({
+						html:true,
+						title:"죄송합니다 시험 문제가 준비 중입니다",
+						confirmButtonText: "확인",
+						closeOnConfirm: false
+					}, function(isConfirm){
+						if(isConfirm){
+							location.replace("${pageContext.request.contextPath}/mock_test/");
+						}
+					});
+				}else{
+					makeTags(result);
+					
+					swal({
+						html:true,
+						title:"지금 보시는 시험은 "+substrName+" 입니다",
+						text:"제한 시간은 총 <b>2시간 30분</b>이며,<br>한 과목당 제한 시간은 <b>30분</b>입니다<br>확인을 누르면 시험이 시작됩니다",
+						confirmButtonText: "확인",
+						closeOnConfirm: false
+					}, function(isConfirm){
+						if(isConfirm){
+							setTimer(result[0].testName.tname);
+							swal.close();
+						}
+					});
+				}
 			},
 			error:function(e){
 				alert("에러가 발생하였습니다.");
